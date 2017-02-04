@@ -135,20 +135,6 @@ module.exports = function (grunt) {
                 '<%= yeoman.app %>/styles/*.css'
             ]
         },
-        toggleComments: {
-            customOptions: {
-                options: {
-                    padding: 4,
-                    removeCommands: true
-                },
-                files: {
-                    "dist/offline/index.html": "dist/offline/index.html",
-                    "dist/registration/index.html": "dist/registration/index.html",
-                    "dist/clinical/index.html": "dist/clinical/index.html",
-                    "dist/home/index.html": "dist/home/index.html"
-                }
-            }
-        },
         eslint: {
             options: {
                 fix: false,
@@ -228,14 +214,9 @@ module.exports = function (grunt) {
                 '<%= yeoman.app %>/patients/*.html',
                 '<%= yeoman.app %>/clinical/*.html',
                 '<%= yeoman.app %>/**/*.html',
-                '<%= yeoman.app %>/adt/**/*.html',
                 '<%= yeoman.app %>/common/**/*.html',
-                '<%= yeoman.app %>/orders/**/*.html',
                 '<%= yeoman.app %>/home/**/*.html',
-                '<%= yeoman.app %>/admin/**/*.html',
-                '<%= yeoman.app %>/registration/**/*.html',
-                '<%= yeoman.app %>/document-upload/**/*.html',
-                '<%= yeoman.app %>/reports/**/*.html'
+                '<%= yeoman.app %>/registration/**/*.html'
             ],
             css: '<%= yeoman.app %>/styles/**/*.css',
             options: {
@@ -299,15 +280,10 @@ module.exports = function (grunt) {
                         src: [
                             'patients/**/*.html',
                             'clinical/**/*.html',
-                            'adt/**/*.html',
                             'common/**/*.html',
-                            'orders/**/*.html',
                             'home/**/*.html',
                             'offline/**/*.html',
-                            'admin/**/*.html',
-                            'reports/**/*.html',
-                            'registration/**/*.html',
-                            'document-upload/**/*.html'
+                            'registration/**/*.html'
                         ],
                         dest: '<%= yeoman.dist %>'
                     }
@@ -548,12 +524,7 @@ module.exports = function (grunt) {
             multifile: {
                 files: {
                     '<%= yeoman.dist %>/registration.min.js': '<%= yeoman.dist %>/registration.min.js',
-                    '<%= yeoman.dist %>/admin.min.js': '<%= yeoman.dist %>/admin.min.js',
-                    '<%= yeoman.dist %>/adt.min.js': '<%= yeoman.dist %>/adt.min.js',
-                    '<%= yeoman.dist %>/document-upload.min.js': '<%= yeoman.dist %>/document-upload.min.js',
                     '<%= yeoman.dist %>/home.min.js': '<%= yeoman.dist %>/home.min.js',
-                    '<%= yeoman.dist %>/orders.min.js': '<%= yeoman.dist %>/orders.min.js',
-                    '<%= yeoman.dist %>/reports.min.js': '<%= yeoman.dist %>/reports.min.js',
                     '<%= yeoman.dist %>/clinical.min.js': '<%= yeoman.dist %>/clinical.min.js'
                 }
             },
@@ -627,8 +598,8 @@ module.exports = function (grunt) {
     ]);
 
     grunt.registerTask('dev', ['build', 'test']);
-    grunt.registerTask('devchrome', ['devbundle', 'preprocess:chrome', 'toggleComments', 'clean:chromeApp', 'copy:chromeApp']);
-    grunt.registerTask('devandroid', ['devbundle', 'preprocess:android', 'toggleComments', 'clean:androidApp', 'copy:androidApp']);
+    grunt.registerTask('devchrome', ['devbundle', 'preprocess:chrome', 'clean:chromeApp', 'copy:chromeApp']);
+    grunt.registerTask('devandroid', ['devbundle', 'preprocess:android', 'clean:androidApp', 'copy:androidApp']);
 
     grunt.registerTask('default', ['bundle', 'uglify-and-rename', 'test', 'preprocess:web']);
 
