@@ -3,7 +3,7 @@
 angular.module('bahmni.common.offline')
     .service('appInfoStrategy', function () {
         var getVersion = function () {
-            var manifest = chrome.app.getDetails();
+            var manifest = 2;
             return manifest.version;
         };
         return {
