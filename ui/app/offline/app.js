@@ -6,14 +6,28 @@ angular.module('bahmni.offline', ['ui.router', 'httpErrorInterceptor', 'bahmni.c
             $urlRouterProvider.otherwise('/initScheduler');
         // @endif
             $stateProvider
-            .state('initScheduler',
-                {
+                .state('initScheduler', {
                     url: '/initScheduler',
                     resolve: {
                         offlineDb: function (offlineDbInitialization) {
                             return offlineDbInitialization();
                         },
-                        offlineReferenceDataInitialization: function (offlineReferenceDataInitialization, offlineDbService, offlineService, androidDbService, $state, offlineDb) {
+                        offlineConfigInitialization: function (offlineConfigInitialization, offlineDb, offlineService, offlineDbService, androidDbService, $q) {
+                            var checkConfig = function () {
+                                var allowMultipleLoginLocation = offlineService.getItem("allowMultipleLoginLocation");
+                                return allowMultipleLoginLocation !== null && !allowMultipleLoginLocation;
+                            };
+                            if (offlineService.isAndroidApp()) {
+                                offlineDbService = androidDbService;
+                            }
+                            return offlineDbService.getConfig("dbNameCondition").then(function (result) {
+                                if (result || checkConfig()) {
+                                    return $q.when();
+                                }
+                                else return offlineConfigInitialization();
+                            });
+                        },
+                        offlineReferenceDataInitialization: function (offlineReferenceDataInitialization, offlineDbService, offlineService, androidDbService, $state, offlineConfigInitialization) {
                             if (offlineService.isAndroidApp()) {
                                 offlineDbService = androidDbService;
                             }
