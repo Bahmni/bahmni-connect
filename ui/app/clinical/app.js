@@ -277,23 +277,6 @@ angular.module('consultation')
                     }
                 }
             })
-            .state('patient.dashboard.show.bacteriology', {
-                url: '/bacteriology',
-                params: {
-                    cachebuster: null
-                },
-                views: {
-                    'consultation-content': {
-                        templateUrl: 'consultation/views/bacteriology.html',
-                        controller: 'BacteriologyController'
-                    }
-                },
-                resolve: {
-                    bacteriologyConceptSet: function (bacteriologyTabInitialization) {
-                        return bacteriologyTabInitialization();
-                    }
-                }
-            })
             .state('patient.dashboard.show.investigation', {
                 url: '/investigation',
                 params: {
