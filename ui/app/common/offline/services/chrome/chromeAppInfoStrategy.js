@@ -3,8 +3,8 @@
 angular.module('bahmni.common.offline')
     .service('appInfoStrategy', function () {
         var getVersion = function () {
-            var manifest = 2;
-            return manifest.version;
+            var manifestVersion = 2;
+            return manifestVersion;
         };
         return {
             getVersion: getVersion
