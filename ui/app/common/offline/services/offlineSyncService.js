@@ -32,7 +32,7 @@ angular.module('bahmni.common.offline')
 
             var syncForCategory = function (category, isInitSync) {
                 return offlineDbService.getMarker(category).then(function (marker) {
-                    if (category == "transactionalData" && isInitSync) {
+                    if ((category == "patient" || category == "encounter") && isInitSync) {
                         marker = angular.copy(marker);
                         marker.filters = offlineService.getItem("initSyncFilter");
                     }

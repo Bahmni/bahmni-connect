@@ -45,26 +45,8 @@ describe('offlineService', function () {
     });
 
     describe("isOfflineApp", function () {
-        it('should return false if platformType is chrome browser', function () {
-            bahmniCookieStore.get.and.callFake(function () {
-                return "chrome";
-            });
-
-            expect(offlineServiceInjected.isOfflineApp()).toBeFalsy();
-            expect(bahmniCookieStore.get).toHaveBeenCalledWith(Bahmni.Common.Constants.platform);
-        });
-
-        it('should return true if platformType is not chrome browser', function () {
-            bahmniCookieStore.put.and.callFake(function () {
-                return undefined;
-            });
-
-            bahmniCookieStore.get.and.callFake(function () {
-                return "android";
-            });
-
+        it('should return always true ', function () {
             expect(offlineServiceInjected.isOfflineApp()).toBeTruthy();
-            expect(bahmniCookieStore.get).toHaveBeenCalledWith(Bahmni.Common.Constants.platform);
         });
 
     });

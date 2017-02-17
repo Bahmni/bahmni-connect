@@ -22,13 +22,13 @@ describe('EventLogService', function () {
             return specUtil.respondWith({"events":[newVar], "pendingEventsCount":1});
         });
 
-        eventLogService.getEventsFor('transactionalData',{ filters: [111]}).then(function (data) {
+        eventLogService.getEventsFor('patient',{ filters: [111]}).then(function (data) {
             expect(data["events"].length).toBe(1);
             expect(data["events"][0]).toBe(newVar);
             expect(data["pendingEventsCount"]).toBe(1);
         });
 
-        expect(mockHttp.get).toHaveBeenCalledWith('/event-log-service/rest/eventlog/events', {
+        expect(mockHttp.get).toHaveBeenCalledWith('/event-log-service/rest/eventlog/events/patient', {
             params: {filterBy: [111], uuid: undefined}
         });
     });
@@ -139,7 +139,7 @@ describe('EventLogService', function () {
     });
 
     it('should call event log filter URL to get filters for all categories for the given login  location, address and provider ', function () {
-        var newVar = [{category:"addressHierarchy" , filters:[]}, {category:"transactionalData" , filters:["123", "456"]}, {category:"offline-concepts" , filters:[]}];
+        var newVar = [{category:"addressHierarchy" , filters:[]}, {category:"patient" , filters:["123", "456"]},{category:"encounter" , filters:["123", "456"]}, {category:"offline-concepts" , filters:[]}];
         mockHttp.get.and.callFake(function () {
             return specUtil.respondWith(newVar);
         });
