@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('bahmni.common.offline')
-    .service('offlineSyncService', ['eventLogService', 'offlineDbService', '$q', 'offlineService', 'androidDbService', '$rootScope', 'loggingService',
-        function (eventLogService, offlineDbService, $q, offlineService, androidDbService, $rootScope, loggingService) {
+    .service('offlineSyncService', ['eventLogService', 'offlineDbService', '$q', 'offlineService', 'androidDbService', '$rootScope', 'loggingService', '$http',
+        function (eventLogService, offlineDbService, $q, offlineService, androidDbService, $rootScope, loggingService, $http) {
             var stages, categories;
 
             var initializeInitSyncInfo = function initializeCounters (categories) {
@@ -16,6 +16,20 @@ angular.module('bahmni.common.offline')
                 $rootScope.initSyncInfo.savedEvents = 0;
             };
 
+            var savePatientDataFromFile = function () {
+                return offlineDbService.getMarker("patient").then(function (marker) {
+                    var filter = marker.filters[0];
+                    return $http.get(Bahmni.Common.Constants.bulkPatientUrl + filter).then(function (response) {
+                        var patients = response.data;
+                        return patients.map(function (patient) {
+                            return saveData({category: 'patient'}, {data: patient}).then(function () {
+                                return updateMarker(patient, 'patient');
+                            });
+                        });
+                    });
+                });
+            };
+
             var sync = function (isInitSync) {
                 stages = 0;
                 if (offlineService.isAndroidApp()) {
@@ -24,9 +38,14 @@ angular.module('bahmni.common.offline')
                 var promises = [];
                 categories = offlineService.getItem("eventLogCategories");
                 initializeInitSyncInfo(categories);
-                _.map(categories, function (category) {
-                    promises.push(syncForCategory(category, isInitSync));
+                _.forEach(categories, function (category) {
+                    if (!isInitSync || category !== "patient") {
+                        promises.push(syncForCategory(category, isInitSync));
+                    }
                 });
+                if (isInitSync) {
+                    promises.push(savePatientDataFromFile());
+                }
                 return $q.all(promises);
             };
 

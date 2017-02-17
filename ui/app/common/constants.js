@@ -244,6 +244,7 @@ Bahmni.Common = Bahmni.Common || {};
         addressEventLogServiceUrl: hostUrl + "/event-log-service/rest/eventlog/getAddressHierarchyEvents",
         eventLogServicePatientUrl: hostUrl + "/event-log-service/rest/eventlog/events/patient",
         eventLogServiceEncounterUrl: hostUrl + "/event-log-service/rest/eventlog/events/encounter",
+        bulkPatientUrl: RESTWS_V1 + "/bulk/patient?filter=",
         eventLogServiceConceptUrl: hostUrl + "/event-log-service/rest/eventlog/concepts",
         offlineMetadataUrl: hostUrl + "/offlineMetadata.json",
         faviconUrl: hostUrl + "/bahmni/favicon.ico",
