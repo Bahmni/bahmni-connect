@@ -8,7 +8,7 @@
         <link rel="stylesheet" href="../lib/jquery/jquery-ui-1.10.4.custom.min.css">
         <link rel="stylesheet" href="../components/select2/select2.css"/>
         <!-- build:css registration.min.css -->
-        <link rel="stylesheet" href="../styles/registration.css"/>
+        <link rel="stylesheet" href="../components/bahmniapps/styles/registration.css"/>
         <!-- endbuild -->
         <link rel="stylesheet" href="../components/ngDialog/css/ngDialog.min.css"/>
         <link rel="stylesheet" href="../components/ngDialog/css/ngDialog-theme-default.min.css"/>
@@ -16,7 +16,7 @@
     </head>
     <body>
         <div class="reg-wrapper">
-            <div ng-include src="'../common/ui-helper/messages.html'"></div>
+            <div ng-include src="'../components/bahmniapps/common/ui-helper/messages.html'"></div>
             <div ui-view="layout" id="view-content"></div>
         </div>
         <script src="../components/jquery/jquery.min.js"></script>
@@ -50,9 +50,9 @@
         <!-- build:js ../common.offline.min.js -->
         <script src="../common/constants.js"></script>
         <script src="../components/lodash/dist/lodash.min.js"></script>
-        <script src="../common/util/init.js"></script>
-        <script src="../common/models/init.js"></script>
-        <script src="../common/models/age.js"></script>
+        <script src="../components/bahmniapps/common/util/init.js"></script>
+        <script src="../components/bahmniapps/common/models/init.js"></script>
+        <script src="../components/bahmniapps/common/models/age.js"></script>
         <script src="../lib/angular-workers/dist/angular-workers.js"></script>
         <script src="../common/offline/init.js"></script>
         <script src="../common/offline/offlineService.js"></script>
@@ -104,168 +104,163 @@
 
 
         <!-- build:js registration.min.js -->
-        <script src="../common/route-errorhandler/init.js"></script>
-        <script src="../common/util/init.js"></script>
-        <script src="../common/util/dateUtil.js"></script>
-        <script src="../common/util/validationUtil.js"></script>
-        <script src="../common/util/dynamicResourceLoader.js"></script>
-        <script src="../common/util/arrayUtil.js"></script>
-        <script src="../common/util/httpErrorInterceptor.js"></script>
-        <script src="../common/models/visitControl.js"></script>
+        <script src="../components/bahmniapps/common/route-errorhandler/init.js"></script>
+        <script src="../components/bahmniapps/common/util/init.js"></script>
+        <script src="../components/bahmniapps/common/util/dateUtil.js"></script>
+        <script src="../components/bahmniapps/common/util/validationUtil.js"></script>
+        <script src="../components/bahmniapps/common/util/dynamicResourceLoader.js"></script>
+        <script src="../components/bahmniapps/common/util/arrayUtil.js"></script>
+        <script src="../components/bahmniapps/common/util/httpErrorInterceptor.js"></script>
+        <script src="../components/bahmniapps/common/models/visitControl.js"></script>
 
-        <script src="../common/config/init.js"></script>
-        <script src="../common/config/services/configurations.js"></script>
+        <script src="../components/bahmniapps/common/config/init.js"></script>
+        <script src="../components/bahmniapps/common/config/services/configurations.js"></script>
 
-        <script src="../common/domain/init.js"></script>
-        <script src="../common/domain/observationFilter.js"></script>
-        <script src="../common/domain/helpers/domainHelpers.js"></script>
-        <script src="../common/domain/mappers/conceptMapper.js"></script>
-        <script src="../common/domain/services/providerService.js"></script>
-        <script src="../common/domain/encounterConfig.js"></script>
-        <script src="../common/domain/mappers/observationValueMapper.js"></script>
-
-
-        <script src="../common/ui-helper/init.js"></script>
-        <script src="../common/ui-helper/directives.js"></script>
-        <script src="../common/ui-helper/directives/toggle.js"></script>
-        <script src="../common/ui-helper/directives/popOver.js"></script>
-        <script src="../common/ui-helper/directives/splitButton.js"></script>
-        <script src="../common/ui-helper/directives/focusOn.js"></script>
-        <script src="../common/ui-helper/directives/conceptAutocomplete.js"></script>
-        <script src="../common/ui-helper/directives/focusMe.js"></script>
-        <script src="../common/ui-helper/directives/bahmniAutocomplete.js"></script>
-        <script src="../common/ui-helper/spinner.js"></script>
-        <script src="../common/ui-helper/printer.js"></script>
-        <script src="../common/ui-helper/services/contextChangeHandler.js"></script>
-        <script src="../common/ui-helper/controllers/messageController.js"></script>
-        <script src="../common/ui-helper/services/messagingService.js"></script>
-        <script src="../common/ui-helper/directives/ngConfirmClick.js"></script>
-        <script src="../common/ui-helper/directives/bmShow.js"></script>
-        <script src="../common/ui-helper/directives/monthyearpicker.js"></script>
-        <script src="../common/ui-helper/directives/singleSubmit.js"></script>
-
-        <script src="../common/uicontrols/init.js"></script>
-        <script src="../common/uicontrols/concept-dropdown/directives/conceptDropdown.js"></script>
-
-        <script src="../common/attributeTypes/directives/attributeTypes.js"></script>
-
-        <script src="../common/photo-capture/init.js"></script>
-        <script src="../common/photo-capture/directives/capturePhoto.js"></script>
-
-        <script src="../common/auth/init.js"></script>
-        <script src="../common/auth/user.js"></script>
-        <script src="../common/auth/userService.js"></script>
-        <script src="../common/auth/authentication.js"></script>
-
-        <script src="../common/app-framework/init.js"></script>
-        <script src="../common/app-framework/models/appDescriptor.js"></script>
-        <script src="../common/app-framework/services/appService.js"></script>
-        <script src="../common/app-framework/services/mergeService.js"></script>
-
-        <script src="../common/patient/init.js"></script>
-        <script src="../common/patient/filters/age.js"></script>
-
-        <script src="../common/concept-set/init.js"></script>
-        <script src="../common/concept-set/directives/conceptSetGroup.js"></script>
-        <script src="../common/concept-set/directives/conceptSet.js"></script>
-        <script src="../common/concept-set/directives/concept.js"></script>
-        <script src="../common/concept-set/directives/buttonSelect.js"></script>
-        <script src="../common/concept-set/directives/stepper.js"></script>
-        <script src="../common/concept-set/directives/obsConstraints.js"></script>
-        <script src="../common/concept-set/directives/duration.js"></script>
-        <script src="../common/concept-set/directives/latestObs.js"></script>
-        <script src="../common/concept-set/models/conceptSetGroupValidationHandler.js"></script>
-        <script src="../common/concept-set/models/conceptSetObservation.js"></script>
-        <script src="../common/concept-set/models/booleanObservation.js"></script>
-        <script src="../common/concept-set/models/observationNode.js"></script>
-        <script src="../common/concept-set/models/tabularObservations.js"></script>
-        <script src="../common/concept-set/models/multiSelectObservations.js"></script>
-        <script src="../common/concept-set/models/customRepresentationBuilder.js"></script>
-        <script src="../common/concept-set/models/conceptSetSection.js"></script>
-        <script src="../common/concept-set/mappers/observationMapper.js"></script>
-        <script src="../common/concept-set/services/conceptService.js"></script>
-        <script src="../common/concept-set/services/conceptSetUiConfigService.js"></script>
-        <script src="../common/ui-helper/filters/thumbnail.js"></script>
-        <script src="../common/ui-helper/filters/dateFilters.js"></script>
-        <script src="../common/logging/init.js"></script>
-        <script src="../common/logging/exceptionHandler.js"></script>
-
-        <script src="../common/displaycontrols/init.js"></script>
-
-        <script src="../common/displaycontrols/observation/init.js"></script>
-        <script src="../common/displaycontrols/observation/helpers/groupingFunctions.js"></script>
-        <script src="../common/displaycontrols/observation/directives/bahmniObservation.js"></script>
-        <script src="../common/displaycontrols/pivottable/init.js"></script>
-        <script src="../common/displaycontrols/pivottable/directives/pivotTable.js"></script>
-        <script src="../common/displaycontrols/pivottable/services/pivotTableService.js"></script>
-
-        <script src="../common/displaycontrols/custom/init.js"></script>
-        <script src="../common/displaycontrols/custom/directives/customDisplayControl.js"></script>
-
-        <script src="../common/obs/init.js"></script>
-        <script src="../common/obs/models/observation.js"></script>
-        <script src="../common/obs/mappers/observationMapper.js"></script>
-        <script src="../common/obs/directives/showObservation.js"></script>
-        <script src="../common/obs/util/observationUtil.js"></script>
-
-        <script src="../common/displaycontrols/hint/init.js"></script>
-        <script src="../common/displaycontrols/hint/directives/hint.js"></script>
+        <script src="../components/bahmniapps/common/domain/init.js"></script>
+        <script src="../components/bahmniapps/common/domain/observationFilter.js"></script>
+        <script src="../components/bahmniapps/common/domain/helpers/domainHelpers.js"></script>
+        <script src="../components/bahmniapps/common/domain/mappers/conceptMapper.js"></script>
+        <script src="../components/bahmniapps/common/domain/services/providerService.js"></script>
+        <script src="../components/bahmniapps/common/domain/encounterConfig.js"></script>
+        <script src="../components/bahmniapps/common/domain/mappers/observationValueMapper.js"></script>
 
 
-        <script src="../common/domain/models/diagnosis.js"></script>
-        <script src="../common/domain/mappers/diagnosisMapper.js"></script>
-        <script src="../common/domain/services/diagnosisService.js"></script>
-        <script src="../common/displaycontrols/diagnosis/init.js"></script>
-        <script src="../common/displaycontrols/diagnosis/filters/primaryDiagnosisFirst.js"></script>
-        <script src="../common/displaycontrols/diagnosis/directives/bahmniDiagnosis.js"></script>
+        <script src="../components/bahmniapps/common/ui-helper/init.js"></script>
+        <script src="../components/bahmniapps/common/ui-helper/directives.js"></script>
+        <script src="../components/bahmniapps/common/ui-helper/directives/toggle.js"></script>
+        <script src="../components/bahmniapps/common/ui-helper/directives/popOver.js"></script>
+        <script src="../components/bahmniapps/common/ui-helper/directives/splitButton.js"></script>
+        <script src="../components/bahmniapps/common/ui-helper/directives/focusOn.js"></script>
+        <script src="../components/bahmniapps/common/ui-helper/directives/conceptAutocomplete.js"></script>
+        <script src="../components/bahmniapps/common/ui-helper/directives/focusMe.js"></script>
+        <script src="../components/bahmniapps/common/ui-helper/directives/bahmniAutocomplete.js"></script>
+        <script src="../components/bahmniapps/common/ui-helper/spinner.js"></script>
+        <script src="../components/bahmniapps/common/ui-helper/printer.js"></script>
+        <script src="../components/bahmniapps/common/ui-helper/services/contextChangeHandler.js"></script>
+        <script src="../components/bahmniapps/common/ui-helper/controllers/messageController.js"></script>
+        <script src="../components/bahmniapps/common/ui-helper/services/messagingService.js"></script>
+        <script src="../components/bahmniapps/common/ui-helper/directives/ngConfirmClick.js"></script>
+        <script src="../components/bahmniapps/common/ui-helper/directives/bmShow.js"></script>
+        <script src="../components/bahmniapps/common/ui-helper/directives/monthyearpicker.js"></script>
+        <script src="../components/bahmniapps/common/ui-helper/directives/singleSubmit.js"></script>
 
-        <script src="../common/i18n/init.js"></script>
-        <script src="../common/i18n/bahmni-translate.js"></script>
-        <script src="../common/i18n/services/mergeLocaleFilesService.js"></script>
+        <script src="../components/bahmniapps/common/uicontrols/init.js"></script>
+        <script src="../components/bahmniapps/common/uicontrols/concept-dropdown/directives/conceptDropdown.js"></script>
+
+        <script src="../components/bahmniapps/common/attributeTypes/directives/attributeTypes.js"></script>
+
+        <script src="../components/bahmniapps/common/photo-capture/init.js"></script>
+        <script src="../components/bahmniapps/common/photo-capture/directives/capturePhoto.js"></script>
+
+        <script src="../components/bahmniapps/common/auth/init.js"></script>
+        <script src="../components/bahmniapps/common/auth/user.js"></script>
+        <script src="../components/bahmniapps/common/auth/userService.js"></script>
+        <script src="../components/bahmniapps/common/auth/authentication.js"></script>
+
+        <script src="../components/bahmniapps/common/app-framework/init.js"></script>
+        <script src="../components/bahmniapps/common/app-framework/models/appDescriptor.js"></script>
+        <script src="../components/bahmniapps/common/app-framework/services/appService.js"></script>
+        <script src="../components/bahmniapps/common/app-framework/services/mergeService.js"></script>
+
+        <script src="../components/bahmniapps/common/patient/init.js"></script>
+        <script src="../components/bahmniapps/common/patient/filters/age.js"></script>
+
+        <script src="../components/bahmniapps/common/concept-set/init.js"></script>
+        <script src="../components/bahmniapps/common/concept-set/directives/conceptSetGroup.js"></script>
+        <script src="../components/bahmniapps/common/concept-set/directives/conceptSet.js"></script>
+        <script src="../components/bahmniapps/common/concept-set/directives/concept.js"></script>
+        <script src="../components/bahmniapps/common/concept-set/directives/buttonSelect.js"></script>
+        <script src="../components/bahmniapps/common/concept-set/directives/stepper.js"></script>
+        <script src="../components/bahmniapps/common/concept-set/directives/obsConstraints.js"></script>
+        <script src="../components/bahmniapps/common/concept-set/directives/duration.js"></script>
+        <script src="../components/bahmniapps/common/concept-set/directives/latestObs.js"></script>
+        <script src="../components/bahmniapps/common/concept-set/models/conceptSetGroupValidationHandler.js"></script>
+        <script src="../components/bahmniapps/common/concept-set/models/conceptSetObservation.js"></script>
+        <script src="../components/bahmniapps/common/concept-set/models/booleanObservation.js"></script>
+        <script src="../components/bahmniapps/common/concept-set/models/observationNode.js"></script>
+        <script src="../components/bahmniapps/common/concept-set/models/tabularObservations.js"></script>
+        <script src="../components/bahmniapps/common/concept-set/models/multiSelectObservations.js"></script>
+        <script src="../components/bahmniapps/common/concept-set/models/customRepresentationBuilder.js"></script>
+        <script src="../components/bahmniapps/common/concept-set/models/conceptSetSection.js"></script>
+        <script src="../components/bahmniapps/common/concept-set/mappers/observationMapper.js"></script>
+        <script src="../components/bahmniapps/common/concept-set/services/conceptService.js"></script>
+        <script src="../components/bahmniapps/common/concept-set/services/conceptSetUiConfigService.js"></script>
+        <script src="../components/bahmniapps/common/ui-helper/filters/thumbnail.js"></script>
+        <script src="../components/bahmniapps/common/ui-helper/filters/dateFilters.js"></script>
+        <script src="../components/bahmniapps/common/logging/init.js"></script>
+        <script src="../components/bahmniapps/common/logging/exceptionHandler.js"></script>
+
+        <script src="../components/bahmniapps/common/displaycontrols/init.js"></script>
+
+        <script src="../components/bahmniapps/common/displaycontrols/observation/init.js"></script>
+        <script src="../components/bahmniapps/common/displaycontrols/observation/helpers/groupingFunctions.js"></script>
+        <script src="../components/bahmniapps/common/displaycontrols/observation/directives/bahmniObservation.js"></script>
+        <script src="../components/bahmniapps/common/displaycontrols/pivottable/init.js"></script>
+        <script src="../components/bahmniapps/common/displaycontrols/pivottable/directives/pivotTable.js"></script>
+        <script src="../components/bahmniapps/common/displaycontrols/pivottable/services/pivotTableService.js"></script>
+
+        <script src="../components/bahmniapps/common/displaycontrols/custom/init.js"></script>
+        <script src="../components/bahmniapps/common/displaycontrols/custom/directives/customDisplayControl.js"></script>
+
+        <script src="../components/bahmniapps/common/obs/init.js"></script>
+        <script src="../components/bahmniapps/common/obs/models/observation.js"></script>
+        <script src="../components/bahmniapps/common/obs/mappers/observationMapper.js"></script>
+        <script src="../components/bahmniapps/common/obs/directives/showObservation.js"></script>
+        <script src="../components/bahmniapps/common/obs/util/observationUtil.js"></script>
+
+        <script src="../components/bahmniapps/common/displaycontrols/hint/init.js"></script>
+        <script src="../components/bahmniapps/common/displaycontrols/hint/directives/hint.js"></script>
+
+
+        <script src="../components/bahmniapps/common/domain/models/diagnosis.js"></script>
+        <script src="../components/bahmniapps/common/domain/mappers/diagnosisMapper.js"></script>
+        <script src="../components/bahmniapps/common/domain/services/diagnosisService.js"></script>
+        <script src="../components/bahmniapps/common/displaycontrols/diagnosis/init.js"></script>
+        <script src="../components/bahmniapps/common/displaycontrols/diagnosis/filters/primaryDiagnosisFirst.js"></script>
+        <script src="../components/bahmniapps/common/displaycontrols/diagnosis/directives/bahmniDiagnosis.js"></script>
+
+        <script src="../components/bahmniapps/common/i18n/init.js"></script>
+        <script src="../components/bahmniapps/common/i18n/bahmni-translate.js"></script>
+        <script src="../components/bahmniapps/common/i18n/services/mergeLocaleFilesService.js"></script>
 
         <script src="init.js"></script>
         <script src="app.js"></script>
         <script src="initialization.js"></script>
         <script src="defaults.js"></script>
         <script src="constants.js"></script>
-        <!--script to get number of watchers on page-->
-        <!--<script src="watchers.js"></script>-->
 
-        <script src="../common/ui-helper/directives/fallbackSrc.js"></script>
-        <script src="directives/addressFields.js"></script>
-        <script src="directives/topDownAddressFields.js"></script>
-        <script src="directives/printOptions.js"></script>
-        <script src="directives/patientRelationship.js"></script>
-        <script src="controllers/navigationController.js"></script>
-        <script src="controllers/searchPatientController.js"></script>
-        <script src="controllers/patientCommonController.js"></script>
-        <script src="controllers/createPatientController.js"></script>
-        <script src="controllers/editPatientController.js"></script>
-        <script src="directives/patientAction.js"></script>
-        <script src="controllers/visitController.js"></script>
-        <script src="services/patientService.js"></script>
+        <script src="../components/bahmniapps/common/ui-helper/directives/fallbackSrc.js"></script>
+        <script src="../components/bahmniapps/registration/directives/addressFields.js"></script>
+        <script src="../components/bahmniapps/registration/directives/topDownAddressFields.js"></script>
+        <script src="../components/bahmniapps/registration/directives/printOptions.js"></script>
+        <script src="../components/bahmniapps/registration/directives/patientRelationship.js"></script>
+        <script src="../components/bahmniapps/registration/controllers/navigationController.js"></script>
+        <script src="../components/bahmniapps/registration/controllers/searchPatientController.js"></script>
+        <script src="../components/bahmniapps/registration/controllers/patientCommonController.js"></script>
+        <script src="../components/bahmniapps/registration/controllers/createPatientController.js"></script>
+        <script src="../components/bahmniapps/registration/controllers/editPatientController.js"></script>
+        <script src="../components/bahmniapps/registration/directives/patientAction.js"></script>
+        <script src="../components/bahmniapps/registration/controllers/visitController.js"></script>
+        <script src="../components/bahmniapps/registration/services/patientService.js"></script>
+        <script src="../components/bahmniapps/registration/services/patientAttributeService.js"></script>
+        <script src="../components/bahmniapps/registration/services/addressHierarchyService.js"></script>
+        <script src="../components/bahmniapps/registration/services/registrationCardPrinter.js"></script>
+        <script src="../components/bahmniapps/common/domain/mappers/attributeTypeMapper.js"></script>
+        <script src="../components/bahmniapps/common/domain/mappers/attributeFormatter.js"></script>
+        <script src="../components/bahmniapps/registration/mappers/openmrsPatientMapper.js"></script>
+        <script src="../components/bahmniapps/registration/mappers/createPatientRequestMapper.js"></script>
+        <script src="../components/bahmniapps/registration/mappers/updatePatientRequestMapper.js"></script>
+        <script src="../components/bahmniapps/registration/models/patient.js"></script>
+        <script src="../components/bahmniapps/registration/models/identifier.js"></script>
+        <script src="../components/bahmniapps/registration/models/identifiers.js"></script>
+        <script src="../components/bahmniapps/registration/models/preferences.js"></script>
+        <script src="../components/bahmniapps/registration/models/registrationEncounterConfig.js"></script>
+        <script src="../components/bahmniapps/registration/models/patientConfig.js"></script>
 
-
-        <!--<script src="services/visitService.js"></script>-->
-        <script src="services/patientAttributeService.js"></script>
-        <script src="services/addressHierarchyService.js"></script>
-        <script src="services/registrationCardPrinter.js"></script>
-        <script src="../common/domain/mappers/attributeTypeMapper.js"></script>
-        <script src="../common/domain/mappers/attributeFormatter.js"></script>
-        <script src="mappers/openmrsPatientMapper.js"></script>
-        <script src="mappers/createPatientRequestMapper.js"></script>
-        <script src="mappers/updatePatientRequestMapper.js"></script>
-        <script src="models/patient.js"></script>
-        <script src="models/identifier.js"></script>
-        <script src="models/identifiers.js"></script>
-        <script src="models/preferences.js"></script>
-        <script src="models/registrationEncounterConfig.js"></script>
-        <script src="models/patientConfig.js"></script>
-
-        <script src="../common/patient-search/constants.js"></script>
-        <script src="../common/patient-search/models/search.js"></script>
-        <script src="../common/patient-search/init.js"></script>
-        <script src="../common/patient-search/controllers/patientsListController.js"></script>
+        <script src="../components/bahmniapps/common/patient-search/constants.js"></script>
+        <script src="../components/bahmniapps/common/patient-search/models/search.js"></script>
+        <script src="../components/bahmniapps/common/patient-search/init.js"></script>
+        <script src="../components/bahmniapps/common/patient-search/controllers/patientsListController.js"></script>
 
         <script src="initialization.js"></script>
         <script src="offlineRegistrationInitialization.js"></script>
@@ -329,8 +324,8 @@
             <script src="../common/domain/offline/chrome/chromeEncounterService.js"></script>
             <script src="../common/domain/offline/chrome/chromeObservationService.js"></script>
 
-            <script src="../common/util/dateTimeFormatter.js"></script>
-            <script src="../common/logging/offline/chromeLoggingService.js"></script>
+            <script src="../components/bahmniapps/common/util/dateTimeFormatter.js"></script>
+            <script src="../components/bahmniapps/common/logging/offline/chromeLoggingService.js"></script>
             <script src="../common/offline/services/chrome/chromeAppInfoStrategy.js"></script>
             <script src="../common/ui-helper/controllers/chromeAppUpdateController.js"></script>
 

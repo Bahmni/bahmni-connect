@@ -14,22 +14,15 @@ angular
         $urlRouterProvider.otherwise('/search');
         $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension|file):/);
         $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|local|data|blob|chrome-extension):/);
-
-        // @if DEBUG='production'
         $compileProvider.debugInfoEnabled(false);
-        // @endif
-
-        // @if DEBUG='development'
-        $compileProvider.debugInfoEnabled(true);
-        // @endif
 
         $stateProvider
             .state('search', {
                 url: '/search',
                 reloadOnSearch: false,
                 views: {
-                    'layout': {templateUrl: 'views/layout.html', controller: 'SearchPatientController'},
-                    'content@search': {templateUrl: 'views/search.html'}
+                    'layout': {templateUrl: '../components/bahmniapps/registration/views/layout.html', controller: 'SearchPatientController'},
+                    'content@search': {templateUrl: '../components/bahmniapps/registration/views/search.html'}
                 },
                 resolve: {
                     offlineDb: function (offlineDbInitialization) {
@@ -43,8 +36,8 @@ angular
             .state('newpatient', {
                 url: '/patient/new',
                 views: {
-                    'layout': {templateUrl: 'views/layout.html', controller: 'CreatePatientController'},
-                    'content@newpatient': {templateUrl: 'views/newpatient.html'}
+                    'layout': {templateUrl: '../components/bahmniapps/registration/views/layout.html', controller: 'CreatePatientController'},
+                    'content@newpatient': {templateUrl: '../components/bahmniapps/registration/views/newpatient.html'}
                 },
                 resolve: {
                     offlineDb: function (offlineDbInitialization) {
@@ -73,24 +66,24 @@ angular
             .state('patient.edit', {
                 url: '?serverError',
                 views: {
-                    'layout': {templateUrl: 'views/layout.html', controller: 'EditPatientController'},
-                    'content@patient.edit': {templateUrl: 'views/editpatient.html'},
+                    'layout': {templateUrl: '../components/bahmniapps/registration/views/layout.html', controller: 'EditPatientController'},
+                    'content@patient.edit': {templateUrl: '../components/bahmniapps/registration/views/editpatient.html'},
                     'headerExtension@patient.edit': {template: '<div print-options></div>'}
                 }
             })
             .state('patient.visit', {
                 url: '/visit',
                 views: {
-                    'layout': {templateUrl: 'views/layout.html', controller: 'VisitController'},
-                    'content@patient.visit': {templateUrl: 'views/visit.html'},
+                    'layout': {templateUrl: '../components/bahmniapps/registration/views/layout.html', controller: 'VisitController'},
+                    'content@patient.visit': {templateUrl: '../components/bahmniapps/registration/views/visit.html'},
                     'headerExtension@patient.visit': {template: '<div print-options></div>'}
                 }
             })
             .state('patient.printSticker', {
                 url: '/printSticker',
                 views: {
-                    'layout': {templateUrl: 'views/layout.html'},
-                    'content@patient.printSticker': {templateUrl: 'views/notimplemented.html'}
+                    'layout': {templateUrl: '../components/bahmniapps/registration/views/layout.html'},
+                    'content@patient.printSticker': {templateUrl: '../components/bahmniapps/registration/views/notimplemented.html'}
                 }
             });
         $bahmniTranslateProvider.init({app: 'registration', shouldMerge: true});

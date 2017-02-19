@@ -9,18 +9,11 @@ angular.module('bahmni.home', ['ui.router', 'httpErrorInterceptor', 'bahmni.comm
 
             $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension|file):/);
 
-        // @if DEBUG='production'
-            $compileProvider.debugInfoEnabled(false);
-        // @endif
-
-        // @if DEBUG='development'
-            $compileProvider.debugInfoEnabled(true);
-        // @endif
             $stateProvider
             .state('dashboard',
                 {
                     url: '/dashboard',
-                    templateUrl: 'views/dashboard.html',
+                    templateUrl: '../components/bahmniapps/home/views/dashboard.html',
                     controller: 'DashboardController',
                     data: {extensionPointId: 'org.bahmni.home.dashboard'},
                     resolve: {
@@ -36,12 +29,12 @@ angular.module('bahmni.home', ['ui.router', 'httpErrorInterceptor', 'bahmni.comm
                     }
                 }).state('changePassword', {
                     url: '/changePassword',
-                    templateUrl: 'views/changePassword.html',
+                    templateUrl: '../components/bahmniapps/home/views/changePassword.html',
                     controller: 'ChangePasswordController'
                 }).state('login',
                 {
                     url: '/login?showLoginMessage',
-                    templateUrl: 'views/login.html',
+                    templateUrl: '../components/bahmniapps/home/views/login.html',
                     controller: 'LoginController',
                     resolve: {
                         offlineDb: function (offlineDbInitialization) {
@@ -58,7 +51,7 @@ angular.module('bahmni.home', ['ui.router', 'httpErrorInterceptor', 'bahmni.comm
             .state('errorLog', {
                 url: '/errorLog',
                 controller: 'ErrorLogController',
-                templateUrl: 'views/errorLog.html',
+                templateUrl: '../components/bahmniapps/home/views/errorLog.html',
                 data: {
                     backLinks: [
                         {label: "Home", state: "dashboard", accessKey: "h", icon: "fa-home"}
