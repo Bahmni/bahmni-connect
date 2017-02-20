@@ -37,7 +37,7 @@ angular
                 url: '/patient/new',
                 views: {
                     'layout': {templateUrl: '../components/bahmniapps/registration/views/layout.html', controller: 'CreatePatientController'},
-                    'content@newpatient': {templateUrl: '../components/bahmniapps/registration/views/newpatient.html'}
+                    'content@newpatient': {templateUrl: 'views/newpatient.html'}
                 },
                 resolve: {
                     offlineDb: function (offlineDbInitialization) {
@@ -67,7 +67,7 @@ angular
                 url: '?serverError',
                 views: {
                     'layout': {templateUrl: '../components/bahmniapps/registration/views/layout.html', controller: 'EditPatientController'},
-                    'content@patient.edit': {templateUrl: '../components/bahmniapps/registration/views/editpatient.html'},
+                    'content@patient.edit': {templateUrl: 'views/editpatient.html'},
                     'headerExtension@patient.edit': {template: '<div print-options></div>'}
                 }
             })
