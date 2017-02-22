@@ -10,7 +10,7 @@ angular.module('bahmni.common.offline').service('offlineService', ['$rootScope',
     };
 
     this.isOfflineApp = function () {
-        return true;
+        return this.isAndroidApp() || this.isChromeApp();
     };
 
     this.isAndroidApp = function () {

@@ -597,15 +597,11 @@ module.exports = function (grunt) {
         'rename:minified'
     ]);
 
-    grunt.registerTask('dev', ['build', 'test']);
     grunt.registerTask('devchrome', ['devbundle', 'preprocess:chrome', 'clean:chromeApp', 'copy:chromeApp']);
     grunt.registerTask('devandroid', ['devbundle', 'preprocess:android', 'clean:androidApp', 'copy:androidApp']);
 
-    grunt.registerTask('default', ['bundle', 'uglify-and-rename', 'test', 'preprocess:web']);
-
-    grunt.registerTask('web', ['test', 'preprocess:web']);
-    grunt.registerTask('chrome', ['karma:chrome', 'preprocess:chrome']);
-    grunt.registerTask('android', ['karma:android', 'preprocess:android']);
+    grunt.registerTask('chrome', ['bundle', 'karma:chrome', 'uglify-and-rename', 'preprocess:chrome']);
+    grunt.registerTask('android', ['bundle', 'uglify-and-rename', 'karma:android', 'preprocess:android']);
 
     grunt.registerTask('bower-install', 'install dependencies using bower', function () {
         var exec = require('child_process').exec;
