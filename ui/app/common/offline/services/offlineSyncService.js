@@ -17,17 +17,22 @@ angular.module('bahmni.common.offline')
             };
 
             var savePatientDataFromFile = function () {
-                return offlineDbService.getMarker("patient").then(function (marker) {
-                    var filter = marker.filters[0];
-                    return $http.get(Bahmni.Common.Constants.bulkPatientUrl + filter).then(function (response) {
-                        var patients = response.data;
-                        return patients.map(function (patient) {
-                            return saveData({category: 'patient'}, {data: patient}).then(function () {
-                                return updateMarker(patient, 'patient');
+                var eventLogUuid;
+                var defer = $q.defer();
+                offlineDbService.getMarker("patient").then(function (marker) {
+                    var promises = marker.filters.map(function (filter) {
+                        return $http.get(Bahmni.Common.Constants.bulkPatientUrl + filter).then(function (response) {
+                            eventLogUuid = response.data.lastReadEventUuid;
+                            return response.data.patients.map(function (patient) {
+                                return saveData({category: 'patient'}, {data: patient});
                             });
                         });
                     });
+                    $q.all(promises).then(function () {
+                        defer.resolve(eventLogUuid);
+                    });
                 });
+                return defer.promise;
             };
 
             var sync = function (isInitSync) {
@@ -44,7 +49,10 @@ angular.module('bahmni.common.offline')
                     }
                 });
                 if (isInitSync) {
-                    promises.push(savePatientDataFromFile());
+                    var patientPromise = savePatientDataFromFile().then(function (uuid) {
+                        return updateMarker({uuid: uuid}, "patient");
+                    });
+                    promises.push(patientPromise);
                 }
                 return $q.all(promises);
             };
