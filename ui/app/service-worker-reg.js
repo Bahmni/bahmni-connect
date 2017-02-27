@@ -1,7 +1,7 @@
 var registerServiceWorker = function () {
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./service-worker.js')
-            .then(function (registration) {
+             .then(function (registration) {
                 registration.onupdatefound = function () {
                     var installingWorker = registration.installing;
                     installingWorker.onstatechange = function () {
@@ -12,16 +12,16 @@ var registerServiceWorker = function () {
                             }
                             break;
                         case 'activated':
-                            window.location = "home/index.html";
+                            window.location = "offline/index.html#/device/chrome-app";
                             break;
                         case 'installed':
-                            window.location = "home/index.html";
+                            window.location = "offline/index.html#/device/chrome-app";
                             break;
                         }
                     };
                 };
                 if (registration.active && registration.active.state == 'activated') {
-                    window.location = "home/index.html";
+                    window.location = "offline/index.html#/device/chrome-app";
                 }
                 else {
                     console.log('Yey!', registration);
