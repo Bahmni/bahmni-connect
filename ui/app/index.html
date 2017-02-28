@@ -1,5 +1,28 @@
 <html>
+<head>
+    <title>Bahmni Home</title>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="true">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes, minimal-ui" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+
+    <!-- build:css offline.min.css -->
+    <link rel="stylesheet" href="styles/offline.css"/>
+    <link rel="stylesheet" href="components/ngDialog/css/ngDialog.min.css"/>
+    <link rel="stylesheet" href="components/ngDialog/css/ngDialog-theme-default.min.css"/>
+    <link rel="stylesheet" href="components/ngDialog/css/ngDialog-theme-plain.min.css"/>
+</head>
 <body>
-    <script src="./service-worker-reg.js"></script>
+<div class="reg-wrapper">
+    <div ng-include src="'../common/ui-helper/messages.html'"></div>
+    <div ui-view id="view-content"></div>
+    <div class="mask" ng-hide="showSyncInfo">
+        <div class="overlay">
+            <p class="message">Offline content is being synced</p>
+            <img src="images/spinner.gif" style="margin-top: 20px;"/>
+        </div>
+    </div>
+</div>
+<script src="./service-worker-reg.js"></script>
 </body>
 </html>

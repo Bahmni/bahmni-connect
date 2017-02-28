@@ -8,7 +8,6 @@ module.exports = function (grunt) {
     var yeomanConfig = {
         app: 'app',
         dist: 'dist',
-        chromeApp: '../../bahmni-offline/chrome/app/',
         androidApp: '../../bahmni-offline/android/www/app/',
         test: 'test',
         root: '.',
@@ -108,16 +107,6 @@ module.exports = function (grunt) {
                     }
                 ]
             },
-            chromeApp: {
-                files: [
-                    {
-                        dot: true,
-                        src: [
-                            '<%= yeoman.chromeApp %>/*'
-                        ]
-                    }
-                ]
-            },
             androidApp: {
                 files: [
                     {
@@ -200,6 +189,7 @@ module.exports = function (grunt) {
                 src: [
                     '<%= yeoman.dist %>/**/*.js',
                     '<%= yeoman.dist %>/**/*.css',
+                    '!<%= yeoman.dist %>/service-worker-events.js',
                     '!<%= yeoman.dist %>/**/registrationPrint.css',
                     '!<%= yeoman.dist %>/initWorker.js',
                     '!<%= yeoman.dist %>/components/sw-toolbox/sw-toolbox.js',
@@ -321,20 +311,6 @@ module.exports = function (grunt) {
                         dot: true,
                         cwd: '<%= yeoman.app %>',
                         dest: '<%= yeoman.dist %>',
-                        src: [
-                            '*.{ico,txt,html,js}',
-                            '*/**/*'
-                        ]
-                    }
-                ]
-            },
-            chromeApp: {
-                files: [
-                    {
-                        expand: true,
-                        dot: true,
-                        cwd: '<%= yeoman.dist %>',
-                        dest: '<%= yeoman.chromeApp %>',
                         src: [
                             '*.{ico,txt,html,js}',
                             '*/**/*'
@@ -597,7 +573,7 @@ module.exports = function (grunt) {
         'rename:minified'
     ]);
 
-    grunt.registerTask('devchrome', ['devbundle', 'preprocess:chrome', 'clean:chromeApp', 'copy:chromeApp']);
+    grunt.registerTask('devchrome', ['devbundle', 'preprocess:chrome']);
     grunt.registerTask('devandroid', ['devbundle', 'preprocess:android', 'clean:androidApp', 'copy:androidApp']);
 
     grunt.registerTask('chrome', ['bundle', 'karma:chrome', 'uglify-and-rename', 'preprocess:chrome']);

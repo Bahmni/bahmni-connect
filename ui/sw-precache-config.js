@@ -3,6 +3,7 @@ module.exports = {
     root: 'dist',
     templateFilePath: "service-worker-custom.tmpl",
     skipWaiting: false,
+    importScripts: ['service-worker-events.js'],
     ignoreUrlParametersMatching:[ /./],
     staticFileGlobs: [
         'dist/index.html',
