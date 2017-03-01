@@ -275,47 +275,17 @@
         <script src="../common/offline/services/chrome/chromeAppInfoStrategy.js"></script>
         <!-- endbuild -->
 
-
-        <!-- @ifdef ONLINE -->
-        <!-- build:js registration.min.web.js -->
-        <!--<script src="../common/domain/services/locationService.js"></script>-->
-        <!--<script src="services/defaultPatientServiceStrategy.js"></script>-->
-        <!--<script src="../common/domain/services/configurationService.js"></script>-->
-        <!--<script src="../common/app-framework/services/loadConfigService.js"></script>-->
-        <!--<script src="../common/domain/services/visitService.js"></script>-->
-        <!--<script src="../common/util/dateTimeFormatter.js"></script>-->
-        <!--<script src="../common/logging/services/loggingService.js"></script>-->
-        <!--<script src="../common/domain/services/observationsService.js"></script>-->
-        <!--<script src="../common/domain/services/encounterService.js"></script>-->
-        <!--<script src="../common/concept-set/services/conceptSetServices.js"></script>-->
-
-        <!-- endbuild -->
-        <!-- @endif -->
-
-        <!-- @ifdef ONLINE -->
-        <!--<script src="/bahmni_config/openmrs/apps/customDisplayControl/js/customControl.js"></script>-->
-        <!--<script src="/bahmni_config/openmrs/apps/clinical/formConditions.js"></script>-->
-        <!--<script src="/implementation_config/openmrs/apps/clinical/formConditions.js"></script>-->
-        <!--<script src="/bahmni_config/openmrs/apps/registration/attributesConditions.js"></script>-->
-        <!--<script src="/implementation_config/openmrs/apps/registration/attributesConditions.js"></script>-->
-        <!-- @endif -->
-
-        <!-- @ifdef OFFLINE -->
         <!-- build:js ../common.background.min.js -->
-        <!-- comments:toggle html -->
             <script src="../components/hustle/hustle.js"></script>
             <script src="../components/lovefield/dist/lovefield.min.js"></script>
             <script src="../common/offline/scheduler/eventQueue.js"></script>
             <script src="../common/offline/scheduler/scheduledSync.js"></script>
             <script src="../common/offline/scheduler/backgroundWorker.js"></script>
             <script src="../common/logging/offline/offlineLoggingService.js"></script>
-        <!-- endcomments -->
         <!-- endbuild -->
-        <!-- @endif -->
 
         <!-- @ifdef CHROME -->
         <!-- build:js registration.min.chrome.js -->
-        <!-- comments:toggle html -->
             <script src="offline/offlinePatientServiceStrategy.js"></script>
             <script src="../common/domain/offline/offlineObservationService.js"></script>
             <script src="../common/domain/offline/offlineEncounterService.js"></script>
@@ -333,8 +303,6 @@
             <script src="../common/logging/offline/chromeLoggingService.js"></script>
             <script src="../common/offline/services/chrome/chromeAppInfoStrategy.js"></script>
             <script src="../common/ui-helper/controllers/chromeAppUpdateController.js"></script>
-
-        <!-- endcomments -->
             <!-- endbuild -->
         <!-- @endif -->
 

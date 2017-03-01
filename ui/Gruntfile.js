@@ -135,6 +135,20 @@ module.exports = function (grunt) {
                 '<%= yeoman.app %>/styles/*.css'
             ]
         },
+        toggleComments: {
+            customOptions: {
+                options: {
+                    padding: 4,
+                    removeCommands: true
+                },
+                files: {
+                    "dist/offline/index.html": "dist/offline/index.html",
+                    "dist/registration/index.html": "dist/registration/index.html",
+                    "dist/clinical/index.html": "dist/clinical/index.html",
+                    "dist/home/index.html": "dist/home/index.html"
+                }
+            }
+        },
         eslint: {
             options: {
                 fix: false,
@@ -598,8 +612,8 @@ module.exports = function (grunt) {
     ]);
 
     grunt.registerTask('dev', ['build', 'test']);
-    grunt.registerTask('devchrome', ['devbundle', 'preprocess:chrome', 'clean:chromeApp', 'copy:chromeApp']);
-    grunt.registerTask('devandroid', ['devbundle', 'preprocess:android', 'clean:androidApp', 'copy:androidApp']);
+    grunt.registerTask('devchrome', ['devbundle', 'preprocess:chrome', 'toggleComments', 'clean:chromeApp', 'copy:chromeApp']);
+    grunt.registerTask('devandroid', ['devbundle', 'preprocess:android', 'toggleComments', 'clean:androidApp', 'copy:androidApp']);
 
     grunt.registerTask('default', ['bundle', 'uglify-and-rename', 'test', 'preprocess:web']);
 
