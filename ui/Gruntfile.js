@@ -520,11 +520,17 @@ module.exports = function (grunt) {
         'bundle'
     ]);
 
+
+    grunt.registerTask('uglify-and-rename', [
+        'uglify',
+        'rename:minified'
+    ]);
+
     grunt.registerTask('devchrome', ['devbundle', 'preprocess:chrome', "toggleComments", 'generate-sw']);
     grunt.registerTask('devandroid', ['devbundle', 'preprocess:android', "toggleComments", 'clean:androidApp', 'copy:androidApp']);
 
-    grunt.registerTask('chrome', ['bundle', 'uglify', 'karma:chrome', 'preprocess:chrome', 'generate-sw']);
-    grunt.registerTask('android', ['bundle', 'uglify', 'karma:android', 'preprocess:android']);
+    grunt.registerTask('chrome', ['bundle', 'uglify', 'toggleComments', 'karma:chrome', 'preprocess:chrome', 'generate-sw']);
+    grunt.registerTask('android', ['bundle', 'uglify','toggleComments', 'karma:android', 'preprocess:android']);
 
     grunt.registerTask('bower-install', 'install dependencies using bower', function () {
         var exec = require('child_process').exec;
