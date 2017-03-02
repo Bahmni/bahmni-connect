@@ -139,9 +139,6 @@ module.exports = function (grunt) {
             ]
         },
         karma: {
-            unit: {
-                configFile: 'test/config/karma.conf.js'
-            },
             chrome: {
                 configFile: 'test/config/karma.chrome.conf.js'
             },
@@ -149,7 +146,7 @@ module.exports = function (grunt) {
                 configFile: 'test/config/karma.android.conf.js'
             },
             auto: {
-                configFile: 'test/config/karma.conf.js',
+                configFile: 'test/config/karma.chrome.conf.js',
                 singleRun: false,
                 autoWatch: true
             }
@@ -364,20 +361,7 @@ module.exports = function (grunt) {
                         src: ['clinical.*.js'],
                         dest: '<%= yeoman.dist %>/clinical/'
                     },
-                    {expand: true, cwd: '<%= yeoman.dist %>', src: ['adt.*.js'], dest: '<%= yeoman.dist %>/adt/'},
-                    {
-                        expand: true,
-                        cwd: '<%= yeoman.dist %>',
-                        src: ['orders.*.js'],
-                        dest: '<%= yeoman.dist %>/orders/'
-                    },
                     {expand: true, cwd: '<%= yeoman.dist %>', src: ['home.*.js'], dest: '<%= yeoman.dist %>/home/'},
-                    {
-                        expand: true,
-                        cwd: '<%= yeoman.dist %>',
-                        src: ['admin.*.js'],
-                        dest: '<%= yeoman.dist %>/admin/'
-                    },
                     {
                         expand: true,
                         cwd: '<%= yeoman.dist %>',
@@ -388,20 +372,8 @@ module.exports = function (grunt) {
                     {
                         expand: true,
                         cwd: '<%= yeoman.dist %>',
-                        src: ['reports.*.js'],
-                        dest: '<%= yeoman.dist %>/reports/'
-                    },
-                    {
-                        expand: true,
-                        cwd: '<%= yeoman.dist %>',
                         src: ['registration.*.js'],
                         dest: '<%= yeoman.dist %>/registration/'
-                    },
-                    {
-                        expand: true,
-                        cwd: '<%= yeoman.dist %>',
-                        src: ['document-upload.*.js'],
-                        dest: '<%= yeoman.dist %>/document-upload/'
                     },
                     {
                         expand: true,
@@ -415,24 +387,11 @@ module.exports = function (grunt) {
                         src: ['clinical.*.css'],
                         dest: '<%= yeoman.dist %>/clinical/'
                     },
-                    {expand: true, cwd: '<%= yeoman.dist %>', src: ['adt.*.css'], dest: '<%= yeoman.dist %>/adt/'},
-                    {
-                        expand: true,
-                        cwd: '<%= yeoman.dist %>',
-                        src: ['orders.*.css'],
-                        dest: '<%= yeoman.dist %>/orders/'
-                    },
                     {
                         expand: true,
                         cwd: '<%= yeoman.dist %>',
                         src: ['home.*.css'],
                         dest: '<%= yeoman.dist %>/home/'
-                    },
-                    {
-                        expand: true,
-                        cwd: '<%= yeoman.dist %>',
-                        src: ['admin.*.css'],
-                        dest: '<%= yeoman.dist %>/admin/'
                     },
                     {
                         expand: true,
@@ -443,20 +402,8 @@ module.exports = function (grunt) {
                     {
                         expand: true,
                         cwd: '<%= yeoman.dist %>',
-                        src: ['reports.*.css'],
-                        dest: '<%= yeoman.dist %>/reports/'
-                    },
-                    {
-                        expand: true,
-                        cwd: '<%= yeoman.dist %>',
                         src: ['registration.*.css'],
                         dest: '<%= yeoman.dist %>/registration/'
-                    },
-                    {
-                        expand: true,
-                        cwd: '<%= yeoman.dist %>',
-                        src: ['document-upload.*.css'],
-                        dest: '<%= yeoman.dist %>/document-upload/'
                     }
                 ]
             }
@@ -502,15 +449,6 @@ module.exports = function (grunt) {
                     '<%= yeoman.dist %>/registration.min.js': '<%= yeoman.dist %>/registration.min.js',
                     '<%= yeoman.dist %>/home.min.js': '<%= yeoman.dist %>/home.min.js',
                     '<%= yeoman.dist %>/clinical.min.js': '<%= yeoman.dist %>/clinical.min.js'
-                }
-            },
-            web: {
-                src: ['<%= yeoman.dist %>/**/index.html'],
-                options: {
-                    inline: true,
-                    context: {
-                        ONLINE: true
-                    }
                 }
             },
             chrome: {
@@ -568,21 +506,25 @@ module.exports = function (grunt) {
         'bundle'
     ]);
 
-    grunt.registerTask('uglify-and-rename', [
-        'uglify',
-        'rename:minified'
-    ]);
-
-    grunt.registerTask('devchrome', ['devbundle', 'preprocess:chrome']);
+    grunt.registerTask('devchrome', ['devbundle', 'preprocess:chrome', 'generate-sw']);
     grunt.registerTask('devandroid', ['devbundle', 'preprocess:android', 'clean:androidApp', 'copy:androidApp']);
 
-    grunt.registerTask('chrome', ['bundle', 'karma:chrome', 'uglify-and-rename', 'preprocess:chrome']);
-    grunt.registerTask('android', ['bundle', 'uglify-and-rename', 'karma:android', 'preprocess:android']);
+    grunt.registerTask('chrome', ['build', 'uglify', 'karma:chrome', 'preprocess:chrome', 'generate-sw']);
+    grunt.registerTask('android', ['build', 'uglify', 'karma:android', 'preprocess:android']);
 
     grunt.registerTask('bower-install', 'install dependencies using bower', function () {
         var exec = require('child_process').exec;
         var cb = this.async();
         exec('bower install', function (err, stdout) {
+            console.log(stdout);
+            cb(!err);
+        });
+    });
+
+    grunt.registerTask('generate-sw', 'generate service worker file', function () {
+        var exec = require('child_process').exec;
+        var cb = this.async();
+        exec('npm run sw', function (err, stdout) {
             console.log(stdout);
             cb(!err);
         });
