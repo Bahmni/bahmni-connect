@@ -15,7 +15,7 @@ angular.module('bahmni.common.offline')
                         var promises = [];
                         Object.keys(categoryFilterMap).forEach(function (category) {
                             var promise = offlineDbService.getMarker(category).then(function (marker) {
-                                if (category === "patient" || category === "encounter") {
+                                if (category === "encounter") {
                                     offlineService.setItem("initSyncFilter", categoryFilterMap[category]);
                                 }
                                 var filters = (marker && marker.filters) || [];
