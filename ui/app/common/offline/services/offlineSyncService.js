@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('bahmni.common.offline')
-    .service('offlineSyncService', ['eventLogService', 'offlineDbService', '$q', 'offlineService', 'androidDbService', '$rootScope', 'loggingService', '$http',
-        function (eventLogService, offlineDbService, $q, offlineService, androidDbService, $rootScope, loggingService, $http) {
+    .service('offlineSyncService', ['eventLogService', 'offlineDbService', '$q', 'offlineService', 'androidDbService', '$rootScope', 'loggingService', '$http', '$timeout',
+        function (eventLogService, offlineDbService, $q, offlineService, androidDbService, $rootScope, loggingService, $http, $timeout) {
             var stages, categories;
 
             var initializeInitSyncInfo = function initializeCounters (categories) {
@@ -16,16 +16,31 @@ angular.module('bahmni.common.offline')
                 $rootScope.initSyncInfo.savedEvents = 0;
             };
 
+            var savePatients = function (patients, count) {
+                if (count != patients.length) {
+                    return saveData({category: 'patient'}, {data: patients[count]}).then(function () {
+                        updateSavedEventsCount('patient');
+                        return (offlineService.isAndroidApp() && count % 10 == 0) ?
+                            $timeout(savePatients, 100, true, patients, ++count) : savePatients(patients, ++count);
+                    });
+                }
+                return $q.when();
+            };
+
             var savePatientDataFromFile = function () {
                 var eventLogUuid;
                 var defer = $q.defer();
-                offlineDbService.getMarker("patient").then(function (marker) {
+                var category = 'patient';
+                offlineDbService.getMarker(category).then(function (marker) {
+                    if (marker.lastReadEventUuid) {
+                        return defer.resolve();
+                    }
                     var promises = marker.filters.map(function (filter) {
-                        return $http.get(Bahmni.Common.Constants.bulkPatientUrl + filter).then(function (response) {
+                        return $http.get(Bahmni.Common.Constants.preprocessedPatientUrl + filter).then(function (response) {
+                            updatePendingEventsCount(category, response.data.patients.length);
                             eventLogUuid = response.data.lastReadEventUuid;
-                            return response.data.patients.map(function (patient) {
-                                return saveData({category: 'patient'}, {data: patient});
-                            });
+
+                            return savePatients(response.data.patients, 0);
                         });
                     });
                     $q.all(promises).then(function () {
@@ -48,7 +63,7 @@ angular.module('bahmni.common.offline')
                         promises.push(syncForCategory(category, isInitSync));
                     }
                 });
-                if (isInitSync) {
+                if (isInitSync && _.indexOf(categories, 'patient') != -1) {
                     var patientPromise = savePatientDataFromFile().then(function (uuid) {
                         return updateMarker({uuid: uuid}, "patient");
                     });
@@ -59,7 +74,7 @@ angular.module('bahmni.common.offline')
 
             var syncForCategory = function (category, isInitSync) {
                 return offlineDbService.getMarker(category).then(function (marker) {
-                    if ((category == "patient" || category == "encounter") && isInitSync) {
+                    if (category == "encounter" && isInitSync) {
                         marker = angular.copy(marker);
                         marker.filters = offlineService.getItem("initSyncFilter");
                     }
@@ -220,7 +235,6 @@ angular.module('bahmni.common.offline')
                             attribute.hydratedObject = value.uuid;
                         }
                     }
-                    return;
                 });
             };
 

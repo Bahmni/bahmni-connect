@@ -1,32 +1,41 @@
 'use strict';
 
-var $scope, offlineDbService, eventLogService, offlineSyncService, offlineService, configurationService,loggingService;
+var $scope, offlineDbService, eventLogService, offlineSyncService, offlineService, configurationService, loggingService;
 
 describe('OfflineSyncService', function () {
-    var patient, mappedPatient, encounter, concept, error_log, labOrderResults;
+    var patient, mappedPatient, encounter, concept, error_log, labOrderResults, mappedIdentifiers;
     describe('initial sync ', function () {
         var httpBackend, $http, $rootScope;
         beforeEach(function () {
             module('bahmni.common.offline');
             module('bahmni.common.domain');
             module(function ($provide) {
-                mappedPatient = {
-                    patient: {
-                        uuid: 'dataUuid',
-                        person: {
-                            attributes: [{
-                                attributeType: {uuid: 'attributeUuid'},
-                                voided: false,
-                                value: 'attributeName',
-                                hydratedObject: 'attributeValueUuid'
-                            }]
-                        }
-                    }
-                };
+                mappedIdentifiers = [{
+                    "display": "Bahmni Id = GAN200076",
+                    "uuid": "9cc96aeb-2877-4340-b9fd-abba016a84a3",
+                    "identifier": "GAN200076",
+                    "identifierSourceUuid": "81f27b48-8792-11e5-ade6-005056b07f03",
+                    "identifierType": {"uuid": "81433852-3f10-11e4-adec-0800271c1b75", "primary": true},
+                    "voided": false,
+                    "primaryIdentifier": "GAN200076",
+                    "extraIdentifiers": {"Bahmni Sec Id": "SecodaryIdentifier"}
+                }, {
+                    "uuid": "99996aeb-2877-4340-b9fd-abba016a84a3",
+                    "identifier": "SecodaryIdentifier",
+                    "identifierSourceUuid": "99997b48-8792-11e5-ade6-005056b07f03",
+                    "identifierType": {
+                        "uuid": "99993852-3f10-11e4-adec-0800271c1b75",
+                        "display": "Bahmni Sec Id",
+                        "primary": false
+                    },
+                    "voided": false,
+                    "primaryIdentifier": "GAN200076",
+                    "extraIdentifiers": {"Bahmni Sec Id": "SecodaryIdentifier"}
+                }];
                 patient = {
                     uuid: 'dataUuid',
                     person: {
-                        attributes:[{
+                        attributes: [{
                             attributeType: {
                                 uuid: "attributeUuid"
                             },
@@ -63,7 +72,7 @@ describe('OfflineSyncService', function () {
                 concept = {
                     uuid: 'dataUuid',
                     data: {},
-                    parents: {"parentUuids" : []},
+                    parents: {"parentUuids": []},
                     name: 'concept'
                 };
                 error_log = {
@@ -76,7 +85,12 @@ describe('OfflineSyncService', function () {
                     patientUuid: "patientUuid",
                     visitUuid: "visitUuid"
                 };
-                labOrderResults = { results: {"results":[],"tabularResult":{"dates":[],"orders":[],"values":[]}}};
+                labOrderResults = {
+                    results: {
+                        "results": [],
+                        "tabularResult": {"dates": [], "orders": [], "values": []}
+                    }
+                };
                 $provide.value('offlineDbService', {
                     insertAddressHierarchy: function () {
                         return {
@@ -138,7 +152,7 @@ describe('OfflineSyncService', function () {
                             }
                         };
                     },
-                insertConceptAndUpdateHierarchy: function () {
+                    insertConceptAndUpdateHierarchy: function () {
                         return {
                             then: function (callback) {
                                 return callback({});
@@ -166,7 +180,7 @@ describe('OfflineSyncService', function () {
                             }
                         };
                     },
-                    getAttributeTypes: function(){
+                    getAttributeTypes: function () {
                         return {
                             then: function (callback) {
                                 var attributeTypes = {
@@ -189,7 +203,7 @@ describe('OfflineSyncService', function () {
                                 };
                                 return callback({
 
-                                    data: { events:[event] , pendingEventsCount:2 }
+                                    data: {events: [event], pendingEventsCount: 2}
                                 });
                             }
                         };
@@ -198,7 +212,7 @@ describe('OfflineSyncService', function () {
                     getDataForUrl: function (url) {
                         return {
                             then: function (callback) {
-                                if (_.includes(url,"concept")) {
+                                if (_.includes(url, "concept")) {
                                     return callback({data: concept});
                                 }
                                 return callback({data: patient});
@@ -211,39 +225,45 @@ describe('OfflineSyncService', function () {
                     isAndroidApp: function () {
                         return false;
                     },
-                    getItem: function() {
+                    getItem: function () {
                         return [202020];
                     },
-                    setItem: function() {}
+                    setItem: function () {
+                    }
                 });
 
                 $provide.value('loggingService', {
-                    logSyncError: function(errorUrl, status, stackTrace, payload) {
+                    logSyncError: function (errorUrl, status, stackTrace, payload) {
                         return {};
                     }
                 });
             });
         });
 
-        beforeEach(inject(['offlineSyncService', 'eventLogService', 'offlineDbService', 'configurationService', '$httpBackend', '$http', '$rootScope','loggingService','offlineService',
-            function (offlineSyncServiceInjected, eventLogServiceInjected, offlineDbServiceInjected, configurationServiceInjected, _$httpBackend_, http, rootScope, loggingServiceInjected,offlineServiceInjected) {
-            offlineSyncService = offlineSyncServiceInjected;
-            eventLogService = eventLogServiceInjected;
-            offlineDbService = offlineDbServiceInjected;
-            configurationService = configurationServiceInjected;
-            loggingService = loggingServiceInjected;
-            offlineService = offlineServiceInjected;
-            httpBackend = _$httpBackend_;
-            $http = http;
-            $rootScope = rootScope;
-        }]));
+        beforeEach(inject(['offlineSyncService', 'eventLogService', 'offlineDbService', 'configurationService', '$httpBackend', '$http', '$rootScope', 'loggingService', 'offlineService',
+            function (offlineSyncServiceInjected, eventLogServiceInjected, offlineDbServiceInjected, configurationServiceInjected, _$httpBackend_, http, rootScope, loggingServiceInjected, offlineServiceInjected) {
+                offlineSyncService = offlineSyncServiceInjected;
+                eventLogService = eventLogServiceInjected;
+                offlineDbService = offlineDbServiceInjected;
+                configurationService = configurationServiceInjected;
+                loggingService = loggingServiceInjected;
+                offlineService = offlineServiceInjected;
+                httpBackend = _$httpBackend_;
+                $http = http;
+                $rootScope = rootScope;
+            }]));
 
-        it('should read the meta data events from the beginning for each category', function() {
+        it('should read the meta data events from the beginning for each category', function () {
             var categories = [
                 'addressHierarchy',
                 'parentAddressHierarchy',
                 'offline-concepts'
             ];
+
+            httpBackend.whenGET(Bahmni.Common.Constants.preprocessedPatientUrl + "202020").respond({
+                lastReadEvaentUuid: "last",
+                patients: []
+            });
 
             spyOn(offlineService, 'getItem').and.returnValue(categories);
             spyOn(offlineDbService, 'getMarker').and.callThrough();
@@ -255,16 +275,17 @@ describe('OfflineSyncService', function () {
                     }
                 };
             });
-            spyOn(offlineDbService, 'insertMarker').and.callFake(function(){ return {
-                then: function (callback) {
-                    return callback;
+            spyOn(offlineDbService, 'insertMarker').and.callFake(function () {
+                return {
+                    then: function (callback) {
+                        return callback;
+                    }
                 }
-            }
             });
             spyOn(offlineDbService, 'insertAddressHierarchy').and.callThrough();
             spyOn(offlineDbService, 'insertConceptAndUpdateHierarchy').and.callThrough();
 
-            offlineSyncService.sync();
+            offlineSyncService.sync(true);
             $rootScope.$digest();
 
             expect(offlineDbService.getMarker.calls.count()).toBe(categories.length * 2);
@@ -283,20 +304,64 @@ describe('OfflineSyncService', function () {
             });
 
             expect(offlineDbService.insertAddressHierarchy).toHaveBeenCalledWith({uuid: 'url to get addressHierarchy object'});
-            expect(offlineDbService.insertConceptAndUpdateHierarchy).toHaveBeenCalledWith({results:[{uuid: 'url to get offline-concepts object'}]});
+            expect(offlineDbService.insertConceptAndUpdateHierarchy).toHaveBeenCalledWith({results: [{uuid: 'url to get offline-concepts object'}]});
             expect(offlineDbService.insertAddressHierarchy).toHaveBeenCalledWith({uuid: 'url to get parentAddressHierarchy object'});
             expect(offlineDbService.insertAddressHierarchy.calls.count()).toBe(2);
         });
 
-        it('should read the transactional events from the beginning for each category', function () {
+        it('should read the encounter events from the beginning for each category', function () {
+            var category = 'patient';
+            var patient1 = patient;
+            var patient2 = patient;
+            patient2.identifiers[0].identifier = "GAN2009";
+            var response = {lastReadEventUuid: "lastEventUuid", patients: [patient1, patient2]};
+            httpBackend.when('GET', Bahmni.Common.Constants.preprocessedPatientUrl + "202020").respond(200, response);
+
+            var marker = {markerName: 'patient', filters: [202020]};
+
+            spyOn(offlineService, 'getItem').and.callFake(function (key) {
+                return key == 'initSyncFilter' ? [202020] : [category];
+            });
+            spyOn(offlineService, 'setItem').and.callThrough();
+            spyOn(offlineDbService, 'getMarker').and.callThrough(function () {
+                return {
+                    then: function () {
+                        return marker;
+                    }
+                }
+            });
+            spyOn(eventLogService, 'getEventsFor').and.callThrough();
+            spyOn(eventLogService, 'getDataForUrl').and.callThrough();
+            spyOn(offlineDbService, 'insertMarker').and.callFake(function (name, uuid, filters) {
+                marker.lastReadEventUuid = uuid;
+                return {lastReadTime: new Date()}
+            });
+            spyOn(offlineDbService, 'insertAddressHierarchy').and.callThrough();
+            spyOn(offlineDbService, 'createPatient').and.callThrough();
+            spyOn(offlineDbService, 'createEncounter').and.callThrough();
+            spyOn(offlineDbService, 'insertLabOrderResults').and.callThrough();
+
+            offlineSyncService.sync(true);
+            $rootScope.$digest();
+            httpBackend.flush();
+
+
+            expect(offlineDbService.getMarker.calls.count()).toBe(2);
+            expect(offlineDbService.getMarker).toHaveBeenCalledWith(category);
+            expect(eventLogService.getEventsFor.calls.count()).toBe(0);
+
+            expect(offlineDbService.insertMarker).toHaveBeenCalledWith(category, "lastEventUuid", [202020]);
+            expect(offlineDbService.insertMarker.calls.count()).toBe(1);
+            expect(offlineDbService.createPatient.calls.count()).toBe(2);
+            expect(offlineDbService.createEncounter.calls.count()).toBe(0);
+            expect(offlineDbService.insertLabOrderResults.calls.count()).toBe(0);
+            expect(eventLogService.getDataForUrl.calls.count()).toBe(0);
+        });
+
+        it('should read the encounter events from the beginning for each category', function () {
             var categories = [
-                'transactionalData'
+                'encounter'
             ];
-            var patientEvent = {
-                object: 'patientUrl',
-                category: 'patient',
-                uuid: 'uuid1'
-            };
 
             var encounterEvent = {
                 object: 'encounterUrl',
@@ -310,46 +375,50 @@ describe('OfflineSyncService', function () {
                 uuid: 'uuid3'
             };
 
-            var marker = {markerName: 'transactionalData', filters: [202020]};
+            var marker = {markerName: 'encounter', filters: [202020]};
 
-            spyOn(offlineService, 'getItem').and.returnValue(categories);
+            spyOn(offlineService, 'getItem').and.callFake(function (key) {
+                return key == 'initSyncFilter' ? [202020] : categories;
+            });
             spyOn(offlineService, 'setItem').and.callThrough();
-            spyOn(offlineDbService, 'getMarker').and.callThrough(function(){ return {
-                then: function () {
-                    return marker;
+            spyOn(offlineDbService, 'getMarker').and.callThrough(function () {
+                return {
+                    then: function () {
+                        return marker;
+                    }
                 }
-            }
             });
             spyOn(eventLogService, 'getEventsFor').and.callFake(function (category) {
                 return {
                     then: function (callback) {
-                        if(!marker.lastReadEventUuid)
-                        return callback({
-                            data: { events:[patientEvent, encounterEvent, labOrderResultsEvent], pendingEventsCount: 3}
-                        });
+                        if (!marker.lastReadEventUuid)
+                            return callback({
+                                data: {
+                                    events: [encounterEvent, labOrderResultsEvent],
+                                    pendingEventsCount: 2
+                                }
+                            });
                     }
                 }
             });
             spyOn(eventLogService, 'getDataForUrl').and.callFake(function (url) {
                 return {
                     then: function (callback) {
-                        return callback({data: url === patientEvent.object ? patient : url === encounterEvent.object ? encounter : labOrderResults});
+                        return callback({data: url === encounterEvent.object ? encounter : labOrderResults});
                     }
                 };
             });
-            spyOn(offlineDbService, 'insertMarker').and.callFake(function(name,uuid,filters){
+            spyOn(offlineDbService, 'insertMarker').and.callFake(function (name, uuid, filters) {
                 marker.lastReadEventUuid = uuid;
                 return {lastReadTime: new Date()}
             });
-            spyOn(offlineDbService, 'insertAddressHierarchy').and.callThrough();
-            spyOn(offlineDbService, 'createPatient').and.callThrough();
             spyOn(offlineDbService, 'createEncounter').and.callThrough();
             spyOn(offlineDbService, 'insertLabOrderResults').and.callThrough();
 
-            offlineSyncService.sync();
+            offlineSyncService.sync(true);
             $rootScope.$digest();
 
-            expect(offlineDbService.getMarker.calls.count()).toBe(5);
+            expect(offlineDbService.getMarker.calls.count()).toBe(4);
 
             categories.forEach(function (category) {
                 expect(offlineDbService.getMarker).toHaveBeenCalledWith(category);
@@ -358,30 +427,20 @@ describe('OfflineSyncService', function () {
                     filters: [202020]
                 });
 
-                expect(offlineDbService.insertMarker).toHaveBeenCalledWith(category, "uuid1", [202020]);
                 expect(offlineDbService.insertMarker).toHaveBeenCalledWith(category, "uuid2", [202020]);
                 expect(offlineDbService.insertMarker).toHaveBeenCalledWith(category, "uuid3", [202020]);
-                expect(offlineDbService.insertMarker.calls.count()).toBe(3);
+                expect(offlineDbService.insertMarker.calls.count()).toBe(2);
             });
-            expect(eventLogService.getDataForUrl).toHaveBeenCalledWith(patientEvent.object);
             expect(eventLogService.getDataForUrl).toHaveBeenCalledWith(encounterEvent.object);
-            expect(offlineDbService.createPatient).toHaveBeenCalledWith({patient:patient});
             expect(offlineDbService.createEncounter).toHaveBeenCalledWith(encounter);
-            expect(offlineDbService.insertLabOrderResults).toHaveBeenCalledWith('5e94e7cb-e9fe-4763-e9ea-217bdaa85029',labOrderResults);
-            expect(offlineDbService.insertAddressHierarchy.calls.count()).toBe(0);
+            expect(offlineDbService.insertLabOrderResults).toHaveBeenCalledWith('5e94e7cb-e9fe-4763-e9ea-217bdaa85029', labOrderResults);
         });
 
         it("should skip attribute if it's attribute type is retired or attribute is voided", function () {
             var categories = [
-                'transactionalData'
+                'patient'
             ];
-            var patientEvent = {
-                object: 'patientUrl',
-                category: 'patient',
-                uuid: 'uuid1'
-            };
-
-            var responsePatient = patient;
+            var responsePatient = angular.copy(patient);
             var attributeOne = {
                 attributeType: {
                     uuid: "attributeUuidOne",
@@ -406,55 +465,44 @@ describe('OfflineSyncService', function () {
             };
             responsePatient.person.attributes.push(attributeOne);
             responsePatient.person.attributes.push(attributeTwo);
+            var response = {lastReadEventUuid: "lastEventUuid", patients: [responsePatient]};
+            httpBackend.when('GET', Bahmni.Common.Constants.preprocessedPatientUrl + "202020").respond(200, response);
             var marker = {markerName: 'transactionalData', filters: [202020]};
 
             spyOn(offlineService, 'getItem').and.returnValue(categories);
             spyOn(offlineService, 'setItem').and.callThrough();
-            spyOn(offlineDbService, 'getMarker').and.callThrough(function(){ return {
-                then: function () {
-                    return marker;
-                }
-            }});
-            spyOn(eventLogService, 'getEventsFor').and.callFake(function (category) {
+            spyOn(offlineDbService, 'getMarker').and.callThrough(function () {
                 return {
-                    then: function (callback) {
-                        if(!marker.lastReadEventUuid)
-                        return callback({
-                            data: { events:[patientEvent], pendingEventsCount: 3}
-                        });
+                    then: function () {
+                        return marker;
                     }
                 }
             });
-            spyOn(eventLogService, 'getDataForUrl').and.callFake(function (url) {
-                return {
-                    then: function (callback) {
-                        return callback({data: responsePatient});
-                    }
-                };
-            });
-            spyOn(offlineDbService, 'insertMarker').and.callFake(function(name,uuid,filters){
+            spyOn(eventLogService, 'getEventsFor').and.callThrough();
+            spyOn(eventLogService, 'getDataForUrl').and.callThrough();
+            spyOn(offlineDbService, 'insertMarker').and.callFake(function (name, uuid, filters) {
                 marker.lastReadEventUuid = uuid;
                 return {lastReadTime: new Date()}
             });
             spyOn(offlineDbService, 'createPatient').and.callThrough();
 
-            offlineSyncService.sync();
+            offlineSyncService.sync(true);
             $rootScope.$digest();
+            httpBackend.flush();
 
-            expect(offlineDbService.getMarker.calls.count()).toBe(3);
-
+            expect(offlineDbService.getMarker.calls.count()).toBe(2);
             categories.forEach(function (category) {
                 expect(offlineDbService.getMarker).toHaveBeenCalledWith(category);
-                expect(eventLogService.getEventsFor).toHaveBeenCalledWith(category, {
-                    markerName: category,
-                    filters: [202020]
-                });
-
-                expect(offlineDbService.insertMarker).toHaveBeenCalledWith(category, "uuid1", [202020]);
+                expect(offlineDbService.insertMarker).toHaveBeenCalledWith(category, "lastEventUuid", [202020]);
                 expect(offlineDbService.insertMarker.calls.count()).toBe(1);
             });
-            expect(eventLogService.getDataForUrl).toHaveBeenCalledWith(patientEvent.object);
-            expect(offlineDbService.createPatient).toHaveBeenCalledWith({patient:patient});
+            expect(eventLogService.getDataForUrl.calls.count()).toBe(0);
+            expect(eventLogService.getEventsFor.calls.count()).toBe(0);
+            responsePatient.person.attributes[0].value = "attributeName";
+            responsePatient.person.attributes[0].hydratedObject = "attributeValueUuid";
+            responsePatient.identifiers = mappedIdentifiers;
+
+            expect(offlineDbService.createPatient).toHaveBeenCalledWith({patient: responsePatient});
         });
 
 
@@ -468,19 +516,19 @@ describe('OfflineSyncService', function () {
             spyOn(eventLogService, 'getEventsFor').and.callThrough();
 
             spyOn($rootScope, '$broadcast');
-            spyOn(eventLogService, 'getDataForUrl').and.callFake(function(){
+            spyOn(eventLogService, 'getDataForUrl').and.callFake(function () {
                 return $http.get("some url");
             });
             spyOn(loggingService, 'logSyncError').and.callThrough();
             httpBackend.expectGET("some url").respond(500, error_log.data);
-            offlineSyncService.sync();
+            offlineSyncService.sync(true);
             httpBackend.flush();
             $rootScope.$digest();
 
 
             expect(offlineDbService.getMarker).toHaveBeenCalled();
             expect(offlineDbService.getMarker.calls.count()).toBe(1);
-            expect(eventLogService.getEventsFor).toHaveBeenCalledWith('offline-concepts',{
+            expect(eventLogService.getEventsFor).toHaveBeenCalledWith('offline-concepts', {
                 markerName: 'offline-concepts',
                 filters: [202020]
             });
@@ -500,7 +548,7 @@ describe('OfflineSyncService', function () {
                 patient = {
                     uuid: 'dataUuid',
                     person: {
-                        attributes:[{
+                        attributes: [{
                             attributeType: {
                                 uuid: "attributeUuid"
                             },
@@ -537,7 +585,7 @@ describe('OfflineSyncService', function () {
                 concept = {
                     uuid: 'dataUuid',
                     data: {},
-                    parents: {"parentUuids" : []},
+                    parents: {"parentUuids": []},
                     name: 'concept'
                 };
                 $provide.value('offlineDbService', {
@@ -551,18 +599,22 @@ describe('OfflineSyncService', function () {
                     getMarker: function (category) {
                         return {
                             then: function (callback) {
-                                return callback({markerName: category, lastReadEventUuid: 'lastReadUuid', filters: [202020]});
+                                return callback({
+                                    markerName: category,
+                                    lastReadEventUuid: 'lastReadUuid',
+                                    filters: [202020]
+                                });
                             }
                         }
                     },
                     insertMarker: function () {
                         return {
                             then: function (callback) {
-                                return ;
+                                return;
                             }
                         };
                     },
-                    getAttributeTypes: function(){
+                    getAttributeTypes: function () {
                         return {
                             then: function (callback) {
                                 var attributeTypes = {
@@ -615,11 +667,11 @@ describe('OfflineSyncService', function () {
                                     uuid: 'eventuuid'
                                 };
                                 return callback({
-                                    data: { events:[event] , pendingEventsCount:1 }
+                                    data: {events: [event], pendingEventsCount: 1}
                                 });
                             }
                         };
-                    },getAddressEventsFor: function () {
+                    }, getAddressEventsFor: function () {
                         return {
                             then: function (callback) {
                                 var event = {
@@ -628,7 +680,7 @@ describe('OfflineSyncService', function () {
                                     uuid: 'eventuuid'
                                 };
                                 return callback({
-                                    data: { events:[event] , pendingEventsCount:1 }
+                                    data: {events: [event], pendingEventsCount: 1}
                                 });
                             }
                         };
@@ -642,7 +694,7 @@ describe('OfflineSyncService', function () {
                                     uuid: 'eventuuid'
                                 };
                                 return callback({
-                                    data: { events:[conceptEvent] , pendingEventsCount:1 }
+                                    data: {events: [conceptEvent], pendingEventsCount: 1}
                                 });
                             }
                         };
@@ -662,31 +714,32 @@ describe('OfflineSyncService', function () {
                     isAndroidApp: function () {
                         return false;
                     },
-                    getItem: function() {
+                    getItem: function () {
                         return [202020];
                     },
-                    setItem: function() {}
+                    setItem: function () {
+                    }
 
                 });
 
                 $provide.value('loggingService', {
-                    logSyncError: function(errorUrl, status, stackTrace, payload) {
+                    logSyncError: function (errorUrl, status, stackTrace, payload) {
                         return {};
                     }
                 });
             });
         });
 
-        beforeEach(inject(['offlineSyncService', 'eventLogService', 'offlineDbService', 'configurationService', '$rootScope', 'loggingService','offlineService',
+        beforeEach(inject(['offlineSyncService', 'eventLogService', 'offlineDbService', 'configurationService', '$rootScope', 'loggingService', 'offlineService',
             function (offlineSyncServiceInjected, eventLogServiceInjected, offlineDbServiceInjected, configurationServiceInjected, rootScope, loggingServiceInjected, offlineServiceInjected) {
-            offlineSyncService = offlineSyncServiceInjected;
-            eventLogService = eventLogServiceInjected;
-            offlineDbService = offlineDbServiceInjected;
-            configurationService = configurationServiceInjected;
-            loggingService = loggingServiceInjected;
-            offlineService = offlineServiceInjected;
-            $rootScope = rootScope;
-        }]));
+                offlineSyncService = offlineSyncServiceInjected;
+                eventLogService = eventLogServiceInjected;
+                offlineDbService = offlineDbServiceInjected;
+                configurationService = configurationServiceInjected;
+                loggingService = loggingServiceInjected;
+                offlineService = offlineServiceInjected;
+                $rootScope = rootScope;
+            }]));
 
 
         it('should read parent events from the last read uuid', function () {
@@ -707,11 +760,12 @@ describe('OfflineSyncService', function () {
                     }
                 };
             });
-            spyOn(offlineDbService, 'insertMarker').and.callFake(function(){ return {
-                then: function (callback) {
-                    return callback;
+            spyOn(offlineDbService, 'insertMarker').and.callFake(function () {
+                return {
+                    then: function (callback) {
+                        return callback;
+                    }
                 }
-            }
             });
             spyOn(offlineDbService, 'insertAddressHierarchy').and.callThrough();
             spyOn(offlineDbService, 'insertConceptAndUpdateHierarchy').and.callThrough();
@@ -723,7 +777,7 @@ describe('OfflineSyncService', function () {
                 expect(offlineDbService.getMarker).toHaveBeenCalledWith(category);
                 expect(eventLogService.getEventsFor).toHaveBeenCalledWith(category, {
                     markerName: category,
-                    lastReadEventUuid : 'lastReadUuid',
+                    lastReadEventUuid: 'lastReadUuid',
                     filters: [202020]
                 });
                 var url = 'url to get ' + category + ' object';
@@ -733,7 +787,7 @@ describe('OfflineSyncService', function () {
             });
 
             expect(offlineDbService.insertAddressHierarchy).toHaveBeenCalledWith({uuid: 'url to get addressHierarchy object'});
-            expect(offlineDbService.insertConceptAndUpdateHierarchy).toHaveBeenCalledWith({results:[{uuid: 'url to get offline-concepts object'}]});
+            expect(offlineDbService.insertConceptAndUpdateHierarchy).toHaveBeenCalledWith({results: [{uuid: 'url to get offline-concepts object'}]});
             expect(offlineDbService.insertAddressHierarchy).toHaveBeenCalledWith({uuid: 'url to get parentAddressHierarchy object'});
             expect(offlineDbService.insertAddressHierarchy.calls.count()).toBe(2);
 
@@ -768,18 +822,19 @@ describe('OfflineSyncService', function () {
 
             spyOn(offlineService, 'getItem').and.returnValue(categories);
             spyOn(offlineService, 'setItem').and.callThrough();
-            spyOn(offlineDbService, 'getMarker').and.callThrough(function(){ return {
-                then: function () {
-                    return marker;
+            spyOn(offlineDbService, 'getMarker').and.callThrough(function () {
+                return {
+                    then: function () {
+                        return marker;
+                    }
                 }
-            }
             });
             spyOn(eventLogService, 'getEventsFor').and.callFake(function (category) {
                 return {
                     then: function (callback) {
-                        if(!marker.lastReadEventUuid)
+                        if (!marker.lastReadEventUuid)
                             return callback({
-                                data: { events:[patientEvent] , pendingEventsCount:1 }
+                                data: {events: [patientEvent], pendingEventsCount: 1}
                             });
                     }
                 }
@@ -791,7 +846,7 @@ describe('OfflineSyncService', function () {
                     }
                 };
             });
-            spyOn(offlineDbService, 'insertMarker').and.callFake(function(name,uuid,filters){
+            spyOn(offlineDbService, 'insertMarker').and.callFake(function (name, uuid, filters) {
                 marker.lastReadEventUuid = uuid;
                 return {lastReadTime: new Date()}
             });
@@ -801,13 +856,13 @@ describe('OfflineSyncService', function () {
             offlineSyncService.sync();
             $rootScope.$digest();
 
-            expect(offlineDbService.getMarker.calls.count()).toBe(3 );
+            expect(offlineDbService.getMarker.calls.count()).toBe(3);
 
             categories.forEach(function (category) {
                 expect(offlineDbService.getMarker).toHaveBeenCalledWith(category);
                 expect(eventLogService.getEventsFor).toHaveBeenCalledWith(category, {
                     markerName: category,
-                    lastReadEventUuid : 'lastReadUuid',
+                    lastReadEventUuid: 'lastReadUuid',
                     filters: [202020]
                 });
                 expect(eventLogService.getEventsFor.calls.count()).toBe(2);
@@ -817,7 +872,7 @@ describe('OfflineSyncService', function () {
             });
             expect(eventLogService.getDataForUrl).toHaveBeenCalledWith(patientEvent.object);
             expect(eventLogService.getDataForUrl.calls.count()).toBe(1);
-            expect(offlineDbService.createPatient).toHaveBeenCalledWith({patient:patient});
+            expect(offlineDbService.createPatient).toHaveBeenCalledWith({patient: patient});
             expect(offlineDbService.insertAddressHierarchy.calls.count()).toBe(0);
         });
 
@@ -860,7 +915,7 @@ describe('OfflineSyncService', function () {
                     then: function (callback) {
                         if (!marker.lastReadEventUuid)
                             return callback({
-                                data: { events:[patientEvent] , pendingEventsCount:1 }
+                                data: {events: [patientEvent], pendingEventsCount: 1}
                             });
                     }
                 }
