@@ -6,8 +6,8 @@ set -e
 npm cache clean
 bower cache clean
 
-npm-install
-bower-install
+npm install
+bower install
 bundle
 
 mkdir chromeDist
