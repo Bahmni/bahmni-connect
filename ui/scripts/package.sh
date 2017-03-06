@@ -6,6 +6,10 @@ set -e
 npm cache clean
 bower cache clean
 
+npm-install
+bower-install
+bundle
+
 mkdir chromeDist
 mkdir androidDist
 

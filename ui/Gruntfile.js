@@ -509,8 +509,8 @@ module.exports = function (grunt) {
     grunt.registerTask('devchrome', ['devbundle', 'preprocess:chrome', 'generate-sw']);
     grunt.registerTask('devandroid', ['devbundle', 'preprocess:android', 'clean:androidApp', 'copy:androidApp']);
 
-    grunt.registerTask('chrome', ['build', 'uglify', 'karma:chrome', 'preprocess:chrome', 'generate-sw']);
-    grunt.registerTask('android', ['build', 'uglify', 'karma:android', 'preprocess:android']);
+    grunt.registerTask('chrome', ['bundle', 'uglify', 'karma:chrome', 'preprocess:chrome', 'generate-sw']);
+    grunt.registerTask('android', ['bundle', 'uglify', 'karma:android', 'preprocess:android']);
 
     grunt.registerTask('bower-install', 'install dependencies using bower', function () {
         var exec = require('child_process').exec;
