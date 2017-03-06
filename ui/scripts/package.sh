@@ -8,7 +8,7 @@ bower cache clean
 
 npm install
 bower install
-bundle
+grunt bundle
 
 mkdir chromeDist
 mkdir androidDist
