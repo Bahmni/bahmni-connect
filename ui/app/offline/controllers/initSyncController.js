@@ -78,7 +78,7 @@ angular.module('bahmni.common.offline')
             }).then(function (dbName) {
                 if (syncStatus && syncStatus[dbName] && syncStatus[dbName][loginLocationUuid] === "complete") {
                     $state.go('dashboard');
-                } else if (syncStatus && syncStatus[dbName] && !syncStatus[dbName][loginLocationUuid]) {
+                } else if (syncStatus && !(syncStatus[dbName] && syncStatus[dbName][loginLocationUuid])) {
                     offlineLocationInitialization().then(function () {
                         init().then(syncSuccessCallBack, syncFailureCallBack);
                     });
