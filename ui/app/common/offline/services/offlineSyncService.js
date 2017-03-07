@@ -5,6 +5,12 @@ angular.module('bahmni.common.offline')
         function (eventLogService, offlineDbService, $q, offlineService, androidDbService, $rootScope, loggingService, $http, $timeout) {
             var stages, categories;
 
+            var createRejectedPromise = function () {
+                var deferrable = $q.defer();
+                deferrable.reject();
+                return deferrable.promise;
+            };
+
             var initializeInitSyncInfo = function initializeCounters (categories) {
                 $rootScope.initSyncInfo = {};
                 $rootScope.showSyncInfo = true;
@@ -41,10 +47,13 @@ angular.module('bahmni.common.offline')
                             eventLogUuid = response.data.lastReadEventUuid;
 
                             return savePatients(response.data.patients, 0);
+                        }).catch(function () {
+                            endSync(-1);
+                            return defer.reject();
                         });
                     });
-                    $q.all(promises).then(function () {
-                        defer.resolve(eventLogUuid);
+                    return $q.all(promises).then(function () {
+                        return defer.resolve(eventLogUuid);
                     });
                 });
                 return defer.promise;
@@ -100,16 +109,8 @@ angular.module('bahmni.common.offline')
                     return readEvent(events, 0, category, isInitSync);
                 }, function () {
                     endSync(-1);
-                    var deferrable = $q.defer();
-                    deferrable.reject();
-                    return deferrable.promise;
+                    return createRejectedPromise();
                 });
-            };
-
-            var createRejectedPromise = function () {
-                var deferrable = $q.defer();
-                deferrable.reject();
-                return deferrable.promise;
             };
 
             var readEvent = function (events, index, category, isInitSync) {

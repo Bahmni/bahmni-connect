@@ -3,7 +3,7 @@
 var $scope, offlineDbService, eventLogService, offlineSyncService, offlineService, configurationService, loggingService;
 
 describe('OfflineSyncService', function () {
-    var patient, mappedPatient, encounter, concept, error_log, labOrderResults, mappedIdentifiers;
+    var patient, encounter, concept, error_log, labOrderResults, mappedIdentifiers;
     describe('initial sync ', function () {
         var httpBackend, $http, $rootScope;
         beforeEach(function () {
@@ -309,7 +309,7 @@ describe('OfflineSyncService', function () {
             expect(offlineDbService.insertAddressHierarchy.calls.count()).toBe(2);
         });
 
-        it('should read the encounter events from the beginning for each category', function () {
+        it('should read the patient event from zip file', function () {
             var category = 'patient';
             var patient1 = patient;
             var patient2 = patient;
@@ -356,6 +356,50 @@ describe('OfflineSyncService', function () {
             expect(offlineDbService.createEncounter.calls.count()).toBe(0);
             expect(offlineDbService.insertLabOrderResults.calls.count()).toBe(0);
             expect(eventLogService.getDataForUrl.calls.count()).toBe(0);
+        });
+
+        it('should stop the sync if patient zip file is not present', function () {
+            var category = 'patient';
+            httpBackend.when('GET', Bahmni.Common.Constants.preprocessedPatientUrl + "202020").respond(500, "File not found");
+
+            var marker = {markerName: 'patient', filters: [202020]};
+
+            spyOn(offlineService, 'getItem').and.callFake(function (key) {
+                return key == 'initSyncFilter' ? [202020] : [category];
+            });
+            spyOn(offlineService, 'setItem').and.callThrough();
+            spyOn($rootScope, '$broadcast');
+            spyOn(offlineDbService, 'getMarker').and.callThrough(function () {
+                return {
+                    then: function () {
+                        return marker;
+                    }
+                }
+            });
+            spyOn(eventLogService, 'getEventsFor').and.callThrough();
+            spyOn(eventLogService, 'getDataForUrl').and.callThrough();
+            spyOn(offlineDbService, 'insertMarker').and.callThrough();
+            spyOn(offlineDbService, 'insertAddressHierarchy').and.callThrough();
+            spyOn(offlineDbService, 'createPatient').and.callThrough();
+            spyOn(offlineDbService, 'createEncounter').and.callThrough();
+            spyOn(offlineDbService, 'insertLabOrderResults').and.callThrough();
+
+            offlineSyncService.sync(true);
+            $rootScope.$digest();
+            httpBackend.flush();
+
+            expect(offlineDbService.getMarker.calls.count()).toBe(1);
+            expect(offlineDbService.getMarker).toHaveBeenCalledWith(category);
+            expect(eventLogService.getEventsFor.calls.count()).toBe(0);
+
+            expect(offlineDbService.insertMarker.calls.count()).toBe(0);
+            expect(offlineDbService.createPatient.calls.count()).toBe(0);
+            expect(offlineDbService.createEncounter.calls.count()).toBe(0);
+            expect(offlineDbService.insertLabOrderResults.calls.count()).toBe(0);
+            expect(eventLogService.getDataForUrl.calls.count()).toBe(0);
+            expect($rootScope.isSyncing).toBeFalsy();
+            expect($rootScope.$broadcast).toHaveBeenCalledWith("schedulerStage", null);
+
         });
 
         it('should read the encounter events from the beginning for each category', function () {
@@ -431,6 +475,82 @@ describe('OfflineSyncService', function () {
                 expect(offlineDbService.insertMarker).toHaveBeenCalledWith(category, "uuid3", [202020]);
                 expect(offlineDbService.insertMarker.calls.count()).toBe(2);
             });
+            expect(eventLogService.getDataForUrl).toHaveBeenCalledWith(encounterEvent.object);
+            expect(offlineDbService.createEncounter).toHaveBeenCalledWith(encounter);
+            expect(offlineDbService.insertLabOrderResults).toHaveBeenCalledWith('5e94e7cb-e9fe-4763-e9ea-217bdaa85029', labOrderResults);
+        });
+
+        it('should update filters for category encounter', function () {
+            var categories = [
+                'encounter'
+            ];
+
+            var encounterEvent = {
+                object: 'encounterUrl',
+                category: 'Encounter',
+                uuid: 'uuid2'
+            };
+
+            var labOrderResultsEvent = {
+                object: '/openmrs/ws/rest/v1/bahmnicore/labOrderResults?patientUuid=5e94e7cb-e9fe-4763-e9ea-217bdaa85029',
+                category: 'LabOrderResults',
+                uuid: 'uuid3'
+            };
+
+            var marker = {markerName: 'encounter', filters: [202020]};
+
+            spyOn(offlineService, 'getItem').and.callFake(function (key) {
+                return key == 'initSyncFilter' ? [202020, 202010] : categories;
+            });
+            spyOn(offlineService, 'setItem').and.callThrough();
+            spyOn(offlineDbService, 'getMarker').and.callThrough(function () {
+                return {
+                    then: function () {
+                        return marker;
+                    }
+                }
+            });
+            spyOn(eventLogService, 'getEventsFor').and.callFake(function (category) {
+                return {
+                    then: function (callback) {
+                        if (!marker.lastReadEventUuid)
+                            return callback({
+                                data: {
+                                    events: [encounterEvent, labOrderResultsEvent],
+                                    pendingEventsCount: 2
+                                }
+                            });
+                    }
+                }
+            });
+            spyOn(eventLogService, 'getDataForUrl').and.callFake(function (url) {
+                return {
+                    then: function (callback) {
+                        return callback({data: url === encounterEvent.object ? encounter : labOrderResults});
+                    }
+                };
+            });
+            spyOn(offlineDbService, 'insertMarker').and.callFake(function (name, uuid, filters) {
+                marker.lastReadEventUuid = uuid;
+                return {lastReadTime: new Date()}
+            });
+            spyOn(offlineDbService, 'createEncounter').and.callThrough();
+            spyOn(offlineDbService, 'insertLabOrderResults').and.callThrough();
+
+            offlineSyncService.sync(true);
+            $rootScope.$digest();
+
+            expect(offlineDbService.getMarker.calls.count()).toBe(4);
+
+            expect(offlineDbService.getMarker).toHaveBeenCalledWith(categories[0]);
+            expect(eventLogService.getEventsFor).toHaveBeenCalledWith(categories[0], {
+                markerName: categories[0],
+                filters: [202020, 202010]
+            });
+
+            expect(offlineDbService.insertMarker).toHaveBeenCalledWith(categories[0], "uuid2", [202020]);
+            expect(offlineDbService.insertMarker).toHaveBeenCalledWith(categories[0], "uuid3", [202020]);
+            expect(offlineDbService.insertMarker.calls.count()).toBe(2);
             expect(eventLogService.getDataForUrl).toHaveBeenCalledWith(encounterEvent.object);
             expect(offlineDbService.createEncounter).toHaveBeenCalledWith(encounter);
             expect(offlineDbService.insertLabOrderResults).toHaveBeenCalledWith('5e94e7cb-e9fe-4763-e9ea-217bdaa85029', labOrderResults);
