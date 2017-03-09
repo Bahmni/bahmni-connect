@@ -392,12 +392,6 @@ module.exports = function (grunt) {
                     {
                         expand: true,
                         cwd: '<%= yeoman.dist %>',
-                        src: ['patients.min.*.css'],
-                        dest: '<%= yeoman.dist %>/patients/'
-                    },
-                    {
-                        expand: true,
-                        cwd: '<%= yeoman.dist %>',
                         src: ['clinical.*.css'],
                         dest: '<%= yeoman.dist %>/clinical/'
                     },
@@ -470,8 +464,7 @@ module.exports = function (grunt) {
                 options: {
                     inline: true,
                     context: {
-                        CHROME: true,
-                        OFFLINE: true
+                        CHROME: true
                     }
                 }
             },
@@ -480,8 +473,7 @@ module.exports = function (grunt) {
                 options: {
                     inline: true,
                     context: {
-                        ANDROID: true,
-                        OFFLINE: true
+                        ANDROID: true
                     }
                 }
             }
@@ -493,8 +485,9 @@ module.exports = function (grunt) {
     grunt.registerTask('test', ['karma:unit', 'coverage']);
 
     grunt.registerTask('bundle', [
+        'npm-install',
+        'bower-install',
         'eslint',
-        'copy:nodeModules',
         'clean:dist',
         'compass:dist',
         'useminPrepare',
@@ -505,7 +498,6 @@ module.exports = function (grunt) {
         'htmlmin',
         'cssmin',
         'copy:dist',
-        'filerev',
         'usemin'
     ]);
 
@@ -513,13 +505,6 @@ module.exports = function (grunt) {
         'clean:offlineDist',
         'copy:offlineDist'
     ]);
-
-    grunt.registerTask('build', [
-        'npm-install',
-        'bower-install',
-        'bundle'
-    ]);
-
 
     grunt.registerTask('uglify-and-rename', [
         'uglify',
@@ -529,8 +514,9 @@ module.exports = function (grunt) {
     grunt.registerTask('devchrome', ['devbundle', 'preprocess:chrome', "toggleComments", 'generate-sw']);
     grunt.registerTask('devandroid', ['devbundle', 'preprocess:android', "toggleComments", 'clean:androidApp', 'copy:androidApp']);
 
-    grunt.registerTask('chrome', ['bundle', 'uglify', 'toggleComments', 'karma:chrome', 'preprocess:chrome', 'generate-sw']);
-    grunt.registerTask('android', ['bundle', 'uglify','toggleComments', 'karma:android', 'preprocess:android']);
+
+    grunt.registerTask('chrome', ['bundle', 'uglify-and-rename', 'preprocess:chrome']);
+    grunt.registerTask('android', ['bundle', 'uglify-and-rename', 'preprocess:android', 'toggleComments']);
 
     grunt.registerTask('bower-install', 'install dependencies using bower', function () {
         var exec = require('child_process').exec;

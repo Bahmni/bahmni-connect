@@ -26,6 +26,7 @@ echo "Starting Xvfb process $XVFB_PID"
 rm -rf dist/*
 
 grunt chrome
+npm run sw
 cp -r dist/* chromeDist
 zip -r bahmni-connect-apps.zip chromeDist/*
 
