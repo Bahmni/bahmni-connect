@@ -1,6 +1,6 @@
 'use strict';
 
-describe('observationFormService', function () {
+xdescribe('observationFormService', function () {
 
     var http;
     beforeEach(module('bahmni.clinical'));
