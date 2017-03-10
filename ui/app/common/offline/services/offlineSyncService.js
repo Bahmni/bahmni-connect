@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('bahmni.common.offline')
-    .service('offlineSyncService', ['eventLogService', 'offlineDbService', '$q', 'offlineService', 'androidDbService', '$rootScope', 'loggingService', '$http', '$timeout',
-        function (eventLogService, offlineDbService, $q, offlineService, androidDbService, $rootScope, loggingService, $http, $timeout) {
+    .service('offlineSyncService', ['eventLogService', 'offlineDbService', '$q', 'offlineService', 'androidDbService', '$rootScope', 'loggingService', '$http', '$timeout', 'dbNameService',
+        function (eventLogService, offlineDbService, $q, offlineService, androidDbService, $rootScope, loggingService, $http, $timeout, dbNameService) {
             var stages, categories;
 
             var createRejectedPromise = function () {
@@ -33,27 +33,63 @@ angular.module('bahmni.common.offline')
                 return $q.when();
             };
 
+            var updateSyncedFileNames = function (fileName, dbName) {
+                var syncedInfo = offlineService.getItem("synced") || {};
+                syncedInfo[dbName] = syncedInfo[dbName] || [];
+                syncedInfo[dbName].push(fileName);
+                offlineService.setItem("synced", syncedInfo);
+            };
+
+            var getPatientDataForFiles = function (fileNames, count, eventLogUuid, dbName) {
+                if (count != fileNames.length) {
+                    return $http.get(Bahmni.Common.Constants.preprocessedPatientUrl + fileNames[count]).then(function (response) {
+                        updatePendingEventsCount("patient", response.data.patients.length);
+                        eventLogUuid = response.data.lastReadEventUuid;
+                        return savePatients(response.data.patients, 0).then(function () {
+                            updateSyncedFileNames(fileNames[count], dbName);
+                            return getPatientDataForFiles(fileNames, ++count, eventLogUuid, dbName);
+                        });
+                    });
+                }
+                return $q.when(eventLogUuid);
+            };
+
+            var getDbName = function () {
+                var loginInformation = offlineService.getItem('LoginInformation');
+                var location = loginInformation ? loginInformation.currentLocation.display : null;
+                var username = offlineService.getItem("userData").results[0].username;
+                return dbNameService.getDbName(username, location);
+            };
+
+            var getRemainingFileNames = function (fileNames, synced) {
+                var remaining = _.difference(fileNames, synced);
+                return remaining.length ? remaining : _.last(fileNames);
+            };
+
             var savePatientDataFromFile = function () {
                 var eventLogUuid;
                 var defer = $q.defer();
-                var category = 'patient';
-                offlineDbService.getMarker(category).then(function (marker) {
+                offlineDbService.getMarker('patient').then(function (marker) {
                     if (marker.lastReadEventUuid) {
                         return defer.resolve();
                     }
-                    var promises = marker.filters.map(function (filter) {
-                        return $http.get(Bahmni.Common.Constants.preprocessedPatientUrl + filter).then(function (response) {
-                            updatePendingEventsCount(category, response.data.patients.length);
-                            eventLogUuid = response.data.lastReadEventUuid;
 
-                            return savePatients(response.data.patients, 0);
-                        }).catch(function () {
-                            endSync(-1);
-                            return defer.reject();
+                    return getDbName().then(function (dbName) {
+                        var promises = marker.filters.map(function (filter) {
+                            var syncedInfo = offlineService.getItem("synced") || {};
+                            var synced = syncedInfo[dbName] || [];
+                            return $http.get(Bahmni.Common.Constants.preprocessedPatientFilesUrl + filter).then(function (response) {
+                                return getPatientDataForFiles(getRemainingFileNames(response.data, synced), 0, null, dbName).then(function (uuid) {
+                                    eventLogUuid = uuid;
+                                });
+                            }).catch(function () {
+                                endSync(-1);
+                                return defer.reject();
+                            });
                         });
-                    });
-                    return $q.all(promises).then(function () {
-                        return defer.resolve(eventLogUuid);
+                        return $q.all(promises).then(function () {
+                            return defer.resolve(eventLogUuid);
+                        });
                     });
                 });
                 return defer.promise;
