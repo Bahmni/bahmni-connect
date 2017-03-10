@@ -1,9 +1,9 @@
 'use strict';
 
-var $scope, offlineDbService, eventLogService, offlineSyncService, offlineService, configurationService, loggingService;
+var $scope, offlineDbService, eventLogService, offlineSyncService, offlineService, configurationService, loggingService, dbNameService;
 
 describe('OfflineSyncService', function () {
-    var patient, encounter, concept, error_log, labOrderResults, mappedIdentifiers;
+    var patient, encounter, concept, error_log, labOrderResults, mappedIdentifiers, q;
     describe('initial sync ', function () {
         var httpBackend, $http, $rootScope;
         beforeEach(function () {
@@ -232,6 +232,10 @@ describe('OfflineSyncService', function () {
                     }
                 });
 
+                $provide.value('dbNameService', {
+                    getDbName: function () {}
+                });
+
                 $provide.value('loggingService', {
                     logSyncError: function (errorUrl, status, stackTrace, payload) {
                         return {};
@@ -240,17 +244,19 @@ describe('OfflineSyncService', function () {
             });
         });
 
-        beforeEach(inject(['offlineSyncService', 'eventLogService', 'offlineDbService', 'configurationService', '$httpBackend', '$http', '$rootScope', 'loggingService', 'offlineService',
-            function (offlineSyncServiceInjected, eventLogServiceInjected, offlineDbServiceInjected, configurationServiceInjected, _$httpBackend_, http, rootScope, loggingServiceInjected, offlineServiceInjected) {
+        beforeEach(inject(['offlineSyncService', 'eventLogService', 'offlineDbService', 'configurationService', '$httpBackend', '$http', '$rootScope', 'loggingService', 'offlineService', 'dbNameService', '$q',
+            function (offlineSyncServiceInjected, eventLogServiceInjected, offlineDbServiceInjected, configurationServiceInjected, _$httpBackend_, http, rootScope, loggingServiceInjected, offlineServiceInjected, dbNameServiceInjected, $q) {
                 offlineSyncService = offlineSyncServiceInjected;
                 eventLogService = eventLogServiceInjected;
                 offlineDbService = offlineDbServiceInjected;
                 configurationService = configurationServiceInjected;
                 loggingService = loggingServiceInjected;
                 offlineService = offlineServiceInjected;
+                dbNameService = dbNameServiceInjected;
                 httpBackend = _$httpBackend_;
                 $http = http;
                 $rootScope = rootScope;
+                q = $q;
             }]));
 
         it('should read the meta data events from the beginning for each category', function () {
@@ -310,19 +316,32 @@ describe('OfflineSyncService', function () {
         });
 
         it('should read the patient event from zip file', function () {
+            var localStorage = {};
             var category = 'patient';
             var patient1 = patient;
             var patient2 = patient;
             patient2.identifiers[0].identifier = "GAN2009";
-            var response = {lastReadEventUuid: "lastEventUuid", patients: [patient1, patient2]};
-            httpBackend.when('GET', Bahmni.Common.Constants.preprocessedPatientUrl + "202020").respond(200, response);
+            var response1 = {lastReadEventUuid: "lastEventUuid1", patients: [patient1]};
+            var response2= {lastReadEventUuid: "lastEventUuid2", patients: [patient2]};
+            httpBackend.when('GET', Bahmni.Common.Constants.preprocessedPatientFilesUrl + "202020").respond(200, ["202020-1.json.gz", "202020-2.json.gz"]);
+            httpBackend.when('GET', Bahmni.Common.Constants.preprocessedPatientUrl + "202020-1.json.gz").respond(200, response1);
+            httpBackend.when('GET', Bahmni.Common.Constants.preprocessedPatientUrl + "202020-2.json.gz").respond(200, response2);
 
             var marker = {markerName: 'patient', filters: [202020]};
 
             spyOn(offlineService, 'getItem').and.callFake(function (key) {
-                return key == 'initSyncFilter' ? [202020] : [category];
+                if(key == "LoginInformation")
+                    return {currentLocation:{display:"dbName"}};
+                if(key == "userData")
+                    return {results: [{username:"username"}]};
+                if(key == "synced")
+                    return localStorage.synced;
+                return [category];
             });
-            spyOn(offlineService, 'setItem').and.callThrough();
+            spyOn(dbNameService, 'getDbName').and.returnValue(q.when("dbName"));
+            spyOn(offlineService, 'setItem').and.callFake(function (key, value) {
+                localStorage[key] = value;
+            });
             spyOn(offlineDbService, 'getMarker').and.callThrough(function () {
                 return {
                     then: function () {
@@ -345,28 +364,101 @@ describe('OfflineSyncService', function () {
             $rootScope.$digest();
             httpBackend.flush();
 
-
             expect(offlineDbService.getMarker.calls.count()).toBe(2);
             expect(offlineDbService.getMarker).toHaveBeenCalledWith(category);
             expect(eventLogService.getEventsFor.calls.count()).toBe(0);
 
-            expect(offlineDbService.insertMarker).toHaveBeenCalledWith(category, "lastEventUuid", [202020]);
+            expect(offlineDbService.insertMarker).toHaveBeenCalledWith(category, "lastEventUuid2", [202020]);
             expect(offlineDbService.insertMarker.calls.count()).toBe(1);
             expect(offlineDbService.createPatient.calls.count()).toBe(2);
             expect(offlineDbService.createEncounter.calls.count()).toBe(0);
             expect(offlineDbService.insertLabOrderResults.calls.count()).toBe(0);
             expect(eventLogService.getDataForUrl.calls.count()).toBe(0);
+            expect(dbNameService.getDbName.calls.count()).toBe(1);
+            expect(offlineService.getItem).toHaveBeenCalledWith("synced");
+            expect(offlineService.setItem.calls.count()).toBe(2);
+            expect(offlineService.setItem).toHaveBeenCalledWith("synced", {dbName:["202020-1.json.gz", "202020-2.json.gz"]})
         });
 
-        it('should stop the sync if patient zip file is not present', function () {
+        it('should read only remaining patient zip files', function () {
+            var localStorage = {synced:{dbName:["202020-1.json.gz"]}};
             var category = 'patient';
-            httpBackend.when('GET', Bahmni.Common.Constants.preprocessedPatientUrl + "202020").respond(500, "File not found");
+            var patient1 = patient;
+            var patient2 = patient;
+            patient2.identifiers[0].identifier = "GAN2009";
+            var response1 = {lastReadEventUuid: "lastEventUuid1", patients: [patient1]};
+            var response2= {lastReadEventUuid: "lastEventUuid2", patients: [patient2]};
+            httpBackend.when('GET', Bahmni.Common.Constants.preprocessedPatientFilesUrl + "202020").respond(200, ["202020-1.json.gz", "202020-2.json.gz", "202020-3.json.gz"]);
+            httpBackend.when('GET', Bahmni.Common.Constants.preprocessedPatientUrl + "202020-2.json.gz").respond(200, response1);
+            httpBackend.when('GET', Bahmni.Common.Constants.preprocessedPatientUrl + "202020-3.json.gz").respond(200, response2);
 
             var marker = {markerName: 'patient', filters: [202020]};
 
             spyOn(offlineService, 'getItem').and.callFake(function (key) {
+                if(key == "LoginInformation")
+                    return {currentLocation:{display:"dbName"}};
+                if(key == "userData")
+                    return {results: [{username:"username"}]};
+                if(key == "synced")
+                    return localStorage.synced;
+                return [category];
+            });
+            spyOn(dbNameService, 'getDbName').and.returnValue(q.when("dbName"));
+            spyOn(offlineService, 'setItem').and.callFake(function (key, value) {
+                localStorage[key] = value;
+            });
+            spyOn(offlineDbService, 'getMarker').and.callThrough(function () {
+                return {
+                    then: function () {
+                        return marker;
+                    }
+                }
+            });
+            spyOn(eventLogService, 'getEventsFor').and.callThrough();
+            spyOn(eventLogService, 'getDataForUrl').and.callThrough();
+            spyOn(offlineDbService, 'insertMarker').and.callFake(function (name, uuid, filters) {
+                marker.lastReadEventUuid = uuid;
+                return {lastReadTime: new Date()}
+            });
+            spyOn(offlineDbService, 'insertAddressHierarchy').and.callThrough();
+            spyOn(offlineDbService, 'createPatient').and.callThrough();
+            spyOn(offlineDbService, 'createEncounter').and.callThrough();
+            spyOn(offlineDbService, 'insertLabOrderResults').and.callThrough();
+
+            offlineSyncService.sync(true);
+            $rootScope.$digest();
+            httpBackend.flush();
+
+            expect(offlineDbService.getMarker.calls.count()).toBe(2);
+            expect(offlineDbService.getMarker).toHaveBeenCalledWith(category);
+            expect(eventLogService.getEventsFor.calls.count()).toBe(0);
+
+            expect(offlineDbService.insertMarker).toHaveBeenCalledWith(category, "lastEventUuid2", [202020]);
+            expect(offlineDbService.insertMarker.calls.count()).toBe(1);
+            expect(offlineDbService.createPatient.calls.count()).toBe(2);
+            expect(offlineDbService.createEncounter.calls.count()).toBe(0);
+            expect(offlineDbService.insertLabOrderResults.calls.count()).toBe(0);
+            expect(eventLogService.getDataForUrl.calls.count()).toBe(0);
+            expect(dbNameService.getDbName.calls.count()).toBe(1);
+            expect(offlineService.getItem).toHaveBeenCalledWith("synced");
+            expect(offlineService.setItem.calls.count()).toBe(2);
+            expect(offlineService.setItem).toHaveBeenCalledWith("synced", {dbName:["202020-1.json.gz", "202020-2.json.gz", "202020-3.json.gz"]})
+        });
+
+        it('should stop the sync if patient zip file is not present', function () {
+            var category = 'patient';
+            httpBackend.when('GET', Bahmni.Common.Constants.preprocessedPatientFilesUrl + "202020").respond(200, ["202020-1.json.gz"]);
+            httpBackend.when('GET', Bahmni.Common.Constants.preprocessedPatientUrl + "202020-1.json.gz").respond(500, "File not found");
+            var marker = {markerName: 'patient', filters: [202020]};
+
+            spyOn(offlineService, 'getItem').and.callFake(function (key) {
+                if(key == "LoginInformation")
+                    return {currentLocation:{display:"dbName"}};
+                if(key == "userData")
+                    return {results: [{username:"username"}]};
                 return key == 'initSyncFilter' ? [202020] : [category];
             });
+            spyOn(dbNameService, 'getDbName').and.returnValue(q.when("dbName"));
             spyOn(offlineService, 'setItem').and.callThrough();
             spyOn($rootScope, '$broadcast');
             spyOn(offlineDbService, 'getMarker').and.callThrough(function () {
@@ -586,10 +678,18 @@ describe('OfflineSyncService', function () {
             responsePatient.person.attributes.push(attributeOne);
             responsePatient.person.attributes.push(attributeTwo);
             var response = {lastReadEventUuid: "lastEventUuid", patients: [responsePatient]};
-            httpBackend.when('GET', Bahmni.Common.Constants.preprocessedPatientUrl + "202020").respond(200, response);
+            httpBackend.when('GET', Bahmni.Common.Constants.preprocessedPatientFilesUrl + "202020").respond(200, ["202020-1.json.gz"]);
+            httpBackend.when('GET', Bahmni.Common.Constants.preprocessedPatientUrl + "202020-1.json.gz").respond(200, response);
             var marker = {markerName: 'transactionalData', filters: [202020]};
 
-            spyOn(offlineService, 'getItem').and.returnValue(categories);
+            spyOn(offlineService, 'getItem').and.callFake(function (key) {
+                if(key == "LoginInformation")
+                    return {currentLocation:{display:"dbName"}};
+                if(key == "userData")
+                    return {results: [{username:"username"}]};
+                return key == 'initSyncFilter' ? [202020] : categories;
+            });
+            spyOn(dbNameService, 'getDbName').and.returnValue(q.when("dbName"));
             spyOn(offlineService, 'setItem').and.callThrough();
             spyOn(offlineDbService, 'getMarker').and.callThrough(function () {
                 return {
