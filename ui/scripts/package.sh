@@ -10,7 +10,7 @@ npm install
 bower install
 grunt bundle
 
-mkdir chromeDist
+mkdir bahmni-connect-apps
 mkdir androidDist
 
 if [ $(pgrep Xvfb) ]; then
@@ -27,8 +27,8 @@ rm -rf dist/*
 
 grunt chrome
 npm run sw
-cp -r dist/* chromeDist
-zip -r bahmni-connect-apps.zip chromeDist/*
+cp -r dist/* bahmni-connect-apps
+zip -r bahmni-connect-apps.zip bahmni-connect-apps
 
 rm -rf dist/*
 
