@@ -17,6 +17,7 @@ describe('Offline Push Tests', function () {
             loggingServiceMock = jasmine.createSpyObj('loggingService', ['logSyncError']);
             mockBahmniCookieStore = jasmine.createSpyObj('bahmniCookieStore', ["get"]);
             $provide.value('$bahmniCookieStore', mockBahmniCookieStore);
+            $provide.value('messagingService', jasmine.createSpyObj('messagingService', ["showMessage"]));
 
 
             offlineDbServiceMock.initSchema.and.callFake(function (dbName) {

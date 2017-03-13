@@ -236,6 +236,8 @@ describe('OfflineSyncService', function () {
                     getDbName: function () {}
                 });
 
+                $provide.value('messagingService', jasmine.createSpyObj('messagingService', ["showMessage"]));
+
                 $provide.value('loggingService', {
                     logSyncError: function (errorUrl, status, stackTrace, payload) {
                         return {};
@@ -877,6 +879,9 @@ describe('OfflineSyncService', function () {
                         };
                     }
                 });
+
+                $provide.value('messagingService', jasmine.createSpyObj('messagingService', ["showMessage"]));
+
                 $provide.value('eventLogService', {
                     getEventsFor: function (category) {
                         return {
