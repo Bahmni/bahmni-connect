@@ -9,5 +9,9 @@ module.exports = {
         'dist/index.html',
         'dist/**/**',
         'dist/*.js'
-    ]
+    ],
+    runtimeCaching: [{
+        "urlPattern": "/bahmni_config/openmrs/i18n/**/*.json",
+        "handler": "networkFirst"
+    }]
 };
