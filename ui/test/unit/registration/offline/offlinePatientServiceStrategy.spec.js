@@ -59,7 +59,7 @@ describe('PatientServiceStrategy test', function () {
                 return attribute.attributeType.uuid === 'fb3c00b1-81c8-40fe-89e8-6b3344688a13' && attribute.value === "21";
             })).toBeTruthy();
             expect(_.some(data.patient.person.attributes, function (attribute) {
-                return attribute.attributeType.uuid === '9234695b-0f68-4970-aeb7-3b32d4a2b346';
+                return attribute.attributeType.uuid === '9234695b-0f68-4970-aeb7-3b32d4a2b346' && attribute.value === true;
             })).toBeTruthy();
         }).catch(notifyError).finally(done);
     });
