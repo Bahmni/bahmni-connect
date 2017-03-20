@@ -538,7 +538,10 @@ describe('OfflineDbService ', function () {
                     patient: {
                         uuid: "personUuid",
                         person: {attributes: "attributes", addresses: [], preferredAddress: undefined},
-                        identifiers: [{identifier: "01"}]
+                        identifiers: [
+                            {identifier: "02", primaryIdentifier: "01"},
+                            {identifier: "01", primaryIdentifier: "01"}
+                        ]
                     }
                 };
 
@@ -554,6 +557,8 @@ describe('OfflineDbService ', function () {
                     expect(response.message).not.toBeNull();
                     expect(patientAttributeDbService.insertAttributes).not.toHaveBeenCalled();
                     expect(patientAddressDbService.insertAddress).not.toHaveBeenCalled();
+                    expect(response.message).toEqual("Patient failed to validate with reason: Identifier 01 is already in use by another patient");
+                    expect(response.isOfflineApp).toBeTruthy();
                     done();
                 });
             });

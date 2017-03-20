@@ -58,7 +58,7 @@ angular.module('bahmni.common.offline')
                         });
                     }, function (response) {
                         if (response && response.code == 201) {
-                            response.message = "Patient failed to validate with reason: Identifier " + patient.identifiers[0].identifier + " is already in use by another patient";
+                            response.message = "Patient failed to validate with reason: Identifier " + patient.identifiers[0].primaryIdentifier + " is already in use by another patient";
                             response.isOfflineApp = true;
                         }
                         return $q.reject(response);
