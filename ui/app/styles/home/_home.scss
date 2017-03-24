@@ -446,6 +446,172 @@ body{
   }
 }
 
+/*** Connect login Page Styles ***/
+/******************************************************************************/
+.form-field.custom-dropdown {
+  overflow: visible;
+  .field-value {
+    position: relative;
+  }
+}
+.nya-bs-select {
+  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    font-size: 14px;
+    text-align: left;
+    list-style: none;
+    background-color: rgba(255,255,255,0.8);
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0, 0, 0, .15);
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+    &.pull-right {
+      right: 0;
+      left: auto
+    }
+    .divider {
+      height: 1px;
+      margin: 9px 0;
+      overflow: hidden;
+      background-color: #e5e5e5
+    }
+    > li > a {
+      display: block;
+      padding: 3px 20px;
+      clear: both;
+      font-weight: 400;
+      line-height: 1.42857143;
+      color: #333;
+      white-space: nowrap;
+      position: relative;
+      &:focus, &:hover {
+        color: #FFF;
+        text-decoration: none;
+        background-color: #2b95ff;
+      }
+      &.isSynced:after {
+        content: "";
+        display: inline-block;
+        width: 12px;
+        height: 14px;
+        background: url(../images/sync.png) no-repeat center;
+        background-size: 100%;
+        margin-left: 5px;
+        vertical-align: middle;
+      }
+    }
+    > .active > a, > .active > a:focus, > .active > a:hover {
+      color: #fff;
+      text-decoration: none;
+      background-color: #337ab7;
+      outline: 0
+    }
+    > .disabled > a, > .disabled > a:focus, > .disabled > a:hover {
+      color: #777
+    }
+    > .disabled > a:focus, > .disabled > a:hover {
+      text-decoration: none;
+      cursor: not-allowed;
+      background-color: transparent;
+      background-image: none;
+      filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+    }
+  }
+  &.open {
+    .dropdown-menu {
+      display: block;
+    }
+    a {
+      outline: 0;
+    }
+  }
+  .collapsing {
+    position: relative;
+    height: 0;
+    overflow: hidden;
+    -webkit-transition-timing-function: ease;
+    -o-transition-timing-function: ease;
+    transition-timing-function: ease;
+    -webkit-transition-duration: .35s;
+    -o-transition-duration: .35s;
+    transition-duration: .35s;
+    -webkit-transition-property: height,visibility;
+    -o-transition-property: height,visibility;
+    transition-property: height,visibility;
+  }
+
+  .caret {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin-left: 2px;
+    vertical-align: middle;
+    border-top: 4px dashed;
+    border-top: 4px solid\9;
+    border-right: 4px solid transparent;
+    border-left: 4px solid transparent;
+  }
+  .dropdown-toggle:focus {
+    outline: 0;
+  }
+  .btn-default {
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc
+  }
+
+  .btn-default.focus, .btn-default:focus {
+    color: #333;
+    background-color: #e6e6e6;
+    border: 2px solid #007FFF;
+  }
+
+  .btn-default:hover {
+    color: #333;
+    background-color: #e6e6e6;
+    border-color: #adadad
+  }
+
+  .btn-default.active, .btn-default:active, &.open>.dropdown-toggle.btn-default {
+    color: #333;
+    background-color: #e6e6e6;
+    border-color: #adadad
+  }
+
+  .btn-default.active.focus, .btn-default.active:focus, .btn-default.active:hover, .btn-default:active.focus,
+  .btn-default:active:focus, .btn-default:active:hover, &.open>.dropdown-toggle.btn-default.focus,
+  &.open>.dropdown-toggle.btn-default:focus, &.open>.dropdown-toggle.btn-default:hover {
+    color: #333;
+    background-color: #d4d4d4;
+    border-color: #8c8c8c
+  }
+  .dropdown-toggle.btn-default {
+    background: transparent;
+    padding: 7px 20px;
+    max-width: 100%;
+    box-sizing: border-box;
+    .filter-option {
+      width: auto;
+    }
+  }
+}
+@media screen and (max-width: 1024px) {
+  .nya-bs-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
+    width: 100%;
+  }
+}
+
 /*** Change Password Page Styles ***/
 /******************************************************************************/
 .login.change-password-wrap{

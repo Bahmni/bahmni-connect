@@ -39,16 +39,18 @@
                 </div>
             </div>
 
-            <div class="form-field">
+            <div class="form-field custom-dropdown">
                 <div class="field-attribute">
                     <label for="location">
                         {{'LOGIN_LABEL_LOCATION_KEY' | translate}} <span class="asterick">*</span>
                     </label>
                 </div>
                 <div class="field-value">
-                    <select id="location" ng-model="loginInfo.currentLocation" ng-options="item as item.display for item in locations" required>
-                        <option value="">{{'LOGIN_LABEL_SELECT_LOCATION_KEY' | translate}}</option>
-                    </select>
+                    <ol id="location" title="Select Location" class="nya-bs-select" ng-model="loginInfo.currentLocation">
+                        <li nya-bs-option="location in locations">
+                            <a ng-class="{'isSynced' : location.isSynced}">{{ location.display }}</a>
+                        </li>
+                    </ol>
                 </div>
             </div>
 

@@ -63,7 +63,7 @@ angular.module('bahmni.common.offline')
 
             var getRemainingFileNames = function (fileNames, synced) {
                 var remaining = _.difference(fileNames, synced);
-                return remaining.length ? remaining : _.last(fileNames);
+                return remaining.length ? remaining : [_.last(fileNames)];
             };
 
             var savePatientDataFromFile = function () {

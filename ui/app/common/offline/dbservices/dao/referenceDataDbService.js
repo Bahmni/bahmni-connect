@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('bahmni.common.offline')
-    .service('referenceDataDbService', ['patientAttributeDbService', 'locationDbService',
-        function (patientAttributeDbService, locationDbService) {
+    .service('referenceDataDbService', ['patientAttributeDbService', 'locationDbService', 'offlineService',
+        function (patientAttributeDbService, locationDbService, offlineService) {
             var db, metaDataDb;
 
             var getReferenceData = function (referenceDataKey) {
@@ -11,8 +11,21 @@ angular.module('bahmni.common.offline')
                 .from(referenceData)
                 .where(referenceData.key.eq(referenceDataKey)).exec()
                 .then(function (result) {
-                    return result[0];
+                    return referenceDataKey === 'LoginLocations' ? setSyncInfo(result[0]) : result[0];
                 });
+            };
+
+            var setSyncInfo = function (loginLocations) {
+                var initialSyncStatus = _.values(offlineService.getItem("initialSyncStatus"));
+                if (loginLocations && loginLocations.data.results) {
+                    _.each(loginLocations.data.results, function (loginLocation) {
+                        var x = _.find(initialSyncStatus, function (syncLocation) {
+                            return syncLocation[loginLocation.uuid];
+                        });
+                        loginLocation.isSynced = x ? x[loginLocation.uuid] === 'complete' : false;
+                    });
+                }
+                return loginLocations;
             };
 
             var insertReferenceData = function (referenceDataKey, data, eTag) {
