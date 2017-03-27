@@ -12,6 +12,6 @@ module.exports = {
     ],
     runtimeCaching: [{
         "urlPattern": "/bahmni_config/openmrs/i18n/**/*.json",
-        "handler": "networkFirst"
+        "handler": "cacheFirst"
     }]
 };

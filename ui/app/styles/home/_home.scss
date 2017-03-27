@@ -495,7 +495,13 @@ body{
       color: #333;
       white-space: nowrap;
       position: relative;
-      &:focus, &:hover {
+      border: 2px solid transparent;
+      &:focus {
+        color: #262626;
+        background-color: #f5f5f5;
+        border-color: #2b95ff;
+      }
+      &:hover {
         color: #FFF;
         text-decoration: none;
         background-color: #2b95ff;
@@ -503,8 +509,8 @@ body{
       &.isSynced:after {
         content: "";
         display: inline-block;
-        width: 12px;
-        height: 14px;
+        width: 14px;
+        height: 15px;
         background: url(../images/sync.png) no-repeat center;
         background-size: 100%;
         margin-left: 5px;
@@ -604,6 +610,9 @@ body{
     .filter-option {
       width: auto;
     }
+  }
+  .dropdown-toggle.show-special-title .special-title {
+    width: auto;
   }
 }
 @media screen and (max-width: 1024px) {
