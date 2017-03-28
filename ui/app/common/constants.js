@@ -275,7 +275,8 @@ Bahmni.Common = Bahmni.Common || {};
         offlineBahmniEncounterUrl: "/openmrs/ws/rest/v1/bahmnicore/bahmniencounter/",
         eventlogFilterUrl: hostUrl + "/openmrs/ws/rest/v1/eventlog/filter",
         bahmniConnectMetaDataDb: "metaData",
-        bahmniConnectVersion: "0.89"
+        bahmniConnectVersion: "0.89",
+        defaultBahmniConnectDb: "Bahmni"
     };
 })();
 
