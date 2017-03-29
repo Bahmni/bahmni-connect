@@ -39,7 +39,7 @@ describe("dbNameService", function () {
             offlineService.isOfflineApp.and.returnValue(true);
             offlineService.getItem.and.returnValue(true);
             dbNameService.getDbName("provider", "loginLocation").then(function (dbName) {
-                expect(dbName).toBe("loginLocation");
+                expect(dbName).toBe("loginLocation_db");
                 done();
             });
             expect(offlineDbService.getConfig.calls.count()).toBe(1);
@@ -57,7 +57,7 @@ describe("dbNameService", function () {
             offlineService.isOfflineApp.and.returnValue(true);
             offlineService.getItem.and.returnValue(true);
             dbNameService.getDbName("provider", "loginLocation").then(function (dbName) {
-                expect(dbName).toBe("provider");
+                expect(dbName).toBe("provider_db");
                 done();
             });
             expect(offlineDbService.getConfig.calls.count()).toBe(1);
@@ -65,7 +65,7 @@ describe("dbNameService", function () {
             expect(offlineService.getItem).toHaveBeenCalledWith("allowMultipleLoginLocation");
         });
 
-        it("should give default DB name 'Bahmni Connect' if allowMultipleLoginLocation is set to false", function (done) {
+        it("should give default DB name 'Bahmni' if allowMultipleLoginLocation is set to false", function (done) {
             var config = {
                 value: {"dbNameCondition.js": "Bahmni.Common.Offline.dbNameCondition.get = function (provider, loginLocation) {return provider;};"}
             };
@@ -76,7 +76,7 @@ describe("dbNameService", function () {
             spyOn(offlineDbService, "getConfig").and.callThrough();
 
             dbNameService.getDbName("provider", "loginLocation").then(function (dbName) {
-                expect(dbName).toBe("Bahmni Connect");
+                expect(dbName).toBe(Bahmni.Common.Constants.defaultBahmniConnectDb);
                 done();
             });
             expect(offlineService.getItem.calls.count()).toBe(1);
