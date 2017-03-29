@@ -1,8 +1,8 @@
 "use strict";
 
 angular.module('bahmni.common.offline')
-    .controller('InitSyncController', ['$scope', 'ngDialog', '$state', 'offlineService', 'offlinePush', 'offlinePull', 'spinner', 'sessionService', '$q', 'offlineLocationInitialization', 'dbNameService',
-        function ($scope, ngDialog, $state, offlineService, offlinePush, offlinePull, spinner, sessionService, $q, offlineLocationInitialization, dbNameService) {
+    .controller('InitSyncController', ['$scope', 'ngDialog', '$state', 'offlineService', 'offlinePull', 'sessionService', '$q', 'offlineLocationInitialization', 'dbNameService',
+        function ($scope, ngDialog, $state, offlineService, offlinePull, sessionService, $q, offlineLocationInitialization, dbNameService) {
             var loginLocationUuid = offlineService.getItem('LoginInformation') ? offlineService.getItem('LoginInformation').currentLocation.uuid : undefined;
             var loginInformation = offlineService.getItem('LoginInformation');
             var location = loginInformation ? loginInformation.currentLocation.display : null;
