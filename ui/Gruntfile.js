@@ -304,7 +304,6 @@ module.exports = function (grunt) {
                         src: [
                             libraryCSSFiles,
                             libraryJSFiles,
-                            'components/openmrs-uicommons/**/*',
                             '*.{ico,txt,html,js}',
                             '.htaccess',
                             'images/**/*.{gif,webp}',
