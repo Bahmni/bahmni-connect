@@ -28,12 +28,21 @@ angular.module('bahmni.common.patient')
             return offlineSearchDbService.search(params);
         };
 
-        this.getPatientContext = function (uuid) {
+        this.getPatientContext = function (uuid, personAttributeTypes, additionalPatientIdentifiers) {
             var deferrable = $q.defer();
             var patientContextMapper = new Bahmni.PatientContextMapper();
+            var patientContext;
             offlineDbService.getPatientByUuid(uuid).then(function (response) {
-                var patientContext = patientContextMapper.map(response.patient);
-                deferrable.resolve({"data": patientContext});
+                if (!_.isEmpty(personAttributeTypes)) {
+                    offlineDbService.getAttributeTypes().then(function (allAttributeTypes) {
+                        patientContext = patientContextMapper.map(response.patient, personAttributeTypes, allAttributeTypes, additionalPatientIdentifiers);
+                        deferrable.resolve({"data": patientContext});
+                    });
+                }
+                else {
+                    patientContext = patientContextMapper.map(response.patient, personAttributeTypes, [], additionalPatientIdentifiers);
+                    deferrable.resolve({"data": patientContext});
+                }
             });
             return deferrable.promise;
         };

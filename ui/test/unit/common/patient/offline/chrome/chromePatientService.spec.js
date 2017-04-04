@@ -20,9 +20,10 @@ describe('patientService', function () {
                 }
             }
         };
-        offlineDbServiceMock = jasmine.createSpyObj('offlineDbService', ['getPatientByUuid']);
+        offlineDbServiceMock = jasmine.createSpyObj('offlineDbService', ['getPatientByUuid', 'getAttributeTypes']);
         offlineSearchDbServiceMock = jasmine.createSpyObj('offlineSearchDbService', ['search']);
         offlineDbServiceMock.getPatientByUuid.and.returnValue($q.when(patient));
+        offlineDbServiceMock.getAttributeTypes.and.returnValue($q.when({}));
         $provide.value('offlineSearchDbService', offlineSearchDbServiceMock);
         $provide.value('offlineDbService', offlineDbServiceMock);
         $provide.value('$q', $q);
@@ -49,6 +50,15 @@ describe('patientService', function () {
 
     it('should get patient context by patient uuid', function (done) {
         patientService.getPatientContext("patientUuid").then(function (result) {
+            expect(offlineDbServiceMock.getAttributeTypes).not.toHaveBeenCalled();
+            expect(result.data.givenName).toBe("patientName");
+            done();
+        })
+    });
+
+    it('should get all Attribute types if personAttributeTypes are configured', function (done) {
+        patientService.getPatientContext("patientUuid",["attributeType"]).then(function (result) {
+            expect(offlineDbServiceMock.getAttributeTypes).toHaveBeenCalled();
             expect(result.data.givenName).toBe("patientName");
             done();
         })

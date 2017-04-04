@@ -52,7 +52,7 @@ describe('patient context', function () {
             scope.$digest();
 
             expect(compiledElementScope).not.toBeUndefined();
-            expect(patientService.getPatientContext).toHaveBeenCalledWith(scope.patient.uuid, 'programUuid', undefined, undefined, undefined);
+            expect(patientService.getPatientContext).toHaveBeenCalledWith(scope.patient.uuid, undefined, undefined);
             expect(spinner.forPromise).toHaveBeenCalled();
             expect(compiledElementScope.patientContext).toBe(patientContext.data);
         });
@@ -81,41 +81,12 @@ describe('patient context', function () {
             scope.$digest();
 
             expect(compiledElementScope).not.toBeUndefined();
-            expect(patientService.getPatientContext).toHaveBeenCalledWith(scope.patient.uuid, 'programUuid', patientContextConfig.personAttributes, undefined, undefined);
+            expect(patientService.getPatientContext).toHaveBeenCalledWith(scope.patient.uuid, patientContextConfig.personAttributes, undefined);
             expect(spinner.forPromise).toHaveBeenCalled();
             expect(mockAppService.getAppDescriptor).toHaveBeenCalled();
             expect(mockAppDescriptor.getConfigValue).toHaveBeenCalledWith('patientContext');
         });
 
-        it('should fetch program attributes if configured.', function () {
-            patientService.getPatientContext.and.returnValue(specUtil.createFakePromise({}));
-            var patientContextConfig = {
-                programAttributes: ['Aadhar Number']
-            };
-            mockAppDescriptor.getConfigValue.and.returnValue(patientContextConfig);
-            mockAppService.getAppDescriptor.and.returnValue(mockAppDescriptor);
-
-            spinner.forPromise.and.callFake(function (param) {
-                return {
-                    then: function (callback) {
-                        return callback({data: {}});
-                    }
-                }
-            });
-
-            var simpleHtml = '<patient-context patient="patient"></patient-context>';
-            var element = $compile(simpleHtml)(scope);
-            scope.$digest();
-            mockBackend.flush();
-            var compiledElementScope = element.isolateScope();
-            scope.$digest();
-
-            expect(compiledElementScope).not.toBeUndefined();
-            expect(patientService.getPatientContext).toHaveBeenCalledWith(scope.patient.uuid, 'programUuid', patientContextConfig.personAttributes, patientContextConfig.programAttributes, undefined);
-            expect(spinner.forPromise).toHaveBeenCalled();
-            expect(mockAppService.getAppDescriptor).toHaveBeenCalled();
-            expect(mockAppDescriptor.getConfigValue).toHaveBeenCalledWith('patientContext');
-        });
 
         it('should fetch patient identifiers if configured.', function () {
             patientService.getPatientContext.and.returnValue(specUtil.createFakePromise({}));
@@ -141,50 +112,15 @@ describe('patient context', function () {
             scope.$digest();
 
             expect(compiledElementScope).not.toBeUndefined();
-            expect(patientService.getPatientContext).toHaveBeenCalledWith(scope.patient.uuid, 'programUuid', patientContextConfig.personAttributes, patientContextConfig.programAttributes, patientContextConfig.additionalPatientIdentifiers);
+            expect(patientService.getPatientContext).toHaveBeenCalledWith(scope.patient.uuid, patientContextConfig.personAttributes, patientContextConfig.additionalPatientIdentifiers);
             expect(spinner.forPromise).toHaveBeenCalled();
             expect(mockAppService.getAppDescriptor).toHaveBeenCalled();
             expect(mockAppDescriptor.getConfigValue).toHaveBeenCalledWith('patientContext');
         });
 
-        it('should set preffered identifier to configured program attributes', function () {
-            var patientContext = {
-                programAttributes: {'Aadhar Number': {description: 'Aadhar Number', value: '1234'}},
-                personAttributes: {}
-            };
-            patientService.getPatientContext.and.returnValue(specUtil.createFakePromise(patientContext));
-
-            var patientContextConfig = {
-                programAttributes: ['Aadhar Number'],
-                preferredIdentifier: 'Aadhar Number'
-            };
-            mockAppDescriptor.getConfigValue.and.returnValue(patientContextConfig);
-            mockAppService.getAppDescriptor.and.returnValue(mockAppDescriptor);
-
-            spinner.forPromise.and.callFake(function (param) {
-                return {
-                    then: function (callback) {
-                        return callback({data: patientContext});
-                    }
-                }
-            });
-
-            var simpleHtml = '<patient-context patient="patient"></patient-context>';
-            var element = $compile(simpleHtml)(scope);
-            scope.$digest();
-            mockBackend.flush();
-            var compiledElementScope = element.isolateScope();
-            scope.$digest();
-
-            expect(compiledElementScope).not.toBeUndefined();
-            expect(compiledElementScope.patientContext.identifier).toEqual("1234");
-            expect(Object.keys(compiledElementScope.patientContext.programAttributes).length).toEqual(0);
-        });
-
         it('should set preffered identifier to configured person attributes', function () {
             var patientContext = {
                 personAttributes: {'Aadhar Number': {description: 'Aadhar Number', value: '1234'}},
-                programAttributes: {}
             };
             patientService.getPatientContext.and.returnValue(specUtil.createFakePromise(patientContext));
             var patientContextConfig = {
@@ -216,13 +152,11 @@ describe('patient context', function () {
 
         it('should set preffered identifier to patient identifier if the configure attribute does not exists', function () {
             var patientContext = {
-                programAttributes: {'Aadhar Number': {description: 'Aadhar Number', value: '1234'}},
                 identifier: 'GAN20000',
                 personAttributes: []
             };
             patientService.getPatientContext.and.returnValue(specUtil.createFakePromise(patientContext));
             var patientContextConfig = {
-                programAttributes: ['Aadhar Number'],
                 preferredIdentifier: 'Aadhar Card Number'
             };
             mockAppDescriptor.getConfigValue.and.returnValue(patientContextConfig);
@@ -245,48 +179,11 @@ describe('patient context', function () {
 
             expect(compiledElementScope).not.toBeUndefined();
             expect(compiledElementScope.patientContext.identifier).toEqual("GAN20000");
-            expect(Object.keys(compiledElementScope.patientContext.programAttributes).length).toEqual(1);
-        });
-
-        it('program attribute should take precendence while setting preferred identifier', function () {
-            var patientContext = {
-                personAttributes: {'Aadhar Number': {description: 'Aadhar Number', value: '1234'}},
-                programAttributes: {'Aadhar Number': {description: 'Aadhar Number', value: '2345'}}
-            };
-            patientService.getPatientContext.and.returnValue(specUtil.createFakePromise(patientContext));
-            var patientContextConfig = {
-                personAttributes: ['Aadhar Number'],
-                programAttributes: ['Aadhar Number'],
-                preferredIdentifier: 'Aadhar Number'
-            };
-            mockAppDescriptor.getConfigValue.and.returnValue(patientContextConfig);
-            mockAppService.getAppDescriptor.and.returnValue(mockAppDescriptor);
-
-            spinner.forPromise.and.callFake(function (param) {
-                return {
-                    then: function (callback) {
-                        return callback({data: patientContext});
-                    }
-                }
-            });
-
-            var simpleHtml = '<patient-context patient="patient"></patient-context>';
-            var element = $compile(simpleHtml)(scope);
-            scope.$digest();
-            mockBackend.flush();
-            var compiledElementScope = element.isolateScope();
-            scope.$digest();
-
-            expect(compiledElementScope).not.toBeUndefined();
-            expect(compiledElementScope.patientContext.identifier).toEqual("2345");
-            expect(Object.keys(compiledElementScope.patientContext.personAttributes).length).toEqual(1);
-            expect(Object.keys(compiledElementScope.patientContext.programAttributes).length).toEqual(0);
         });
 
         it("should convert boolean values to 'yes' or 'no'", function() {
             var patientContext = {
                 personAttributes: {'isUrban': {description: 'Urban', value: 'true'}, 'cool': {description: 'Cool', value: 'false'}},
-                programAttributes: {'isUrban': {description: 'Urban', value: 'true'}, 'cool': {description: 'Cool', value: 'false'}}
             };
             patientService.getPatientContext.and.returnValue(specUtil.createFakePromise(patientContext));
             var patientContextConfig = {
@@ -314,8 +211,6 @@ describe('patient context', function () {
             expect(Object.keys(compiledElementScope.patientContext.personAttributes).length).toEqual(2);
             expect(compiledElementScope.patientContext.personAttributes.isUrban.value).toEqual("Yes");
             expect(compiledElementScope.patientContext.personAttributes.cool.value).toEqual("No");
-            expect(compiledElementScope.patientContext.programAttributes.isUrban.value).toEqual("Yes");
-            expect(compiledElementScope.patientContext.programAttributes.cool.value).toEqual("No");
         });
 
         it("should set showNameOnPrint to true by default", function(){
