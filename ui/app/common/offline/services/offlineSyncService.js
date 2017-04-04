@@ -63,7 +63,7 @@ angular.module('bahmni.common.offline')
 
             var getRemainingFileNames = function (fileNames, synced) {
                 var remaining = _.difference(fileNames, synced);
-                return remaining.length ? remaining : [_.last(fileNames)];
+                return remaining.length ? remaining : fileNames.length ? [_.last(fileNames)] : fileNames;
             };
 
             var savePatientDataFromFile = function () {
@@ -127,8 +127,12 @@ angular.module('bahmni.common.offline')
                 });
             };
 
-            var updatePendingEventsCount = function updatePendingEventsCount (category, pendingEventsCount) {
-                $rootScope.initSyncInfo[category].pendingEventsCount = pendingEventsCount;
+            var updatePendingEventsCount = function (category, pendingEventsCount) {
+                if (category === 'patient') {
+                    $rootScope.initSyncInfo[category].pendingEventsCount += pendingEventsCount;
+                } else {
+                    $rootScope.initSyncInfo[category].pendingEventsCount = pendingEventsCount;
+                }
                 $rootScope.initSyncInfo.totalEvents = categories.reduce(function (count, category) {
                     return count + $rootScope.initSyncInfo[category].savedEventsCount + $rootScope.initSyncInfo[category].pendingEventsCount;
                 }, 0);
