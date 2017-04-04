@@ -47,7 +47,7 @@
                 </div>
                 <div class="field-value">
                     <ol id="location" title="Select Location" class="nya-bs-select" ng-model="loginInfo.currentLocation">
-                        <li nya-bs-option="location in locations">
+                        <li nya-bs-option="location in locations | orderBy:'display'">
                             <a ng-class="{'isSynced' : location.isSynced}">{{ location.display }}</a>
                         </li>
                     </ol>
