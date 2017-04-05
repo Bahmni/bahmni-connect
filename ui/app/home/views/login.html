@@ -45,12 +45,15 @@
                         {{'LOGIN_LABEL_LOCATION_KEY' | translate}} <span class="asterick">*</span>
                     </label>
                 </div>
-                <div class="field-value">
-                    <ol id="location" title="Select Location" class="nya-bs-select" ng-model="loginInfo.currentLocation">
+                <div class="field-value custom-select-wrapper">
+                    <ol id="location" name="loc" title="Select Location" class="nya-bs-select" ng-model="loginInfo.currentLocation" required multiple>
                         <li nya-bs-option="location in locations | orderBy:'display'">
                             <a ng-class="{'isSynced' : location.isSynced}">{{ location.display }}</a>
                         </li>
                     </ol>
+                    <span ng-show="loginForm.$submitted && loginForm.loc.$invalid"  class="help-block">
+                     Location is required
+                    </span>
                 </div>
             </div>
 
