@@ -91,6 +91,8 @@ angular.module('bahmni.common.offline')
                 } else if (syncStatus && !(syncStatus[dbName] && syncStatus[dbName][loginLocationUuid])) {
                     offlineLocationInitialization().then(function () {
                         init().then(syncSuccessCallBack, syncFailureCallBack);
+                    }).catch(function () {
+                        $state.go("error");
                     });
                 } else {
                     init().then(syncSuccessCallBack, syncFailureCallBack);

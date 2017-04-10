@@ -47,27 +47,42 @@ angular.module('bahmni.offline', ['ui.router', 'httpErrorInterceptor', 'bahmni.c
                 }).state('scheduler',
                 {
                     url: '/scheduler',
+                    params: {
+                        preventResolve: false
+                    },
                     resolve: {
                         offlineDb: function (offlineDbInitialization) {
                             return offlineDbInitialization();
                         },
-                        testConfig: function (offlineDb, offlineService, offlineDbService, androidDbService, $state) {
+                        testConfig: function (offlineDb, offlineService, offlineDbService, androidDbService, $state, $stateParams) {
                             if (offlineService.isAndroidApp()) {
                                 offlineDbService = androidDbService;
                             }
                             return offlineDbService.getConfig("home").then(function (result) {
                                 if (result && offlineService.getItem('eventLogCategories')) {
+                                    $stateParams.preventResolve = true;
                                     $state.go('initSync');
                                 }
                             });
                         },
-                        offlineReferenceDataInitialization: function (offlineReferenceDataInitialization, offlineDb, testConfig) {
-                            return offlineReferenceDataInitialization(true, offlineDb, testConfig);
+                        offlineReferenceDataInitialization: function (offlineReferenceDataInitialization, offlineDb, testConfig, $state, $stateParams, $q) {
+                            if ($stateParams.preventResolve) {
+                                return $q.when();
+                            }
+                            return offlineReferenceDataInitialization(true, offlineDb, testConfig).catch(function () {
+                                $state.go("error");
+                            });
                         },
-                        offlineLocationInitialization: function (offlineLocationInitialization, offlineReferenceDataInitialization) {
+                        offlineLocationInitialization: function (offlineLocationInitialization, offlineReferenceDataInitialization, $stateParams, $q) {
+                            if ($stateParams.preventResolve) {
+                                return $q.when();
+                            }
                             return offlineLocationInitialization(offlineReferenceDataInitialization);
                         },
-                        offlineConfigInitialization: function (offlineConfigInitialization, offlineLocationInitialization) {
+                        offlineConfigInitialization: function (offlineConfigInitialization, offlineLocationInitialization, $stateParams, $q) {
+                            if ($stateParams.preventResolve) {
+                                return $q.when();
+                            }
                             return offlineConfigInitialization(offlineLocationInitialization);
                         },
                         state: function ($state, offlineConfigInitialization) {
@@ -83,8 +98,26 @@ angular.module('bahmni.offline', ['ui.router', 'httpErrorInterceptor', 'bahmni.c
                             return offlineDbInitialization();
                         }
                     }
-                }).state('device',
-                {
+                }).state('error', {
+                    url: "/error",
+                    controller: function ($state, ngDialog, $scope, sessionService) {
+                        $scope.logout = function () {
+                            sessionService.destroy().then(
+                                function () {
+                                    $state.go('initScheduler');
+                                }
+                            );
+                        };
+                        ngDialog.open({
+                            template: 'views/offlineSyncFailure.html',
+                            class: 'ngdialog-theme-default',
+                            closeByEscape: false,
+                            closeByDocument: false,
+                            showClose: false,
+                            scope: $scope
+                        });
+                    }
+                }).state('device', {
                     url: "/device/:deviceType",
                     controller: function ($stateParams, $rootScope, $state, offlineService, $http) {
                         if ($stateParams.deviceType === 'chrome-app' || $stateParams.deviceType === 'android') {
@@ -99,21 +132,23 @@ angular.module('bahmni.offline', ['ui.router', 'httpErrorInterceptor', 'bahmni.c
                             $state.go('initScheduler');
                         }
                     }
-                }).state('login',
-                {
+                }).state('login', {
                     controller: function () {
                         window.location.href = "../home/index.html#/login";
                     }
-                }).state('dashboard',
-                {
+                }).state('dashboard', {
                     controller: function () {
                         window.location.href = "../home/index.html#/dashboard";
                     }
                 });
             $bahmniTranslateProvider.init({app: 'offline', shouldMerge: true});
-        }]).run(['$rootScope', '$templateCache', function ($rootScope, $templateCache) {
+        }]).run(['$rootScope', '$templateCache', '$state', 'messagingService', function ($rootScope, $templateCache, $state, messagingService) {
     // Disable caching view template partials
             $rootScope.$on('$viewContentLoaded', function () {
                 $templateCache.removeAll();
+            });
+            $rootScope.$on('$stateChangeError', function (event, toState, toParams, fromState, fromParams, error) {
+                messagingService.showMessage("error", error.stack || error);
+                $state.go('error');
             });
         }]);

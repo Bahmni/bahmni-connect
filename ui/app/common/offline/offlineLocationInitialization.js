@@ -55,6 +55,8 @@ angular.module('bahmni.common.offline')
                                         break;
                                     }
                                 }
+                            }).catch(function (response) {
+                                deferred.reject(response);
                             });
                         } else {
                             deferred.resolve();
