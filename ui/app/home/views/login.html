@@ -47,8 +47,8 @@
                 </div>
                 <div class="field-value custom-select-wrapper">
                     <ol id="location" name="locations" title="Select Location" class="nya-bs-select" ng-model="loginInfo.currentLocation" required>
-                        <li nya-bs-option="location in locations | orderBy:'display'">
-                            <a ng-class="{'isSynced' : location.isSynced}">{{ location.display }}</a>
+                        <li nya-bs-option="location in locations | orderBy:'display'" >
+                            <a ng-class="{'isSynced' : location.isSynced}" ng-mouseover="focusFixing()">{{ location.display }}</a>
                         </li>
                     </ol>
                     <span ng-show="loginForm.$submitted && loginForm.locations.$invalid">

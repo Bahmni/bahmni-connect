@@ -471,7 +471,6 @@ body{
     background-color: rgba(255,255,255,0.8);
     -webkit-background-clip: padding-box;
     background-clip: padding-box;
-    border: 1px solid #ccc;
     border: 1px solid rgba(0, 0, 0, .15);
     border-radius: 4px;
     -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
@@ -493,18 +492,16 @@ body{
       font-weight: 400;
       line-height: 1.42857143;
       color: #333;
-      white-space: nowrap;
       position: relative;
       border: 2px solid transparent;
-      &:focus {
-        color: #262626;
-        background-color: #f5f5f5;
-        border-color: #2b95ff;
-      }
-      &:hover {
+      &:focus, &:hover {
         color: #FFF;
         text-decoration: none;
         background-color: #2b95ff;
+      }
+      &:focus &:hover {
+        color: #333;
+        background: transparent;
       }
       &.isSynced:after {
         content: "";
@@ -537,6 +534,10 @@ body{
   &.open {
     .dropdown-menu {
       display: block;
+      max-height: 245px;
+      > .dropdown-menu {
+        overflow: auto;
+      }
     }
     a {
       outline: 0;
@@ -574,7 +575,8 @@ body{
   .btn-default {
     color: #333;
     background-color: #fff;
-    border-color: #ccc
+    border-color: #ccc;
+    font-size: 0;
   }
 
   .btn-default.focus, .btn-default:focus {
@@ -607,12 +609,17 @@ body{
     padding: 7px 20px;
     max-width: 100%;
     box-sizing: border-box;
+    position: relative;
     .filter-option {
       width: auto;
+      font-size: 14px;
+      line-height: 1.2;
     }
   }
   .dropdown-toggle.show-special-title .special-title {
     width: auto;
+    font-size: 14px;
+    line-height: 1.2;
   }
 }
 @media screen and (max-width: 1024px) {

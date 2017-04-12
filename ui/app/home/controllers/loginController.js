@@ -59,6 +59,10 @@ angular.module('bahmni.home')
                 $rootScope.$broadcast('event:auth-loggedin');
                 $scope.loginInfo.currentLocation = getLastLoggedinLocation();
             };
+            $scope.focusFixing = function () {
+                $('.nya-bs-select .dropdown-menu > li > a').blur();
+                console.log("called");
+            };
 
             $scope.login = function () {
                 $scope.errorMessageTranslateKey = null;
