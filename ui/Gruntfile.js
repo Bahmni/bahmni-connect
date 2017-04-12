@@ -170,10 +170,10 @@ module.exports = function (grunt) {
         coverage: {
             options: {
                 thresholds: {
-                    statements: 67.9,
-                    branches: 57.3,
-                    functions: 60.3,
-                    lines: 67.9
+                    statements: 64.6,
+                    branches: 55.0,
+                    functions: 57.9,
+                    lines: 64.6
                 },
                 dir: 'coverage',
                 root: '.'
@@ -514,8 +514,8 @@ module.exports = function (grunt) {
 
     grunt.registerTask('devchrome', ['devbundle', 'preprocess:chrome', "toggleComments", 'generate-sw']);
     grunt.registerTask('devandroid', ['devbundle', 'preprocess:android', "toggleComments", 'clean:androidApp', 'copy:androidApp']);
-    grunt.registerTask('chrome', ['bundle', 'karma:chrome', 'uglify-and-rename', 'preprocess:chrome']);
-    grunt.registerTask('android', ['bundle', 'karma:android', 'uglify-and-rename', 'preprocess:android', 'toggleComments']);
+    grunt.registerTask('chrome', ['bundle', 'karma:chrome', 'coverage', 'uglify-and-rename', 'preprocess:chrome']);
+    grunt.registerTask('android', ['bundle', 'karma:android', 'coverage', 'uglify-and-rename', 'preprocess:android', 'toggleComments']);
 
     grunt.registerTask('bower-install', 'install dependencies using bower', function () {
         var exec = require('child_process').exec;

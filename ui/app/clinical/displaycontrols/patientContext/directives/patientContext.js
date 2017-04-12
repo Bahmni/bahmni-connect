@@ -14,7 +14,7 @@ angular.module('bahmni.clinical')
 
                 var preferredIdentifier = patientContextConfig.preferredIdentifier;
                 if (preferredIdentifier) {
-                    if (personAttributes[preferredIdentifier]) {
+                    if (personAttributes && personAttributes[preferredIdentifier]) {
                         $scope.patientContext.identifier = personAttributes[preferredIdentifier].value;
                         delete personAttributes[preferredIdentifier];
                     }
