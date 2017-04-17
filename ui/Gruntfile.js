@@ -171,7 +171,7 @@ module.exports = function (grunt) {
             options: {
                 thresholds: {
                     statements: 64.6,
-                    branches: 55.0,
+                    branches: 54.9,
                     functions: 57.9,
                     lines: 64.6
                 },
@@ -483,7 +483,7 @@ module.exports = function (grunt) {
 
     grunt.renameTask('regarde', 'watch');
 
-    grunt.registerTask('test', ['karma:unit', 'coverage']);
+    grunt.registerTask('test', ['eslint', 'karma:chrome', 'coverage', 'karma:android', 'coverage']);
 
     grunt.registerTask('bundle', [
         'npm-install',
