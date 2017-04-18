@@ -12,8 +12,9 @@ angular.module('bahmni.common.offline')
                     }
                     offlineDbService.getConfig("dbNameCondition").then(function (config) {
                         if (!config || !config.value) {
-                            messagingService.showMessage("error", "dbNameCondition.json is not present in config");
-                            return defer.reject();
+                            messagingService.showMessage("error",
+                                Bahmni.Common.Constants.offlineErrorMessages.dbNameConditionNotPresent);
+                            return defer.reject(Bahmni.Common.Constants.offlineErrorMessages.dbNameConditionNotPresent);
                         }
                         var script = config.value['dbNameCondition.js'];
                         eval(script); // eslint-disable-line no-eval

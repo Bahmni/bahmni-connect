@@ -9,8 +9,13 @@ angular.module('bahmni.offline', ['ui.router', 'httpErrorInterceptor', 'bahmni.c
                 .state('initScheduler', {
                     url: '/initScheduler',
                     resolve: {
-                        offlineDb: function (offlineDbInitialization) {
-                            return offlineDbInitialization();
+                        offlineDb: function (offlineDbInitialization, $state, offlineService) {
+                            return offlineDbInitialization().catch(function (error) {
+                                if (error === Bahmni.Common.Constants.offlineErrorMessages.dbNameConditionNotPresent) {
+                                    offlineService.deleteItem("LoginInformation");
+                                }
+                                $state.go("error");
+                            });
                         },
                         offlineConfigInitialization: function (offlineConfigInitialization, offlineDb, offlineService, offlineDbService, androidDbService, $q) {
                             var checkConfig = function () {

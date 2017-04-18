@@ -85,18 +85,20 @@ describe("dbNameService", function () {
             expect(messagingService.showMessage.calls.count()).toBe(0);
         });
 
-        it("should show message when dbNameCondition config is not present and allowMultipleLoginLocation is set to true", function () {
+        it("should show message when dbNameCondition config is not present and allowMultipleLoginLocation is set to true", function (done) {
             injectDependency();
             offlineService.isOfflineApp.and.returnValue(true);
             offlineService.getItem.and.returnValue(true);
             spyOn(offlineDbService, "getConfig").and.callThrough();
-            dbNameService.getDbName("provider", "loginLocation");
-            expect(offlineService.getItem.calls.count()).toBe(1);
-            expect(offlineService.getItem).toHaveBeenCalledWith("allowMultipleLoginLocation");
-            expect(offlineDbService.getConfig.calls.count()).toBe(1);
-            expect(messagingService.showMessage.calls.count()).toBe(1);
-            expect(messagingService.showMessage).toHaveBeenCalledWith("error", "dbNameCondition.json is not present in config");
-
+            dbNameService.getDbName("provider", "loginLocation").catch(function (error) {
+                expect(offlineService.getItem.calls.count()).toBe(1);
+                expect(offlineService.getItem).toHaveBeenCalledWith("allowMultipleLoginLocation");
+                expect(offlineDbService.getConfig.calls.count()).toBe(1);
+                expect(messagingService.showMessage.calls.count()).toBe(1);
+                expect(messagingService.showMessage).toHaveBeenCalledWith("error", "dbNameCondition.json is not present in config");
+                expect(error).toBe("dbNameCondition.json is not present in config");
+                done();
+            });
         });
     });
 });

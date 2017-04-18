@@ -32,6 +32,10 @@ angular.module('bahmni.common.offline').service('offlineService', ['$rootScope',
         return value;
     };
 
+    this.deleteItem = function (key) {
+        return delete localStorage[key];
+    };
+
     this.setItem = function (key, value) {
         localStorage.setItem(key, JSON.stringify(value));
     };
