@@ -1,8 +1,10 @@
 'use strict';
 
 angular.module('bahmni.common.offline')
-    .service('offlineSyncService', ['eventLogService', 'offlineDbService', '$q', 'offlineService', 'androidDbService', '$rootScope', 'loggingService', '$http', '$timeout', 'dbNameService',
-        function (eventLogService, offlineDbService, $q, offlineService, androidDbService, $rootScope, loggingService, $http, $timeout, dbNameService) {
+    .service('offlineSyncService', ['eventLogService', 'offlineDbService', '$q', 'offlineService', 'androidDbService',
+        '$rootScope', 'loggingService', '$http', '$timeout', 'dbNameService', 'messagingService',
+        function (eventLogService, offlineDbService, $q, offlineService, androidDbService, $rootScope, loggingService,
+                  $http, $timeout, dbNameService, messagingService) {
             var stages, categories;
 
             var createRejectedPromise = function () {
@@ -41,7 +43,7 @@ angular.module('bahmni.common.offline')
             };
 
             var getPatientDataForFiles = function (fileNames, count, eventLogUuid, dbName) {
-                if (count != fileNames.length) {
+                if (count !== fileNames.length) {
                     return $http.get(Bahmni.Common.Constants.preprocessedPatientUrl + fileNames[count]).then(function (response) {
                         updatePendingEventsCount("patient", response.data.patients.length);
                         eventLogUuid = response.data.lastReadEventUuid;
@@ -95,11 +97,45 @@ angular.module('bahmni.common.offline')
                 return defer.promise;
             };
 
+            var getDbNameCondition = function () {
+                var appName = "dbNameCondition";
+                var requestUrl = Bahmni.Common.Constants.baseUrl + appName + "/" + appName + ".json";
+                return $http.get(requestUrl).then(function (result) {
+                    return offlineDbService.insertConfig(appName, result.data, result.headers().etag);
+                }).catch(function (response) {
+                    messagingService.showMessage("error", Bahmni.Common.Constants.offlineErrorMessages.dbNameConditionNotPresent);
+                    logSyncError(response);
+                });
+            };
+
+            var migrate = function (isInitSync) {
+                var categoryPromise = eventLogService.getEventCategoriesToBeSynced().then(function (results) {
+                    offlineService.setItem("eventLogCategories", results.data);
+                });
+                var url = Bahmni.Common.Constants.globalPropertyUrl + "?property=allowMultipleLoginLocation";
+                var multiDbConfigPromise = $http.get(url).then(function (res) {
+                    offlineService.setItem("allowMultipleLoginLocation", res.data);
+                    if (res.data) {
+                        return getDbNameCondition();
+                    }
+                });
+                return $q.all([categoryPromise, multiDbConfigPromise]).then(function () {
+                    return syncData(isInitSync);
+                });
+            };
+
             var sync = function (isInitSync) {
                 stages = 0;
                 if (offlineService.isAndroidApp()) {
                     offlineDbService = androidDbService;
                 }
+                if (_.includes(offlineService.getItem("eventLogCategories"), "transactionalData")) {
+                    return migrate(isInitSync);
+                }
+                return syncData(isInitSync);
+            };
+
+            var syncData = function (isInitSync) {
                 var promises = [];
                 categories = offlineService.getItem("eventLogCategories");
                 initializeInitSyncInfo(categories);
@@ -108,7 +144,7 @@ angular.module('bahmni.common.offline')
                         promises.push(syncForCategory(category, isInitSync));
                     }
                 });
-                if (isInitSync && _.indexOf(categories, 'patient') != -1) {
+                if (isInitSync && _.indexOf(categories, 'patient') !== -1) {
                     var patientPromise = savePatientDataFromFile().then(function (uuid) {
                         return updateMarker({uuid: uuid}, "patient");
                     });
@@ -119,7 +155,7 @@ angular.module('bahmni.common.offline')
 
             var syncForCategory = function (category, isInitSync) {
                 return offlineDbService.getMarker(category).then(function (marker) {
-                    if (category == "encounter" && isInitSync) {
+                    if (category === "encounter" && isInitSync) {
                         marker = angular.copy(marker);
                         marker.filters = offlineService.getItem("initSyncFilter");
                     }

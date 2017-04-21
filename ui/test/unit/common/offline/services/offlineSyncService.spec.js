@@ -246,8 +246,11 @@ describe('OfflineSyncService', function () {
             });
         });
 
-        beforeEach(inject(['offlineSyncService', 'eventLogService', 'offlineDbService', 'configurationService', '$httpBackend', '$http', '$rootScope', 'loggingService', 'offlineService', 'dbNameService', '$q',
-            function (offlineSyncServiceInjected, eventLogServiceInjected, offlineDbServiceInjected, configurationServiceInjected, _$httpBackend_, http, rootScope, loggingServiceInjected, offlineServiceInjected, dbNameServiceInjected, $q) {
+        beforeEach(inject(['offlineSyncService', 'eventLogService', 'offlineDbService', 'configurationService',
+            '$httpBackend', '$http', '$rootScope', 'loggingService', 'offlineService', 'dbNameService', '$q',
+            function (offlineSyncServiceInjected, eventLogServiceInjected, offlineDbServiceInjected,
+                      configurationServiceInjected, _$httpBackend_, http, rootScope, loggingServiceInjected,
+                      offlineServiceInjected, dbNameServiceInjected, $q) {
                 offlineSyncService = offlineSyncServiceInjected;
                 eventLogService = eventLogServiceInjected;
                 offlineDbService = offlineDbServiceInjected;
@@ -682,7 +685,7 @@ describe('OfflineSyncService', function () {
             var response = {lastReadEventUuid: "lastEventUuid", patients: [responsePatient]};
             httpBackend.when('GET', Bahmni.Common.Constants.preprocessedPatientFilesUrl + "202020").respond(200, ["202020-1.json.gz"]);
             httpBackend.when('GET', Bahmni.Common.Constants.preprocessedPatientUrl + "202020-1.json.gz").respond(200, response);
-            var marker = {markerName: 'transactionalData', filters: [202020]};
+            var marker = {markerName: 'patient', filters: [202020]};
 
             spyOn(offlineService, 'getItem').and.callFake(function (key) {
                 if(key == "LoginInformation")
@@ -762,7 +765,7 @@ describe('OfflineSyncService', function () {
     });
 
     describe('subsequent sync ', function () {
-        var $rootScope;
+        var $rootScope, httpBackend, $http, messagingService;
         beforeEach(function () {
             module('bahmni.common.offline');
             module('bahmni.common.domain');
@@ -817,6 +820,20 @@ describe('OfflineSyncService', function () {
                                 return callback({});
                             }
                         };
+                    },
+                    createEncounter: function () {
+                      return {
+                          then: function (callback) {
+                              return callback({});
+                          }
+                      }
+                    },
+                    insertConfig: function () {
+                       return {
+                           then: function (callback) {
+                               return callback({});
+                           }
+                       }
                     },
                     getMarker: function (category) {
                         return {
@@ -933,6 +950,13 @@ describe('OfflineSyncService', function () {
                                 return callback({data: patient});
                             }
                         };
+                    },
+                    getEventCategoriesToBeSynced: function () {
+                        return {
+                            then: function (callBack) {
+                                return callBack();
+                            }
+                        }
                     }
                 });
                 $provide.value('offlineService', {
@@ -955,8 +979,11 @@ describe('OfflineSyncService', function () {
             });
         });
 
-        beforeEach(inject(['offlineSyncService', 'eventLogService', 'offlineDbService', 'configurationService', '$rootScope', 'loggingService', 'offlineService',
-            function (offlineSyncServiceInjected, eventLogServiceInjected, offlineDbServiceInjected, configurationServiceInjected, rootScope, loggingServiceInjected, offlineServiceInjected) {
+        beforeEach(inject(['offlineSyncService', 'eventLogService', 'offlineDbService', 'configurationService',
+            '$rootScope', 'loggingService', 'offlineService', '$httpBackend', '$http', 'messagingService',
+            function (offlineSyncServiceInjected, eventLogServiceInjected, offlineDbServiceInjected,
+                      configurationServiceInjected, rootScope, loggingServiceInjected, offlineServiceInjected,
+                      _$httpBackend_, http, messagingServiceInjected) {
                 offlineSyncService = offlineSyncServiceInjected;
                 eventLogService = eventLogServiceInjected;
                 offlineDbService = offlineDbServiceInjected;
@@ -964,6 +991,9 @@ describe('OfflineSyncService', function () {
                 loggingService = loggingServiceInjected;
                 offlineService = offlineServiceInjected;
                 $rootScope = rootScope;
+                httpBackend = _$httpBackend_;
+                $http = http;
+                messagingService = messagingServiceInjected;
             }]));
 
 
@@ -1023,7 +1053,7 @@ describe('OfflineSyncService', function () {
 
         it('should read patient events from the last read uuid for the catchment', function () {
             var categories = [
-                'transactionalData'
+                'patient'
             ];
             var patientEvent = {
                 object: 'patientUrl',
@@ -1031,19 +1061,7 @@ describe('OfflineSyncService', function () {
                 uuid: 'uuid1'
             };
 
-            var encounterEvent = {
-                object: 'encounterUrl',
-                category: 'Encounter',
-                uuid: 'uuid2'
-            };
-
-            var labOrderResultsEvent = {
-                object: '/openmrs/ws/rest/v1/bahmnicore/labOrderResults?patientUuid=5e94e7cb-e9fe-4763-e9ea-217bdaa85029',
-                category: 'LabOrderResults',
-                uuid: 'uuid3'
-            };
-
-            var marker = {markerName: 'transactionalData', filters: [202020]};
+            var marker = {markerName: 'patient', filters: [202020]};
 
             spyOn(offlineService, 'getItem').and.returnValue(categories);
             spyOn(offlineService, 'setItem').and.callThrough();
@@ -1103,7 +1121,7 @@ describe('OfflineSyncService', function () {
 
         it('should map patient identifiers data to contain identifierType primary', function () {
             var categories = [
-                'transactionalData'
+                'patient'
             ];
             var patientEvent = {
                 object: 'patientUrl',
@@ -1124,7 +1142,7 @@ describe('OfflineSyncService', function () {
             };
             patient.identifiers.push(identifier);
 
-            var marker = {markerName: 'transactionalData', filters: [202020]};
+            var marker = {markerName: 'patient', filters: [202020]};
 
             spyOn(offlineService, 'getItem').and.returnValue(categories);
             spyOn(offlineService, 'setItem').and.callThrough();
@@ -1156,6 +1174,256 @@ describe('OfflineSyncService', function () {
             expect(patient.identifiers[1].identifierType.primary).toBeFalsy();
             expect(patient.identifiers[2].identifierType.primary).not.toBeUndefined();
             expect(patient.identifiers[2].identifierType.primary).toBeFalsy();
+        });
+
+        it('should migrate local storage if transactionalData present in event log category', function () {
+            var localStorage = {
+                eventLogCategories: ['transactionalData']
+            };
+
+            var patientEvent = {
+                object: 'patientUrl',
+                category: 'patient',
+                uuid: 'uuid1'
+            };
+
+            var encounterEvent = {
+                object: 'encounterUrl',
+                category: 'Encounter',
+                uuid: 'uuid2'
+            };
+
+            var marker = {markerName: 'patient', filters: [202020]};
+
+            spyOn(offlineService, 'getItem').and.callFake(function (key) {
+               return localStorage[key];
+            });
+            spyOn(offlineService, 'setItem').and.callFake(function (key, values) {
+                localStorage[key] = values;
+            });
+            spyOn(offlineDbService, 'getMarker').and.callThrough(function (markerName) {
+                return {
+                    then: function () {
+                        return markerName === "patient"? marker : {markerName: 'encounter', filters: [202020]};
+                    }
+                }
+            });
+            spyOn(eventLogService, 'getEventsFor').and.callFake(function (category) {
+                return {
+                    then: function (callback) {
+                        var events = category ==="patient" ? [patientEvent] : [encounterEvent];
+                        if (!marker.lastReadEventUuid)
+                            return callback({
+                                data: {events: events, pendingEventsCount: 1}
+                            });
+                    }
+                }
+            });
+            spyOn(eventLogService, 'getDataForUrl').and.callFake(function (url) {
+                return {
+                    then: function (callback) {
+                        return callback({data: patient});
+                    }
+                };
+            });
+            spyOn(offlineDbService, 'insertMarker').and.callFake(function (name, uuid, filters) {
+                marker.lastReadEventUuid = uuid;
+                return {lastReadTime: new Date()}
+            });
+            spyOn(offlineDbService, 'insertAddressHierarchy').and.callThrough();
+            spyOn(offlineDbService, 'createPatient').and.callThrough();
+            spyOn(offlineDbService, 'createEncounter').and.callThrough();
+
+            spyOn(eventLogService, 'getEventCategoriesToBeSynced').and.callFake(function () {
+                return specUtil.simplePromise({data: ["patient", "encounter"]});
+            });
+            httpBackend.whenGET(Bahmni.Common.Constants.globalPropertyUrl + "?property=allowMultipleLoginLocation")
+                .respond(false);
+            offlineSyncService.sync();
+            $rootScope.$digest();
+            httpBackend.flush();
+
+            expect(offlineService.setItem).toHaveBeenCalledWith("eventLogCategories", ["patient", "encounter"]);
+            expect(offlineService.setItem).toHaveBeenCalledWith("allowMultipleLoginLocation", false);
+            expect(eventLogService.getDataForUrl).toHaveBeenCalledWith(patientEvent.object);
+            expect(eventLogService.getDataForUrl.calls.count()).toBe(2);
+            expect(offlineDbService.createPatient).toHaveBeenCalled();
+            expect(offlineDbService.createPatient.calls.count()).toBe(1);
+            expect(offlineDbService.insertAddressHierarchy.calls.count()).toBe(0);
+            expect(eventLogService.getDataForUrl).toHaveBeenCalledWith(encounterEvent.object);
+            expect(offlineDbService.createEncounter).toHaveBeenCalled();
+            expect(offlineDbService.createEncounter.calls.count()).toBe(1);
+        });
+
+        it('should migrate local storage if transactionalData present in event log category and also update the dbNameConfig', function () {
+            var dbNameCondition = {"dbNameCondition.js": "Bahmni.Common.Offline.dbNameCondition.get = " +
+            "function (provider, loginLocation) {    return loginLocation;};"};
+
+            var localStorage = {
+                eventLogCategories: ['transactionalData']
+            };
+
+            var patientEvent = {
+                object: 'patientUrl',
+                category: 'patient',
+                uuid: 'uuid1'
+            };
+
+            var encounterEvent = {
+                object: 'encounterUrl',
+                category: 'Encounter',
+                uuid: 'uuid2'
+            };
+
+            var marker = {markerName: 'patient', filters: [202020]};
+
+            spyOn(offlineService, 'getItem').and.callFake(function (key) {
+               return localStorage[key];
+            });
+            spyOn(offlineService, 'setItem').and.callFake(function (key, values) {
+                localStorage[key] = values;
+            });
+            spyOn(offlineDbService, 'getMarker').and.callThrough(function (markerName) {
+                return {
+                    then: function () {
+                        return markerName === "patient"? marker : {markerName: 'encounter', filters: [202020]};
+                    }
+                }
+            });
+            spyOn(eventLogService, 'getEventsFor').and.callFake(function (category) {
+                return {
+                    then: function (callback) {
+                        var events = category ==="patient" ? [patientEvent] : [encounterEvent];
+                        if (!marker.lastReadEventUuid)
+                            return callback({
+                                data: {events: events, pendingEventsCount: 1}
+                            });
+                    }
+                }
+            });
+            spyOn(eventLogService, 'getDataForUrl').and.callFake(function (url) {
+                return {
+                    then: function (callback) {
+                        return callback({data: patient});
+                    }
+                };
+            });
+            spyOn(offlineDbService, 'insertMarker').and.callFake(function (name, uuid, filters) {
+                marker.lastReadEventUuid = uuid;
+                return {lastReadTime: new Date()}
+            });
+            spyOn(offlineDbService, 'insertAddressHierarchy').and.callThrough();
+            spyOn(offlineDbService, 'createPatient').and.callThrough();
+            spyOn(offlineDbService, 'createEncounter').and.callThrough();
+            spyOn(offlineDbService, 'insertConfig').and.callThrough();
+
+            spyOn(eventLogService, 'getEventCategoriesToBeSynced').and.callFake(function () {
+                return specUtil.simplePromise({data: ["patient", "encounter"]});
+            });
+            httpBackend.whenGET(Bahmni.Common.Constants.globalPropertyUrl + "?property=allowMultipleLoginLocation")
+                .respond(true);
+            httpBackend.whenGET(Bahmni.Common.Constants.baseUrl + "dbNameCondition/dbNameCondition.json")
+                .respond(dbNameCondition);
+            offlineSyncService.sync();
+            $rootScope.$digest();
+            httpBackend.flush();
+
+            expect(offlineService.setItem).toHaveBeenCalledWith("eventLogCategories", ["patient", "encounter"]);
+            expect(offlineService.setItem).toHaveBeenCalledWith("allowMultipleLoginLocation", true);
+            expect(eventLogService.getDataForUrl).toHaveBeenCalledWith(patientEvent.object);
+            expect(eventLogService.getDataForUrl.calls.count()).toBe(2);
+            expect(offlineDbService.createPatient).toHaveBeenCalled();
+            expect(offlineDbService.createPatient.calls.count()).toBe(1);
+            expect(offlineDbService.insertAddressHierarchy.calls.count()).toBe(0);
+            expect(eventLogService.getDataForUrl).toHaveBeenCalledWith(encounterEvent.object);
+            expect(offlineDbService.createEncounter).toHaveBeenCalled();
+            expect(offlineDbService.createEncounter.calls.count()).toBe(1);
+            expect(offlineDbService.insertConfig.calls.count()).toBe(1);
+            expect(offlineDbService.insertConfig).toHaveBeenCalledWith("dbNameCondition", dbNameCondition, undefined)
+        });
+
+        it('should show error message if dbNameCondition is not present during migration', function () {
+            var localStorage = {
+                eventLogCategories: ['transactionalData']
+            };
+
+            var patientEvent = {
+                object: 'patientUrl',
+                category: 'patient',
+                uuid: 'uuid1'
+            };
+
+            var encounterEvent = {
+                object: 'encounterUrl',
+                category: 'Encounter',
+                uuid: 'uuid2'
+            };
+
+            var marker = {markerName: 'patient', filters: [202020]};
+
+            spyOn(offlineService, 'getItem').and.callFake(function (key) {
+               return localStorage[key];
+            });
+            spyOn(offlineService, 'setItem').and.callFake(function (key, values) {
+                localStorage[key] = values;
+            });
+            spyOn(offlineDbService, 'getMarker').and.callThrough(function (markerName) {
+                return {
+                    then: function () {
+                        return markerName === "patient"? marker : {markerName: 'encounter', filters: [202020]};
+                    }
+                }
+            });
+            spyOn(eventLogService, 'getEventsFor').and.callFake(function (category) {
+                return {
+                    then: function (callback) {
+                        var events = category ==="patient" ? [patientEvent] : [encounterEvent];
+                        if (!marker.lastReadEventUuid)
+                            return callback({
+                                data: {events: events, pendingEventsCount: 1}
+                            });
+                    }
+                }
+            });
+            spyOn(eventLogService, 'getDataForUrl').and.callFake(function (url) {
+                return {
+                    then: function (callback) {
+                        return callback({data: patient});
+                    }
+                };
+            });
+            spyOn(offlineDbService, 'insertMarker').and.callFake(function (name, uuid, filters) {
+                marker.lastReadEventUuid = uuid;
+                return {lastReadTime: new Date()}
+            });
+            spyOn(offlineDbService, 'insertAddressHierarchy').and.callThrough();
+            spyOn(offlineDbService, 'createPatient').and.callThrough();
+            spyOn(offlineDbService, 'createEncounter').and.callThrough();
+            spyOn(offlineDbService, 'insertConfig').and.callThrough();
+
+            spyOn(eventLogService, 'getEventCategoriesToBeSynced').and.callFake(function () {
+                return specUtil.simplePromise({data: ["patient", "encounter"]});
+            });
+            httpBackend.whenGET(Bahmni.Common.Constants.globalPropertyUrl + "?property=allowMultipleLoginLocation")
+                .respond(true);
+            httpBackend.whenGET(Bahmni.Common.Constants.baseUrl + "dbNameCondition/dbNameCondition.json")
+                .respond(500, "File not found");
+            offlineSyncService.sync();
+            $rootScope.$digest();
+            httpBackend.flush();
+
+            expect(offlineService.setItem).toHaveBeenCalledWith("eventLogCategories", ["patient", "encounter"]);
+            expect(offlineService.setItem).toHaveBeenCalledWith("allowMultipleLoginLocation", true);
+            expect(eventLogService.getDataForUrl).toHaveBeenCalledWith(patientEvent.object);
+            expect(eventLogService.getDataForUrl.calls.count()).toBe(2);
+            expect(offlineDbService.createPatient).toHaveBeenCalled();
+            expect(offlineDbService.createPatient.calls.count()).toBe(1);
+            expect(offlineDbService.insertAddressHierarchy.calls.count()).toBe(0);
+            expect(eventLogService.getDataForUrl).toHaveBeenCalledWith(encounterEvent.object);
+            expect(offlineDbService.createEncounter).toHaveBeenCalled();
+            expect(offlineDbService.createEncounter.calls.count()).toBe(1);
+            expect(messagingService.showMessage).toHaveBeenCalledWith("error", "dbNameCondition.json is not present in config");
+            expect(offlineDbService.insertConfig).not.toHaveBeenCalled();
         });
     });
 });
