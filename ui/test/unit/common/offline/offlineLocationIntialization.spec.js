@@ -91,7 +91,8 @@ describe('offlineLocationInitialization', function () {
 
         offlineDbServiceMock.getReferenceData.and.returnValue(specUtil.respondWithPromise($q, {data: addressLevels}));
         offlineDbServiceMock.getMarker.and.returnValue(specUtil.simplePromise(markers));
-        eventLogServiceMock.getFilterForCategoryAndLoginLocation.and.returnValue(specUtil.createFakePromise(categoryFilterMap));
+        offlineDbServiceMock.insertMarker.and.returnValue(specUtil.simplePromise());
+        eventLogServiceMock.getFilterForCategoryAndLoginLocation.and.returnValue(specUtil.simplePromise({data:categoryFilterMap}));
         eventLogServiceMock.getAddressForLoginLocation.and.returnValue(specUtil.respondWithPromise($q, {data: loginLocationAddress}));
         eventLogServiceMock.getEventCategoriesToBeSynced.and.returnValue(specUtil.createFakePromise(["patient", "addressHierarchy", "offline-concepts"]));
     });
@@ -164,6 +165,19 @@ describe('offlineLocationInitialization', function () {
         offlineLocationInitialization().then(function() {
             expect(eventLogServiceMock.getFilterForCategoryAndLoginLocation).toHaveBeenCalledWith("provider-uuid", 'district-uuid', "location-uuid");
             expect(offlineDbServiceMock.insertMarker).toHaveBeenCalled();
+            done();
+        });
+        scope.$digest();
+    });
+
+    it("should reject proise if network calls fails", function (done) {
+        var defered = $q.defer();
+        var promise = defered.promise;
+        defered.reject();
+        eventLogServiceMock.getEventCategoriesToBeSynced.and.returnValue(promise);
+        offlineLocationInitialization().then(function () {
+            throw new Error("offlineLocationInitialization should reject the promise");
+        }, function () {
             done();
         });
         scope.$digest();

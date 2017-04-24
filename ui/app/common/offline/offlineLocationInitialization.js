@@ -13,20 +13,17 @@ angular.module('bahmni.common.offline')
                 var deferred = $q.defer();
 
                 var insertMarkers = function (categoryFilterMap) {
-                    var promises = [];
-                    Object.keys(categoryFilterMap).forEach(function (category) {
-                        var promise = offlineDbService.getMarker(category).then(function (marker) {
+                    return Object.keys(categoryFilterMap).map(function (category) {
+                        return offlineDbService.getMarker(category).then(function (marker) {
                             if (category === "encounter") {
                                 offlineService.setItem("initSyncFilter", categoryFilterMap[category]);
                             }
                             var filters = (marker && marker.filters) || [];
                             var lastReadEventUuid = (marker && marker.lastReadEventUuid) || null;
                             filters = filters.concat(categoryFilterMap[category]);
-                            offlineDbService.insertMarker(category, lastReadEventUuid, _.uniq(filters));
+                            return offlineDbService.insertMarker(category, lastReadEventUuid, _.uniq(filters));
                         });
-                        promises.push(promise);
                     });
-                    return promises;
                 };
 
                 var getLoginLocationAddress = function () {
@@ -41,10 +38,10 @@ angular.module('bahmni.common.offline')
                     if (!result.parent) {
                         return true;
                     }
-                    if (result.parent.name != loginLocation[addressLevel.addressField]) {
+                    if (result.parent.name !== loginLocation[addressLevel.addressField]) {
                         return false;
                     }
-                    if (result.parent.name == loginLocation[addressLevel.addressField]) {
+                    if (result.parent.name === loginLocation[addressLevel.addressField]) {
                         return checkParents(result.parent, getParentAddressLevel(addressLevel.addressField));
                     }
                 };
@@ -52,7 +49,7 @@ angular.module('bahmni.common.offline')
                 var getParentAddressLevel = function (addressField) {
                     var parent = null;
                     for (var addrLevel = 0; addrLevel < addressLevels.length; addrLevel++) {
-                        if (addressLevels[addrLevel].addressField == addressField) {
+                        if (addressLevels[addrLevel].addressField === addressField) {
                             return parent;
                         }
                         parent = addressLevels[addrLevel];
@@ -61,7 +58,7 @@ angular.module('bahmni.common.offline')
 
                 var getAddressField = function () {
                     return offlineDbService.getReferenceData('AddressHierarchyLevels').then(function (addressHierarchyLevel) {
-                        if (addressHierarchyLevel && addressHierarchyLevel.data ? false : true) {
+                        if (!(addressHierarchyLevel && addressHierarchyLevel.data)) {
                             return null;
                         }
                         addressLevels = _.reverse(addressHierarchyLevel.data);
@@ -91,14 +88,14 @@ angular.module('bahmni.common.offline')
                         var categories = results.data;
                         offlineService.setItem("eventLogCategories", categories);
                         return eventLogService.getFilterForCategoryAndLoginLocation(provider.uuid, result || null, loginLocation.uuid).then(function (results) {
-                            var promises = insertMarkers(angular.copy(results.data));
-                            return $q.all(promises).then(deferred.resolve);
-                        }, function errorCallback (response) {
+                            return $q.all(insertMarkers(angular.copy(results.data))).then(deferred.resolve);
+                        }, function (response) {
                             deferred.reject(response);
                         });
+                    }, function (response) {
+                        return deferred.reject(response);
                     });
                 });
-
                 return deferred.promise;
             };
         }
