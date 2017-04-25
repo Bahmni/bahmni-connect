@@ -124,17 +124,21 @@ angular.module('bahmni.offline', ['ui.router', 'httpErrorInterceptor', 'bahmni.c
                     }
                 }).state('device', {
                     url: "/device/:deviceType",
-                    controller: function ($stateParams, $rootScope, $state, offlineService, $http) {
+                    controller: function ($stateParams, $rootScope, $state, offlineService, $http, $q) {
                         if ($stateParams.deviceType === 'chrome-app' || $stateParams.deviceType === 'android') {
                             offlineService.setAppPlatform($stateParams.deviceType);
                             var syncStatus = offlineService.getItem("initialSyncStatus");
+                            var promise;
                             if (!(syncStatus instanceof Object)) {
                                 var url = Bahmni.Common.Constants.globalPropertyUrl + "?property=allowMultipleLoginLocation";
-                                $http.get(url).then(function (res) {
+                                promise = $http.get(url).then(function (res) {
                                     offlineService.setItem("allowMultipleLoginLocation", res.data);
                                 });
                             }
-                            $state.go('initScheduler');
+                            promise = promise || $q.when();
+                            promise.then(function () {
+                                $state.go('initScheduler');
+                            });
                         }
                     }
                 }).state('login', {
