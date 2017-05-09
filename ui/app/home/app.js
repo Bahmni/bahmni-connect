@@ -69,6 +69,17 @@ angular.module('bahmni.home', ['ui.router', 'httpErrorInterceptor', 'bahmni.comm
                         return offlineDbInitialization();
                     }
                 }
+            }).state('uninstalled', {
+                url: '/uninstalled',
+                onEnter: ['ngDialog', function (ngDialog) {
+                    ngDialog.open({
+                        template: "<div><span>{{'CLOSE_TAB' | translate}}</span></div>",
+                        plain: true,
+                        closeByEscape: false,
+                        closeByDocument: false,
+                        showClose: false
+                    });
+                }]
             });
             $httpProvider.defaults.headers.common['Disable-WWW-Authenticate'] = true;
             $bahmniTranslateProvider.init({app: 'home', shouldMerge: true});
@@ -76,5 +87,10 @@ angular.module('bahmni.home', ['ui.router', 'httpErrorInterceptor', 'bahmni.comm
         // Disable caching view template partials
             $rootScope.$on('$viewContentLoaded', function () {
                 $templateCache.removeAll();
+            });
+            $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState) {
+                if (fromState && fromState.name === 'uninstalled') {
+                    event.preventDefault();
+                }
             });
         }]);

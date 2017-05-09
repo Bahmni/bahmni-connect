@@ -1,11 +1,12 @@
 'use strict';
 
 angular.module('bahmni.home')
-    .controller('DashboardController', ['$scope', '$state', 'appService', 'locationService', 'spinner', '$bahmniCookieStore', '$window', '$q', 'offlineService', 'schedulerService', 'eventQueue', 'offlineDbService', 'androidDbService', 'networkStatusService', 'messagingService',
-        function ($scope, $state, appService, locationService, spinner, $bahmniCookieStore, $window, $q, offlineService, schedulerService, eventQueue, offlineDbService, androidDbService, networkStatusService, messagingService) {
+    .controller('DashboardController', ['$scope', '$state', 'appService', 'locationService', 'spinner', '$bahmniCookieStore', '$window', '$q', 'offlineService', 'schedulerService', 'eventQueue', 'offlineDbService', 'androidDbService', 'networkStatusService', 'messagingService', '$translate',
+        function ($scope, $state, appService, locationService, spinner, $bahmniCookieStore, $window, $q, offlineService, schedulerService, eventQueue, offlineDbService, androidDbService, networkStatusService, messagingService, $translate) {
             $scope.appExtensions = appService.getAppDescriptor().getExtensions($state.current.data.extensionPointId, "link") || [];
             $scope.selectedLocationUuid = {};
             $scope.isOfflineApp = offlineService.isOfflineApp();
+            $scope.isPWAapp = offlineService.isChromeApp();
 
             $scope.isVisibleExtension = function (extension) {
                 if (!$scope.isOfflineApp) {
@@ -133,6 +134,17 @@ angular.module('bahmni.home')
                     return;
                 }
                 $state.go('changePassword');
+            };
+
+            $scope.clearStorage = function () {
+                var message = $translate.instant("DELETE_CONFIRMATION");
+                var confirm = $window.confirm(message);
+                var dbNames = offlineService.getItem("dbNames");
+                if (confirm) {
+                    Bahmni.Common.Util.PWAUtils.uninstall(dbNames).then(function () {
+                        $state.go('uninstalled');
+                    });
+                }
             };
 
             return spinner.forPromise($q.all(init()));

@@ -4,7 +4,7 @@ describe('dashboardController', function () {
 
 
     var $aController, window;
-    var scopeMock, rootScopeMock, _spinner, httpBackend, $q, state, $bahmniCookieStore, locationService, offlineService, appServiceMock, schedulerService, eventQueue, offlineDbService, androidDbService, networkStatusService;
+    var scopeMock, rootScopeMock, _spinner, httpBackend, $q, state, $bahmniCookieStore, locationService, offlineService, appServiceMock, schedulerService, eventQueue, offlineDbService, androidDbService, networkStatusService, translate;
 
     beforeEach(module('bahmni.home'));
     beforeEach(module('bahmni.common.offline'));
@@ -26,7 +26,7 @@ describe('dashboardController', function () {
         appServiceMock.getAppDescriptor.and.returnValue({
             getExtensions: function () { return {} }
         });
-        offlineService = jasmine.createSpyObj('offlineService', ['isOfflineApp', 'getItem', 'setItem','isAndroidApp']);
+        offlineService = jasmine.createSpyObj('offlineService', ['isOfflineApp', 'getItem', 'setItem','isChromeApp', 'isAndroidApp']);
         schedulerService = jasmine.createSpyObj('schedulerService', ['sync', 'stopSync']);
         eventQueue = jasmine.createSpyObj('eventQueue', ['getCount', 'getErrorCount']);
         offlineDbService = jasmine.createSpyObj('offlineDbService',['getAllLogs']);
@@ -41,25 +41,27 @@ describe('dashboardController', function () {
 
         offlineService.isOfflineApp.and.returnValue(true);
         offlineService.isAndroidApp.and.returnValue(false);
+        offlineService.isChromeApp.and.returnValue(true);
         locationService.getAllByTag.and.returnValue(specUtil.createFakePromise({"data": {"results": {}}}));
         offlineDbService.getAllLogs.and.returnValue(specUtil.simplePromise(["error1"]));
 
+        spyOn(Bahmni.Common.Util.PWAUtils, 'uninstall').and.returnValue(specUtil.createFakePromise({}));
+        window = jasmine.createSpyObj('$window', ['confirm']);
+        state = jasmine.createSpyObj('$state',['go']);
     }));
 
     beforeEach(
-        inject(function ($controller, $rootScope, $window, $state, $httpBackend) {
+        inject(function ($controller, $rootScope, $httpBackend, $translate) {
             $aController = $controller;
             rootScopeMock = $rootScope;
-            window = $window;
             $q = Q;
-            state = $state;
             httpBackend = $httpBackend;
             scopeMock = rootScopeMock.$new();
             state.current = state.current || {views: {'dashboard-content': {templateUrl: "/template/url"}}};
             state.current.data = {extensionPointId: 'org.bahmni.home.dashboard'};
             httpBackend.expectGET("../i18n/home/locale_en.json").respond({});
             httpBackend.expectGET("/bahmni_config/openmrs/i18n/home/locale_en.json").respond({});
-
+            translate =  $translate;
         })
     );
 
@@ -79,7 +81,8 @@ describe('dashboardController', function () {
             eventQueue: eventQueue,
             offlineDbService : offlineDbService,
             androidDbService : androidDbService,
-            networkStatusService: networkStatusService
+            networkStatusService: networkStatusService,
+            $translate: translate
         });
     });
 
@@ -349,5 +352,21 @@ describe('dashboardController', function () {
         networkStatusService.isOnline.and.returnValue(true);
 
         expect(scopeMock.isVisibleExtension(extension)).toBeFalsy();
+    });
+
+    it("should uninstall app and change state if window confirm returns true", function () {
+        window.confirm.and.returnValue(true);
+        scopeMock.clearStorage();
+        expect(window.confirm).toHaveBeenCalled();
+        expect(Bahmni.Common.Util.PWAUtils.uninstall).toHaveBeenCalled();
+        expect(state.go).toHaveBeenCalledWith("uninstalled");
+    });
+
+    it("should not uninstall if window confirm returns false", function () {
+        window.confirm.and.returnValue(false);
+        scopeMock.clearStorage();
+        expect(window.confirm).toHaveBeenCalled();
+        expect(Bahmni.Common.Util.PWAUtils.uninstall).not.toHaveBeenCalled();
+        expect(state.go).not.toHaveBeenCalled();
     });
 });

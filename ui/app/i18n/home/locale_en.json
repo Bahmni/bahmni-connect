@@ -43,5 +43,8 @@
     "CHANGE_PASSWORD_DOES_NOT_SUPPORT":"We don’t support this feature for now, please contact administrator.",
     "UNABLE_TO_GET_PROVIDER_DATA": "Unable to get provider data",
     "YOU_HAVE_NOT_BEEN_SETUP_PROVIDER": "You have not been setup as a Provider, please contact administrator.",
-    "COULD_NOT_GET_PROVIDER": "Could not get provider for the current user."
+    "COULD_NOT_GET_PROVIDER": "Could not get provider for the current user.",
+    "DELETE_APP": "Delete Connect App",
+    "CLOSE_TAB": "Your app is deleted, Please close the tab.",
+    "DELETE_CONFIRMATION": "This will delete the app and all the patient data, Do you want to continue?"
 }
