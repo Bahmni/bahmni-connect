@@ -1,4 +1,4 @@
-xdescribe('PWA Utils', function () {
+describe('PWA Utils', function () {
     describe('Uninstall', function () {
         var serviceWorkerRegistrations = [{unregister: jasmine.createSpy('unregister')}],
             cacheKeys = ['some cache key'],
