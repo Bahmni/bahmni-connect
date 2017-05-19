@@ -7,6 +7,8 @@ describe('PWA Utils', function () {
         beforeEach(function () {
             pwaUtils = Bahmni.Common.Util.PWAUtils;
 
+            navigator.serviceWorker = {getRegistrations: function () {
+            }};
             spyOn(navigator.serviceWorker, 'getRegistrations').and.callFake(function() {
              return Promise.resolve(serviceWorkerRegistrations)});
 
