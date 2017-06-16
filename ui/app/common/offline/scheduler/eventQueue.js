@@ -68,4 +68,10 @@ angular.module("bahmni.common.offline")
                 return $q.when(hustle.Queue.release(event.id));
             });
         };
+
+        this.peekFromQueue = function (eventId) {
+            return getQueue().then(function () {
+                return $q.when(hustle.Queue.peek(eventId));
+            });
+        };
     }]);

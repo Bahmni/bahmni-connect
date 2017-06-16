@@ -1,19 +1,18 @@
 'use strict';
 
 describe('Offline Push Tests', function () {
-    var offlinePush, eventQueueMock, httpBackend, androidDbService, $q=Q, eventQueue, errorQueue, event, offlineDbServiceMock, loggingServiceMock, mockBahmniCookieStore, databaseNamePromise;
+    var offlinePush, eventQueueMock, httpBackend, androidDbService, $q = Q, eventQueue, errorQueue, event, offlineDbServiceMock, loggingServiceMock, mockBahmniCookieStore, offlineServiceMock, messagingService;
+    var patientEvents = [2];
 
     beforeEach(function () {
         module('bahmni.common.offline');
         module(function ($provide) {
-            var mockofflineService = jasmine.createSpyObj('offlineService', ['isAndroidApp']);
-            mockofflineService.isAndroidApp.and.returnValue(false);
-
-            var offlineServiceMock = jasmine.createSpyObj('offlineService', ['isOfflineApp','isAndroidApp']);
-            eventQueueMock = jasmine.createSpyObj('eventQueue', ['consumeFromErrorQueue','consumeFromEventQueue','removeFromQueue','addToErrorQueue','releaseFromQueue']);
-            offlineDbServiceMock = jasmine.createSpyObj('offlineDbService', ['getPatientByUuidForPost','getEncounterByEncounterUuid',
-                'insertLog', 'createEncounter','deleteErrorFromErrorLog','getErrorLogByUuid',
-                'initSchema','init','getDbNames']);
+            messagingService = jasmine.createSpyObj('messagingService', ['hideMessages']);
+            offlineServiceMock = jasmine.createSpyObj('offlineService', ['isOfflineApp', 'isAndroidApp', 'getItem', 'setItem']);
+            eventQueueMock = jasmine.createSpyObj('eventQueue', ['consumeFromErrorQueue', 'consumeFromEventQueue', 'removeFromQueue', 'addToErrorQueue', 'releaseFromQueue', 'peekFromQueue']);
+            offlineDbServiceMock = jasmine.createSpyObj('offlineDbService', ['getPatientByUuidForPost', 'getEncounterByEncounterUuid',
+                'insertLog', 'createEncounter', 'deleteErrorFromErrorLog', 'getErrorLogByUuid',
+                'initSchema', 'init', 'getDbNames']);
             loggingServiceMock = jasmine.createSpyObj('loggingService', ['logSyncError']);
             mockBahmniCookieStore = jasmine.createSpyObj('bahmniCookieStore', ["get"]);
             $provide.value('$bahmniCookieStore', mockBahmniCookieStore);
@@ -40,12 +39,14 @@ describe('Offline Push Tests', function () {
             });
 
             event = {
+                "id": 1,
                 "data": {
                     url: "someUrl",
                     patientUuid: "someUuid",
                     dbName: "dbOne"
                 },
-                tube: "event_queue"
+                tube: "event_queue",
+
             };
             eventQueue = [event];
             errorQueue = [event];
@@ -56,14 +57,21 @@ describe('Offline Push Tests', function () {
             offlineServiceMock.isOfflineApp.and.returnValue(true);
             offlineServiceMock.isAndroidApp.and.returnValue(false);
             offlineServiceMock.getItem = function (key) {
-                if(key == 'LoginInformation')
-                    return {currentLocation:{display:"location"}};
-                return {results:[{username: "provider"}]};
+                if (key == 'LoginInformation')
+                    return {currentLocation: {display: "location"}};
+                if (key == 'patientEventsInProgress')
+                    return patientEvents;
+                return {results: [{username: "provider"}]};
+            };
+
+            offlineServiceMock.setItem = function (key, value) {
+                 patientEvents = value;
             };
 
             eventQueueMock.removeFromQueue.and.returnValue($q.when(undefined));
             eventQueueMock.addToErrorQueue.and.returnValue($q.when(undefined));
             eventQueueMock.releaseFromQueue.and.returnValue($q.when(undefined));
+            eventQueueMock.peekFromQueue.and.returnValue($q.when(event));
 
             eventQueueMock.removeFromQueue = jasmine.createSpy('removeFromQueue').and.returnValue($q.when({}));
             var patient = {};
@@ -77,6 +85,7 @@ describe('Offline Push Tests', function () {
             $provide.value('offlineDbService', offlineDbServiceMock);
             $provide.value('androidDbService', androidDbService);
             $provide.value('loggingService', loggingServiceMock);
+            $provide.value('messagingService', messagingService);
             $provide.value('$q', $q);
         });
     });
@@ -216,6 +225,31 @@ describe('Offline Push Tests', function () {
             setTimeout(function () {
                 httpBackend.flush();
             }, 1000);
+        });
+
+
+        it("should push patient data again when sync is resumed", function (done) {
+            offlineServiceMock.setItem("patientEventsInProgress", [2]);
+            httpBackend.expectPOST("someUrl").respond(400, {error: {detail: "org.hibernate.NonUniqueObjectException"}});
+
+            errorQueue = [];
+            event.state = "reserved";
+            event.id = 2;
+            eventQueue = [event];
+
+            eventQueueMock.consumeFromEventQueue.and.returnValue($q.when(eventQueue.shift()));
+            eventQueueMock.consumeFromErrorQueue.and.returnValue($q.when(errorQueue.shift()));
+
+            offlinePush().then(function () {
+                expect(messagingService.hideMessages).toHaveBeenCalled();
+                expect(eventQueueMock.removeFromQueue).toHaveBeenCalled();
+                expect(eventQueueMock.consumeFromEventQueue).toHaveBeenCalled();
+                done();
+            });
+
+            setTimeout(function () {
+                httpBackend.flush();
+            }, 100);
         });
     });
 });
