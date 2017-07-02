@@ -8,10 +8,12 @@ angular.module('bahmni.common.domain')
                 var mappedVisitUuids = _.map(visitUuids, function (visitUuid) {
                     return visitUuid.uuid;
                 });
+                var obsMapper = new Bahmni.Common.Domain.ObservationMapper();
                 params.visitUuids = params.visitUuid ? [params.visitUuid] : (mappedVisitUuids || []);
                 offlineDbService.getObservationsFor(params).then(function (obs) {
                     var mappedObs = _.map(obs, function (ob) {
-                        return ob.observation;
+                        return obsMapper.preProcessObs(ob.observation);
+
                     });
                     deffered.resolve({data: mappedObs});
                 });
@@ -22,6 +24,7 @@ angular.module('bahmni.common.domain')
         this.fetchObsForVisit = function (params) {
             var deferred = $q.defer();
 
+            var obsMapper = new Bahmni.Common.Domain.ObservationMapper();
             offlineDbService.getObservationsForVisit(params.visitUuid).then(function (obs) {
                 var mappedObs = _.map(obs, function (ob) {
                     return ob.observation;

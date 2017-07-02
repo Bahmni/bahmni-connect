@@ -97,7 +97,7 @@ angular.module('bahmni.common.domain')
             var stripExtraInfo = function (obs) {
                 delete obs.isObservation;
                 delete obs.isObservationNode;
-                obs.concept = {uuid: obs.concept.uuid, name: obs.concept.name, dataType: obs.concept.dataType};
+                obs.concept = {uuid: obs.concept.uuid, name: obs.concept.name, dataType: obs.concept.dataType, conceptClass: obs.concept.conceptClass, hiNormal: obs.concept.hiNormal, lowNormal: obs.concept.lowNormal, units: obs.concept.units};
                 obs.groupMembers = obs.groupMembers || [];
                 obs.groupMembers.forEach(function (groupMember) {
                     groupMember.uuid = groupMember.uuid || Bahmni.Common.Offline.UUID.generateUuid();
