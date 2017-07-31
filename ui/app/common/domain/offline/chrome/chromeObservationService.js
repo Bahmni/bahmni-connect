@@ -13,7 +13,6 @@ angular.module('bahmni.common.domain')
                 offlineDbService.getObservationsFor(params).then(function (obs) {
                     var mappedObs = _.map(obs, function (ob) {
                         return obsMapper.preProcessObs(ob.observation);
-
                     });
                     deffered.resolve({data: mappedObs});
                 });
