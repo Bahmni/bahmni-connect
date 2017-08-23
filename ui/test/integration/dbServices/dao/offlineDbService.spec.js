@@ -22,7 +22,7 @@ describe('OfflineDbService ', function () {
             offlineSearchDbService = jasmine.createSpyObj('offlineSearchDbService', ['init']);
             encounterDbService = jasmine.createSpyObj('encounterDbService', ['insertEncounterData', 'getEncountersByPatientUuid', 'findActiveEncounter', 'getEncountersByVisits', 'getEncounterByEncounterUuid']);
             visitDbService = jasmine.createSpyObj('visitDbService', ['insertVisitData', 'getVisitByUuid', 'getVisitsByPatientUuid', 'getVisitDetailsByPatientUuid']);
-            observationDbService = jasmine.createSpyObj('observationDbService', ['insertObservationsData', 'getObservationsFor']);
+            observationDbService = jasmine.createSpyObj('observationDbService', ['insertObservationsData', 'getObservationsFor', 'deleteByEncounterUuid']);
             conceptDbService = jasmine.createSpyObj('conceptDbService', ['init', 'getReferenceData', 'getConceptByName', 'insertConceptAndUpdateHierarchy', 'updateChildren', 'updateParentJson', 'getAllParentsInHierarchy']);
             errorLogDbService = jasmine.createSpyObj('errorLogDbService', ['insertLog', 'getErrorLogByUuid', 'deleteByUuid']);
             eventLogService = jasmine.createSpyObj('eventLogService', ['getDataForUrl']);
@@ -1053,6 +1053,18 @@ describe('OfflineDbService ', function () {
                 done();
             });
         });
+
+        it("should call deleteObsByEncounterUuid with given encounter uuid", function (done) {
+            var schemaBuilder = lf.schema.create('BahmniOfflineDb', 1);
+            schemaBuilder.connect().then(function (db) {
+                offlineDbService.init(db);
+
+                offlineDbService.deleteObsByEncounterUuid("demo-encounter-uuid", "BahmniOfflineDb");
+                expect(observationDbService.deleteByEncounterUuid.calls.count()).toBe(1);
+                expect(observationDbService.deleteByEncounterUuid).toHaveBeenCalledWith("BahmniOfflineDb", "demo-encounter-uuid");
+                done();
+            });
+        })
     });
 
 

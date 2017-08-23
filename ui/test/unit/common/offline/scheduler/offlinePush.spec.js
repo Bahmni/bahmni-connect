@@ -12,7 +12,7 @@ describe('Offline Push Tests', function () {
             eventQueueMock = jasmine.createSpyObj('eventQueue', ['consumeFromErrorQueue', 'consumeFromEventQueue', 'removeFromQueue', 'addToErrorQueue', 'releaseFromQueue', 'peekFromQueue']);
             offlineDbServiceMock = jasmine.createSpyObj('offlineDbService', ['getPatientByUuidForPost', 'getEncounterByEncounterUuid',
                 'insertLog', 'createEncounter', 'deleteErrorFromErrorLog', 'getErrorLogByUuid',
-                'initSchema', 'init', 'getDbNames']);
+                'initSchema', 'init', 'getDbNames', 'deleteObsByEncounterUuid']);
             loggingServiceMock = jasmine.createSpyObj('loggingService', ['logSyncError']);
             mockBahmniCookieStore = jasmine.createSpyObj('bahmniCookieStore', ["get"]);
             $provide.value('$bahmniCookieStore', mockBahmniCookieStore);
@@ -179,6 +179,7 @@ describe('Offline Push Tests', function () {
         it("should push encounter data from event queue", function (done) {
             event.data = {type: "encounter", dbName: "dbOne", encounterUuid: 'encounterUuid'};
             httpBackend.expectPOST(Bahmni.Common.Constants.bahmniEncounterUrl).respond(200, {});
+            offlineDbServiceMock.deleteObsByEncounterUuid.and.returnValue($q.when());
             offlinePush().then(function () {
                 expect(offlineDbServiceMock.getEncounterByEncounterUuid.calls.mostRecent().args[1].getSchema().name()).toEqual("dbOne");
                 expect(offlineDbServiceMock.createEncounter.calls.mostRecent().args[1].getSchema().name()).toEqual("dbOne");

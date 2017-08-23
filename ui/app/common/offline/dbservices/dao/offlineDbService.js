@@ -249,7 +249,7 @@ angular.module('bahmni.common.offline')
 
             var insertLog = function (errorUuid, failedRequest, responseStatus, stackTrace, requestPayload) {
                 var provider = _.has(requestPayload, 'providers') ? requestPayload.providers[0] :
-                (_.has(requestPayload, 'auditInfo.creator') ? requestPayload.auditInfo.creator : "");
+                    (_.has(requestPayload, 'auditInfo.creator') ? requestPayload.auditInfo.creator : "");
                 requestPayload = requestPayload ? requestPayload : "";
                 return errorLogDbService.insertLog(db, errorUuid, failedRequest, responseStatus, stackTrace, requestPayload, provider);
             };
@@ -261,6 +261,11 @@ angular.module('bahmni.common.offline')
 
             var deleteErrorFromErrorLog = function (uuid) {
                 return errorLogDbService.deleteByUuid(db, uuid);
+            };
+
+            var deleteObsByEncounterUuid = function (uuid, preferredDb) {
+                preferredDb = preferredDb ? preferredDb : db;
+                return observationDbService.deleteByEncounterUuid(preferredDb, uuid);
             };
 
             var getAllLogs = function () {
@@ -349,6 +354,7 @@ angular.module('bahmni.common.offline')
                 getObservationsForVisit: getObservationsForVisit,
                 getLabOrderResultsForPatient: getLabOrderResultsForPatient,
                 getDbNames: getDbNames,
-                getCurrentDbName: getCurrentDbName
+                getCurrentDbName: getCurrentDbName,
+                deleteObsByEncounterUuid: deleteObsByEncounterUuid
             };
         }]);

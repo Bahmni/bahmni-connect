@@ -57,9 +57,17 @@ angular.module('bahmni.common.offline')
                 .where(obs.uuid.eq(observationUuid));
         };
 
+        var deleteByEncounterUuid = function (db, encounterUuid) {
+            var obs = db.getSchema().table('observation');
+            return db.delete()
+                .from(obs)
+                .where(obs.encounterUuid.eq(encounterUuid)).exec();
+        };
+
         return {
             getObservationsFor: getObservationsFor,
             insertObservationsData: insertObservationsData,
-            getObservationsForVisit: getObservationsForVisit
+            getObservationsForVisit: getObservationsForVisit,
+            deleteByEncounterUuid: deleteByEncounterUuid
         };
     });

@@ -105,4 +105,32 @@ describe('observationDbService tests', function () {
             });
         });
     });
+
+    it("should delete all the obs for given encounter uuid", function (done) {
+        var schemaBuilder = lf.schema.create('Obs', 1);
+        Bahmni.Tests.OfflineDbUtils.createTable(schemaBuilder, Bahmni.Common.Offline.SchemaDefinitions.Observation);
+        jasmine.getFixtures().fixturesPath = 'base/test/data';
+        var encounterJson = JSON.parse(readFixtures('encounter.json'));
+        var observationJson = encounterJson.observations;
+        var observationUuid = encounterJson.observations[0].uuid;
+        var patientUuid = "fc6ede09-f16f-4877-d2f5-ed8b2182ec11";
+        var visitUuid = encounterJson.observations[0].visitUuid;
+        var encounterUuid = encounterJson.encounterUuid;
+
+        schemaBuilder.connect().then(function (db) {
+            observationDbService.insertObservationsData(db, patientUuid, visitUuid, observationJson).then(function () {
+                observationDbService.getObservationsForVisit(db, visitUuid).then(function (results) {
+                    expect(results.length).not.toEqual(0);
+                    expect(results[0].observation.uuid).toBe(observationUuid);
+                    observationDbService.deleteByEncounterUuid(db, encounterUuid).then(function () {
+                        observationDbService.getObservationsForVisit(db, visitUuid).then(function (obs) {
+                            expect(obs).toEqual([]);
+                            expect(obs.length).toEqual(0);
+                            done();
+                        })
+                    })
+                });
+            });
+        });
+    });
 });

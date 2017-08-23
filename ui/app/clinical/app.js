@@ -176,6 +176,17 @@ angular.module('consultation')
                         templateUrl: 'consultation/views/conceptSet.html',
                         controller: 'ConceptSetPageController'
                     }
+                },
+                resolve: {
+                    observation: function (observationsService, $stateParams) {
+                        return observationsService.getByUuid($stateParams.observationUuid).then(function (results) {
+                            return results.data;
+                        });
+                    },
+                    consultationContext: function (observation, consultationInitialization, initialization, $stateParams) {
+                        return consultationInitialization(
+                            $stateParams.patientUuid, $stateParams.encounterUuid, $stateParams.programUuid, $stateParams.enrollment);
+                    }
                 }
             })
             .state('patient.dashboard.show.diagnosis', {
