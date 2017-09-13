@@ -316,6 +316,11 @@ angular.module('bahmni.common.offline')
                 return AndroidOfflineService.deleteByEncounterUuid(preferredDb, uuid);
             };
 
+            var insertForm = function (data) {
+                AndroidFormDbService.insertForm(JSON.stringify(data));
+                return $q.when({});
+            };
+
             return {
                 init: init,
                 initSchema: initSchema,
@@ -357,7 +362,8 @@ angular.module('bahmni.common.offline')
                 getLabOrderResultsForPatient: getLabOrderResultsForPatient,
                 getDbNames: getDbNames,
                 getCurrentDbName: getCurrentDbName,
-                deleteObsByEncounterUuid: deleteObsByEncounterUuid
+                deleteObsByEncounterUuid: deleteObsByEncounterUuid,
+                insertForm: insertForm
             };
         }
     ]);

@@ -3,7 +3,8 @@
 describe('OfflineDbService ', function () {
     var offlineDbService, $q = Q;
     var patientDbService, patientIdentifierDbService, patientAddressDbService, patientAttributeDbService, offlineMarkerDbService, offlineAddressHierarchyDbService,labOrderResultsDbService, offlineService,
-        offlineConfigDbService, initializeOfflineSchema, referenceDataDbService, locationDbService, offlineSearchDbService, encounterDbService, visitDbService, observationDbService, conceptDbService, errorLogDbService, eventLogService;
+        offlineConfigDbService, initializeOfflineSchema, referenceDataDbService, locationDbService, offlineSearchDbService, encounterDbService, visitDbService, observationDbService, conceptDbService,
+        errorLogDbService, eventLogService, formDbService;
 
     beforeEach(function () {
         module('bahmni.common.offline');
@@ -27,6 +28,7 @@ describe('OfflineDbService ', function () {
             errorLogDbService = jasmine.createSpyObj('errorLogDbService', ['insertLog', 'getErrorLogByUuid', 'deleteByUuid']);
             eventLogService = jasmine.createSpyObj('eventLogService', ['getDataForUrl']);
             offlineService = jasmine.createSpyObj('offlineService', ['getItem']);
+            formDbService = jasmine.createSpyObj('formDbService', ['init', 'insertForm']);
 
             $provide.value('patientDbService', patientDbService);
             $provide.value('patientIdentifierDbService', patientIdentifierDbService);
@@ -47,6 +49,7 @@ describe('OfflineDbService ', function () {
             $provide.value('errorLogDbService', errorLogDbService);
             $provide.value('eventLogService', eventLogService);
             $provide.value('offlineService', offlineService);
+            $provide.value('formDbService', formDbService);
             $provide.value('$q', $q);
         });
     });
@@ -784,6 +787,30 @@ describe('OfflineDbService ', function () {
                 done();
             });
         });
+    });
+
+    describe("formDbService", function () {
+        it("should insert form event with given form data", function (done) {
+            var schemaBuilder = lf.schema.create(Bahmni.Common.Constants.bahmniConnectMetaDataDb, 1);
+            schemaBuilder.connect().then(function (db) {
+                offlineDbService.init(db);
+                var formData = {
+                    "resources": [
+                        {
+                            "value": ""
+                        }
+                    ],
+                    "name": "testForm",
+                    "version": "1",
+                    "uuid": "e5e763aa-31df-4931-bed4-0468ddf63aab"
+                };
+                offlineDbService.insertForm(formData);
+                expect(formDbService.insertForm).toHaveBeenCalledWith(formData);
+                expect(formDbService.insertForm.calls.count()).toBe(1);
+                db.close();
+                done();
+            });
+        })
     });
 
 

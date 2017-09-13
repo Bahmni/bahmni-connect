@@ -1,11 +1,19 @@
 'use strict';
 
 angular.module('bahmni.common.offline')
-    .service('offlineDbService', ['offlineService', '$http', '$q', 'patientDbService', 'patientAddressDbService', 'patientAttributeDbService', 'patientIdentifierDbService', 'offlineMarkerDbService', 'offlineAddressHierarchyDbService', 'labOrderResultsDbService',
-        'offlineConfigDbService', 'initializeOfflineSchema', 'referenceDataDbService', 'locationDbService', 'offlineSearchDbService', 'encounterDbService', 'visitDbService', 'observationDbService', 'conceptDbService', 'errorLogDbService', 'eventLogService',
-        function (offlineService, $http, $q, patientDbService, patientAddressDbService, patientAttributeDbService, patientIdentifierDbService, offlineMarkerDbService, offlineAddressHierarchyDbService, labOrderResultsDbService,
-                  offlineConfigDbService, initializeOfflineSchema, referenceDataDbService, locationDbService, offlineSearchDbService, encounterDbService, visitDbService, observationDbService, conceptDbService, errorLogDbService, eventLogService) {
+    .service('offlineDbService', ['offlineService', '$http', '$q', 'patientDbService', 'patientAddressDbService', 'patientAttributeDbService',
+        'patientIdentifierDbService', 'offlineMarkerDbService', 'offlineAddressHierarchyDbService', 'labOrderResultsDbService',
+        'offlineConfigDbService', 'initializeOfflineSchema', 'referenceDataDbService', 'locationDbService', 'offlineSearchDbService',
+        'encounterDbService', 'visitDbService', 'observationDbService', 'conceptDbService', 'errorLogDbService', 'eventLogService', 'formDbService',
+        function (offlineService, $http, $q, patientDbService, patientAddressDbService, patientAttributeDbService, patientIdentifierDbService,
+                  offlineMarkerDbService, offlineAddressHierarchyDbService, labOrderResultsDbService, offlineConfigDbService,
+                  initializeOfflineSchema, referenceDataDbService, locationDbService, offlineSearchDbService, encounterDbService,
+                  visitDbService, observationDbService, conceptDbService, errorLogDbService, eventLogService, formDbService) {
             var db, metaDataDb;
+
+            var isMetaData = function (category) {
+                return category === 'offline-concepts' || category === 'forms';
+            };
 
             var createPatient = function (postRequest) {
                 var deferred = $q.defer();
@@ -137,6 +145,7 @@ angular.module('bahmni.common.offline')
                     offlineConfigDbService.init(metaDataDb);
                     conceptDbService.init(metaDataDb);
                     referenceDataDbService.init(metaDataDb);
+                    formDbService.init(metaDataDb);
                 } else {
                     db = offlineDb;
                     offlineAddressHierarchyDbService.init(offlineDb);
@@ -156,12 +165,12 @@ angular.module('bahmni.common.offline')
             };
 
             var getMarker = function (markerName) {
-                var database = markerName == "offline-concepts" ? metaDataDb : db;
+                var database = isMetaData(markerName) ? metaDataDb : db;
                 return offlineMarkerDbService.getMarker(database, markerName);
             };
 
             var insertMarker = function (markerName, eventUuid, filters) {
-                var database = markerName == "offline-concepts" ? metaDataDb : db;
+                var database = isMetaData(markerName) ? metaDataDb : db;
                 return offlineMarkerDbService.insertMarker(database, markerName, eventUuid, filters);
             };
 
@@ -207,6 +216,10 @@ angular.module('bahmni.common.offline')
 
             var insertConceptAndUpdateHierarchy = function (data, parent) {
                 return conceptDbService.insertConceptAndUpdateHierarchy(data, parent);
+            };
+
+            var insertForm = function (data) {
+                return formDbService.insertForm(data);
             };
 
             var updateChildren = function (concept) {
@@ -355,6 +368,7 @@ angular.module('bahmni.common.offline')
                 getLabOrderResultsForPatient: getLabOrderResultsForPatient,
                 getDbNames: getDbNames,
                 getCurrentDbName: getCurrentDbName,
-                deleteObsByEncounterUuid: deleteObsByEncounterUuid
+                deleteObsByEncounterUuid: deleteObsByEncounterUuid,
+                insertForm: insertForm
             };
         }]);

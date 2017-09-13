@@ -177,11 +177,11 @@ angular.module('bahmni.common.offline')
             var syncForMarker = function (category, marker, isInitSync) {
                 return eventLogService.getEventsFor(category, marker).then(function (response) {
                     var events = response.data ? response.data["events"] : undefined;
-                    updatePendingEventsCount(category, response.data.pendingEventsCount);
                     if (events == undefined || events.length == 0) {
                         endSync(stages++);
                         return;
                     }
+                    updatePendingEventsCount(category, response.data.pendingEventsCount);
                     return readEvent(events, 0, category, isInitSync);
                 }, function () {
                     endSync(-1);
@@ -290,6 +290,11 @@ angular.module('bahmni.common.offline')
                 case 'addressHierarchy':
                 case 'parentAddressHierarchy':
                     offlineDbService.insertAddressHierarchy(response.data).then(function () {
+                        deferrable.resolve();
+                    });
+                    break;
+                case 'forms':
+                    offlineDbService.insertForm(response.data).then(function () {
                         deferrable.resolve();
                     });
                     break;

@@ -474,5 +474,25 @@ Bahmni.Common.Offline.MetaDataSchemaDefinitions = {
         ],
         nullableColumns: ['filters', 'lastReadEventUuid'],
         primaryKeyColumns: ['markerName']
+    },
+    Form: {
+        tableName: 'form',
+        columns: [
+            {
+                name: 'name',
+                type: 'STRING'
+            }, {
+                name: 'uuid',
+                type: 'STRING'
+            }, {
+                name: 'version',
+                type: 'STRING'
+            }, {
+                name: 'resources',
+                type: 'OBJECT'
+            }
+        ],
+        nullableColumns: [],
+        primaryKeyColumns: ['uuid']
     }
 };

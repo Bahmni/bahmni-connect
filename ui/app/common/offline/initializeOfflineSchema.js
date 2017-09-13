@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('bahmni.common.offline').service('initializeOfflineSchema', [function () {
-    var DB_VERSION = 2;
+    var DB_VERSION = 3;
     var DB_VERSION_OLD;
     var dbPromises = {};
 

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('bahmni.common.offline')
-    .factory('eventLogService', ['$http', function ($http) {
+    .factory('eventLogService', ['$http', '$q', function ($http, $q) {
         var getEvents = function (url, marker) {
             return $http.get(url, { params: {filterBy: marker.filters, uuid: marker.lastReadEventUuid}});
         };
@@ -37,6 +37,10 @@ angular.module('bahmni.common.offline')
             case 'addressHierarchy':
             case 'parentAddressHierarchy':
                 return getEvents(Bahmni.Common.Constants.addressEventLogServiceUrl, marker);
+            case 'forms':
+                return getEvents(Bahmni.Common.Constants.eventLogServiceFormUrl, marker);
+            default:
+                return $q.when({});
             }
         };
 
