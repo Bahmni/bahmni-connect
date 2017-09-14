@@ -7,7 +7,7 @@ angular.module('bahmni.common.offline')
             var observationTable = db.getSchema().table('observation');
             var queries = [];
             _.each(observationsDataList, function (observationData) {
-                if (observationData.groupMembers.length) {
+                if (!observationData.voided) {
                     var row = observationTable.createRow({
                         uuid: observationData.uuid,
                         patientUuid: patientUuid,

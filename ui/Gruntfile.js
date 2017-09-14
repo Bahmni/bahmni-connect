@@ -489,6 +489,7 @@ module.exports = function (grunt) {
         'npm-install',
         'bower-install',
         'eslint',
+        'copy:nodeModules',
         'clean:dist',
         'compass:dist',
         'useminPrepare',
@@ -504,6 +505,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('devbundle', [
         'clean:offlineDist',
+        'copy:nodeModules',
         'copy:offlineDist'
     ]);
 

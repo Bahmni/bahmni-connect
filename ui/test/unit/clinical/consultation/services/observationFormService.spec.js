@@ -1,41 +1,128 @@
 'use strict';
 
-xdescribe('observationFormService', function () {
-
-    var http;
+describe('observationFormService', function () {
+    var forms = [
+        {
+            "name": "test_form",
+            "version": "1",
+            "uuid": "e5e763aa-31df-4931-bed4-0468ddf63aab",
+            "resources": [
+                {
+                    "value": "{'name':'test_form','id':1,'uuid':'e5e763aa-31df-4931-bed4-0468ddf63aab','controls':[],'events':{}}"
+                }
+            ]
+        },
+        {
+            "name": "demo_form",
+            "version": "1",
+            "uuid": "80b7273d-eea0-48d0-abae-b3d3bf7e96f1",
+            "resources": [
+                {
+                    "value": "{'name':'demo_form','id':2,'uuid':'80b7273d-eea0-48d0-abae-b3d3bf7e96f1','controls':[],'events':{}}"
+                }
+            ]
+        },
+        {
+            "name": "test_form",
+            "version": "2",
+            "uuid": "7635fcda-cf1b-4d30-9ea9-595d7d34c7d9",
+            "resources": [
+                {
+                    "value": "{'name':'one','id':6,'uuid':'7635fcda-cf1b-4d30-9ea9-595d7d34c7d9','controls':[],'events':{}}"
+                }
+            ]
+        }
+    ];
+    var observationFormService, $q = Q;
+    var offlineService, androidDbService, offlineDbService;
     beforeEach(module('bahmni.clinical'));
     beforeEach(module('bahmni.common.appFramework'));
 
     beforeEach(module(function ($provide) {
-        http = jasmine.createSpyObj('http', ['get']);
-        $provide.value('$http', http);
+        offlineService = jasmine.createSpyObj('offlineService', ['isAndroidApp']);
+        offlineDbService = jasmine.createSpyObj('offlineDbService', ['getFormByUuid', 'getAllForms', 'getEncounterByEncounterUuid']);
+        androidDbService = jasmine.createSpyObj('androidDbService', ['getFormByUuid', 'getAllForms', 'getEncounterByEncounterUuid']);
+        offlineService.isAndroidApp.and.returnValue(false);
+
+        $provide.value('offlineService', offlineService);
+        $provide.value('offlineDbService', offlineDbService);
+        $provide.value('$q', $q);
+        $provide.value('androidDbService', androidDbService);
     }));
 
-    beforeEach(inject(['observationFormService', function (observationFormService) {
-        this.observationFormService = observationFormService;
+    beforeEach(inject(['observationFormService', function (observationFormServiceInjected) {
+        observationFormService = observationFormServiceInjected;
     }]));
 
-    it('should call http service to return the form list', function () {
-        var response = { data: { results: [{ name: 'form1' }] } };
-        http.get.and.returnValue(response);
+    it('should give the form detail for given uuid', function (done) {
+        var uuid = "e5e763aa-31df-4931-bed4-0468ddf63aab";
+        offlineDbService.getFormByUuid.and.returnValue(specUtil.respondWithPromise($q, forms[0]));
+        observationFormService.getFormDetail(uuid).then(function (form) {
+            expect(uuid).toEqual(form.data.uuid);
+            expect("test_form").toEqual(form.data.name);
+            expect("1").toEqual(form.data.version);
 
-        var httpPromise = this.observationFormService.getFormList("encounterUuid");
-
-        expect(httpPromise).toEqual(response);
-        expect(http.get).toHaveBeenCalledWith("/openmrs/ws/rest/v1/bahmniie/form/latestPublishedForms", {
-            params: { encounterUuid: "encounterUuid" }
+            expect(offlineDbService.getFormByUuid).toHaveBeenCalledWith(uuid);
+            expect(offlineDbService.getFormByUuid.calls.count()).toBe(1);
+            done();
         });
     });
 
-    it('should call http service to return the form detail', function () {
-        var response = { data: { resources: [{ value: 'form1' }] } };
-        http.get.and.returnValue(response);
+    it('should give all the latest form if given encounter uuid is null', function (done) {
+        offlineDbService.getAllForms.and.returnValue(specUtil.respondWithPromise($q, forms));
+        observationFormService.getFormList().then(function (response) {
+            var latestForms = response.data;
+            expect(2).toEqual(latestForms.length);
+            expect("7635fcda-cf1b-4d30-9ea9-595d7d34c7d9").toEqual(latestForms[0].uuid);
+            expect("test_form").toEqual(latestForms[0].name);
+            expect("2").toEqual(latestForms[0].version);
 
-        var httpPromise = this.observationFormService.getFormDetail('someFormUuid', { v: "custom:(uuid,name)" });
+            expect("80b7273d-eea0-48d0-abae-b3d3bf7e96f1").toEqual(latestForms[1].uuid);
+            expect("demo_form").toEqual(latestForms[1].name);
+            expect("1").toEqual(latestForms[1].version);
 
-        expect(httpPromise).toEqual(response);
-        expect(http.get).toHaveBeenCalledWith("/openmrs/ws/rest/v1/form/someFormUuid", {
-            params: { v: "custom:(uuid,name)" }
+            expect(offlineDbService.getAllForms.calls.count()).toBe(1);
+            done();
+        });
+    });
+
+    it("should give all the latest form if given encounter uuid does not hold any form data", function (done) {
+        offlineDbService.getAllForms.and.returnValue(specUtil.respondWithPromise($q, forms));
+        offlineDbService.getEncounterByEncounterUuid.and.returnValue(specUtil.respondWithPromise($q, {encounter: {observations: []}}));
+        observationFormService.getFormList("test-encounter-uuid").then(function (response) {
+            var latestForms = response.data;
+            expect(2).toEqual(latestForms.length);
+            expect("7635fcda-cf1b-4d30-9ea9-595d7d34c7d9").toEqual(latestForms[0].uuid);
+            expect("test_form").toEqual(latestForms[0].name);
+            expect("2").toEqual(latestForms[0].version);
+
+            expect("80b7273d-eea0-48d0-abae-b3d3bf7e96f1").toEqual(latestForms[1].uuid);
+            expect("demo_form").toEqual(latestForms[1].name);
+            expect("1").toEqual(latestForms[1].version);
+
+            expect(offlineDbService.getAllForms.calls.count()).toBe(1);
+            expect(offlineDbService.getEncounterByEncounterUuid).toHaveBeenCalledWith("test-encounter-uuid");
+            done();
+        });
+    });
+
+    it("should replace latest form with older version of form if given encounter holds any form data", function (done) {
+        offlineDbService.getAllForms.and.returnValue(specUtil.respondWithPromise($q, forms));
+        offlineDbService.getEncounterByEncounterUuid.and.returnValue(specUtil.respondWithPromise($q, {encounter: {observations: [{formFieldPath: "test_form.1/2-0"}]}}));
+        observationFormService.getFormList("test-encounter-uuid").then(function (response) {
+            var latestForms = response.data;
+            expect(2).toEqual(latestForms.length);
+            expect("e5e763aa-31df-4931-bed4-0468ddf63aab").toEqual(latestForms[0].uuid);
+            expect("test_form").toEqual(latestForms[0].name);
+            expect("1").toEqual(latestForms[0].version);
+
+            expect("80b7273d-eea0-48d0-abae-b3d3bf7e96f1").toEqual(latestForms[1].uuid);
+            expect("demo_form").toEqual(latestForms[1].name);
+            expect("1").toEqual(latestForms[1].version);
+
+            expect(offlineDbService.getAllForms.calls.count()).toBe(1);
+            expect(offlineDbService.getEncounterByEncounterUuid).toHaveBeenCalledWith("test-encounter-uuid");
+            done();
         });
     });
 });

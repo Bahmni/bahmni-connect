@@ -2,8 +2,10 @@
 
 describe('OfflineDbService ', function () {
     var offlineDbService, $q = Q;
-    var patientDbService, patientIdentifierDbService, patientAddressDbService, patientAttributeDbService, offlineMarkerDbService, offlineAddressHierarchyDbService,labOrderResultsDbService, offlineService,
-        offlineConfigDbService, initializeOfflineSchema, referenceDataDbService, locationDbService, offlineSearchDbService, encounterDbService, visitDbService, observationDbService, conceptDbService,
+    var patientDbService, patientIdentifierDbService, patientAddressDbService, patientAttributeDbService,
+        offlineMarkerDbService, offlineAddressHierarchyDbService, labOrderResultsDbService, offlineService,
+        offlineConfigDbService, initializeOfflineSchema, referenceDataDbService, locationDbService,
+        offlineSearchDbService, encounterDbService, visitDbService, observationDbService, conceptDbService,
         errorLogDbService, eventLogService, formDbService;
 
     beforeEach(function () {
@@ -28,7 +30,7 @@ describe('OfflineDbService ', function () {
             errorLogDbService = jasmine.createSpyObj('errorLogDbService', ['insertLog', 'getErrorLogByUuid', 'deleteByUuid']);
             eventLogService = jasmine.createSpyObj('eventLogService', ['getDataForUrl']);
             offlineService = jasmine.createSpyObj('offlineService', ['getItem']);
-            formDbService = jasmine.createSpyObj('formDbService', ['init', 'insertForm']);
+            formDbService = jasmine.createSpyObj('formDbService', ['init', 'insertForm', 'getFormByUuid', 'getAllForms']);
 
             $provide.value('patientDbService', patientDbService);
             $provide.value('patientIdentifierDbService', patientIdentifierDbService);
@@ -156,7 +158,7 @@ describe('OfflineDbService ', function () {
         describe("insert encounter Data when there are multiple dbs", function () {
             var encounterData;
             beforeEach(function () {
-               encounterData = {
+                encounterData = {
                     patientUuid: "patientUuid",
                     visitUuid: "visitUuid",
                     observations: ["obs1", "obs2"]
@@ -555,7 +557,8 @@ describe('OfflineDbService ', function () {
                 });
 
 
-                offlineDbService.createPatient(patientData).then(function () {},function(response) {
+                offlineDbService.createPatient(patientData).then(function () {
+                }, function (response) {
                     expect(response.code).toEqual(201);
                     expect(response.message).not.toBeNull();
                     expect(patientAttributeDbService.insertAttributes).not.toHaveBeenCalled();
@@ -613,7 +616,7 @@ describe('OfflineDbService ', function () {
 
 
     describe("errorLogDbService ", function () {
-        beforeEach( function(){
+        beforeEach(function () {
 
             errorLogDbService.insertLog.and.callFake(function () {
                 var deferred1 = $q.defer();
@@ -628,9 +631,9 @@ describe('OfflineDbService ', function () {
                 offlineDbService.init(db);
 
                 var requestPayload = {providers: [{display: 'armanvuiyan', uuid: 'providerUuid'}]};
-                offlineDbService.insertLog('someUuid','failedRequestUrl', 500, 'stackTrace', requestPayload);
+                offlineDbService.insertLog('someUuid', 'failedRequestUrl', 500, 'stackTrace', requestPayload);
                 expect(errorLogDbService.insertLog.calls.count()).toBe(1);
-                expect(errorLogDbService.insertLog).toHaveBeenCalledWith(db,'someUuid', 'failedRequestUrl', 500, 'stackTrace', requestPayload, requestPayload.providers[0]);
+                expect(errorLogDbService.insertLog).toHaveBeenCalledWith(db, 'someUuid', 'failedRequestUrl', 500, 'stackTrace', requestPayload, requestPayload.providers[0]);
                 done();
             });
         });
@@ -655,7 +658,7 @@ describe('OfflineDbService ', function () {
                 offlineDbService.init(db);
 
                 var requestPayload = {patient: "patientPostData"};
-                offlineDbService.insertLog('someUuid','failedRequestUrl', 500, 'stackTrace', requestPayload);
+                offlineDbService.insertLog('someUuid', 'failedRequestUrl', 500, 'stackTrace', requestPayload);
                 expect(errorLogDbService.insertLog.calls.count()).toBe(1);
                 expect(errorLogDbService.insertLog).toHaveBeenCalledWith(db, 'someUuid', 'failedRequestUrl', 500, 'stackTrace', requestPayload, "");
                 done()
@@ -790,27 +793,24 @@ describe('OfflineDbService ', function () {
     });
 
     describe("formDbService", function () {
-        it("should insert form event with given form data", function (done) {
-            var schemaBuilder = lf.schema.create(Bahmni.Common.Constants.bahmniConnectMetaDataDb, 1);
-            schemaBuilder.connect().then(function (db) {
-                offlineDbService.init(db);
-                var formData = {
-                    "resources": [
-                        {
-                            "value": ""
-                        }
-                    ],
-                    "name": "testForm",
-                    "version": "1",
-                    "uuid": "e5e763aa-31df-4931-bed4-0468ddf63aab"
-                };
-                offlineDbService.insertForm(formData);
-                expect(formDbService.insertForm).toHaveBeenCalledWith(formData);
-                expect(formDbService.insertForm.calls.count()).toBe(1);
-                db.close();
-                done();
-            });
-        })
+        it("should invoke insertForm", function () {
+            var formData = {name: "test_form", version: 1, uuid: "test-uuid"};
+            offlineDbService.insertForm(formData);
+            expect(formDbService.insertForm).toHaveBeenCalledWith(formData);
+            expect(formDbService.insertForm.calls.count()).toBe(1);
+        });
+
+        it("should invoke getFormByUuid", function () {
+            offlineDbService.getFormByUuid("test-uuid");
+            expect(formDbService.getFormByUuid).toHaveBeenCalledWith("test-uuid");
+            expect(formDbService.getFormByUuid.calls.count()).toBe(1);
+        });
+
+        it("should invoke getAllForms", function () {
+            offlineDbService.getAllForms();
+            expect(formDbService.getAllForms).toHaveBeenCalled();
+            expect(formDbService.getAllForms.calls.count()).toBe(1);
+        });
     });
 
 
@@ -951,7 +951,7 @@ describe('OfflineDbService ', function () {
                     offlineDbService.init(metaDataDb);
                     offlineDbService.getMarker("markerName");
                     expect(offlineMarkerDbService.getMarker.calls.count()).toBe(1);
-                    expect(offlineMarkerDbService.getMarker).toHaveBeenCalledWith(locationDb,"markerName");
+                    expect(offlineMarkerDbService.getMarker).toHaveBeenCalledWith(locationDb, "markerName");
                     metaDataDb.close();
                     locationDb.close();
                     done();
@@ -968,7 +968,7 @@ describe('OfflineDbService ', function () {
                     offlineDbService.init(metaDataDb);
                     offlineDbService.getMarker("offline-concepts");
                     expect(offlineMarkerDbService.getMarker.calls.count()).toBe(1);
-                    expect(offlineMarkerDbService.getMarker).toHaveBeenCalledWith(metaDataDb,"offline-concepts");
+                    expect(offlineMarkerDbService.getMarker).toHaveBeenCalledWith(metaDataDb, "offline-concepts");
                     metaDataDb.close();
                     done();
                 });
@@ -978,7 +978,7 @@ describe('OfflineDbService ', function () {
         it("should call insertMarker with location specific db when markerName is not offline-concepts", function (done) {
             var metaDataSchemaBuilder = lf.schema.create(Bahmni.Common.Constants.bahmniConnectMetaDataDb, 1);
             var schemaBuilder = lf.schema.create('BahmniOfflineDb', 1);
-            var filters = [202020,20202001];
+            var filters = [202020, 20202001];
             var locationDb;
             schemaBuilder.connect().then(function (db) {
                 locationDb = db;
@@ -987,7 +987,7 @@ describe('OfflineDbService ', function () {
                     offlineDbService.init(metaDataDb);
                     offlineDbService.insertMarker("markerName", "eventUuid", filters);
                     expect(offlineMarkerDbService.insertMarker.calls.count()).toBe(1);
-                    expect(offlineMarkerDbService.insertMarker).toHaveBeenCalledWith(locationDb,"markerName", "eventUuid", filters);
+                    expect(offlineMarkerDbService.insertMarker).toHaveBeenCalledWith(locationDb, "markerName", "eventUuid", filters);
                     metaDataDb.close();
                     done();
                 });
@@ -1108,7 +1108,6 @@ describe('OfflineDbService ', function () {
             });
         });
     });
-
 
 
     describe("labOrderResultsDbService", function () {

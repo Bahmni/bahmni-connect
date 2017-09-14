@@ -1,6 +1,6 @@
 'use strict';
 
-var $scope, offlineDbService, eventLogService, offlineSyncService, offlineService, configurationService, loggingService, dbNameService;
+var $scope, offlineDbService, eventLogService, offlineSyncService, offlineService, configurationService, loggingService, dbNameService, form;
 
 describe('OfflineSyncService', function () {
     var patient, encounter, concept, error_log, labOrderResults, mappedIdentifiers, q;
@@ -74,6 +74,12 @@ describe('OfflineSyncService', function () {
                     data: {},
                     parents: {"parentUuids": []},
                     name: 'concept'
+                };
+                form = {
+                    name:"test_form",
+                    uuid: "test-uuid",
+                    resources: [{value:[]}],
+                    version: "1"
                 };
                 error_log = {
                     config: {"url": "this is the url"},
@@ -190,6 +196,13 @@ describe('OfflineSyncService', function () {
                                 return callback({data: attributeTypes});
                             }
                         };
+                    },
+                    insertForm: function () {
+                        return {
+                            then: function (callback) {
+                                return callback(form);
+                            }
+                        };
                     }
                 });
                 $provide.value('eventLogService', {
@@ -214,6 +227,9 @@ describe('OfflineSyncService', function () {
                             then: function (callback) {
                                 if (_.includes(url, "concept")) {
                                     return callback({data: concept});
+                                }
+                                if (_.includes(url, "forms")) {
+                                    return callback({data: form});
                                 }
                                 return callback({data: patient});
                             }
@@ -268,7 +284,8 @@ describe('OfflineSyncService', function () {
             var categories = [
                 'addressHierarchy',
                 'parentAddressHierarchy',
-                'offline-concepts'
+                'offline-concepts',
+                'forms'
             ];
 
             httpBackend.whenGET(Bahmni.Common.Constants.preprocessedPatientUrl + "202020").respond({
@@ -295,6 +312,7 @@ describe('OfflineSyncService', function () {
             });
             spyOn(offlineDbService, 'insertAddressHierarchy').and.callThrough();
             spyOn(offlineDbService, 'insertConceptAndUpdateHierarchy').and.callThrough();
+            spyOn(offlineDbService, 'insertForm').and.callThrough();
 
             offlineSyncService.sync(true);
             $rootScope.$digest();
@@ -310,11 +328,12 @@ describe('OfflineSyncService', function () {
                 var url = 'url to get ' + category + ' object';
                 expect(eventLogService.getDataForUrl).toHaveBeenCalledWith(url);
                 expect(offlineDbService.insertMarker).toHaveBeenCalledWith(category, "eventuuid", [202020]);
-                expect(offlineDbService.insertMarker.calls.count()).toBe(3);
+                expect(offlineDbService.insertMarker.calls.count()).toBe(4);
                 expect($rootScope.initSyncInfo[category].savedEventsCount).toBe(1);
             });
 
             expect(offlineDbService.insertAddressHierarchy).toHaveBeenCalledWith({uuid: 'url to get addressHierarchy object'});
+            expect(offlineDbService.insertForm).toHaveBeenCalledWith({uuid: 'url to get forms object'});
             expect(offlineDbService.insertConceptAndUpdateHierarchy).toHaveBeenCalledWith({results: [{uuid: 'url to get offline-concepts object'}]});
             expect(offlineDbService.insertAddressHierarchy).toHaveBeenCalledWith({uuid: 'url to get parentAddressHierarchy object'});
             expect(offlineDbService.insertAddressHierarchy.calls.count()).toBe(2);

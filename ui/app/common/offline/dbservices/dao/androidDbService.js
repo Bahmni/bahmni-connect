@@ -159,7 +159,11 @@ angular.module('bahmni.common.offline')
                     var encounterSessionDuration = encounterSessionDurationData.data;
                     getReferenceData("DefaultEncounterType").then(function (defaultEncounterType) {
                         var encounterType = defaultEncounterType ? defaultEncounterType.data : null;
-                        var response = AndroidOfflineService.findActiveEncounter(JSON.stringify({patientUuid: params.patientUuid, providerUuid: params.providerUuids[0], encounterType: encounterType}), encounterSessionDuration);
+                        var response = AndroidOfflineService.findActiveEncounter(JSON.stringify({
+                            patientUuid: params.patientUuid,
+                            providerUuid: params.providerUuids[0],
+                            encounterType: encounterType
+                        }), encounterSessionDuration);
                         response = response != undefined ? JSON.parse(response) : response;
                         deferred.resolve(response);
                     });
@@ -313,12 +317,25 @@ angular.module('bahmni.common.offline')
 
             var deleteObsByEncounterUuid = function (uuid, preferredDb) {
                 preferredDb = preferredDb || null;
-                return AndroidOfflineService.deleteByEncounterUuid(preferredDb, uuid);
+                AndroidOfflineService.deleteByEncounterUuid(preferredDb, uuid);
+                return $q.when({});
             };
 
             var insertForm = function (data) {
                 AndroidFormDbService.insertForm(JSON.stringify(data));
                 return $q.when({});
+            };
+
+            var getFormByUuid = function (uuid) {
+                var form = AndroidFormDbService.getFormByUuid(uuid);
+                form = form ? JSON.parse(form) : form;
+                return $q.when(form);
+            };
+
+            var getAllForms = function () {
+                var forms = AndroidFormDbService.getAllForms();
+                forms = forms ? JSON.parse(forms) : forms;
+                return $q.when(forms);
             };
 
             return {
@@ -363,7 +380,9 @@ angular.module('bahmni.common.offline')
                 getDbNames: getDbNames,
                 getCurrentDbName: getCurrentDbName,
                 deleteObsByEncounterUuid: deleteObsByEncounterUuid,
-                insertForm: insertForm
+                insertForm: insertForm,
+                getFormByUuid: getFormByUuid,
+                getAllForms: getAllForms
             };
         }
     ]);

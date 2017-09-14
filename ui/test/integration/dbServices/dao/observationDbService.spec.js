@@ -75,7 +75,8 @@ describe('observationDbService tests', function () {
             observationDbService.insertObservationsData(db, patientUuid, null, observationJson).then(function () {
                 observationDbService.insertObservationsData(db, patientUuid, null, [{
                     groupMembers: [],
-                    uuid: observationUuid
+                    uuid: observationUuid,
+                    voided: true
                 }]).then(function (results) {
                     expect(results).not.toBeUndefined();
                     expect(results).toEqual([[]]);

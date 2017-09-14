@@ -218,10 +218,6 @@ angular.module('bahmni.common.offline')
                 return conceptDbService.insertConceptAndUpdateHierarchy(data, parent);
             };
 
-            var insertForm = function (data) {
-                return formDbService.insertForm(data);
-            };
-
             var updateChildren = function (concept) {
                 return conceptDbService.updateChildren(concept);
             };
@@ -324,6 +320,18 @@ angular.module('bahmni.common.offline')
                 return offlineService.getItem("currentDbName");
             };
 
+            var insertForm = function (data) {
+                return formDbService.insertForm(data);
+            };
+
+            var getFormByUuid = function (uuid) {
+                return formDbService.getFormByUuid(uuid);
+            };
+
+            var getAllForms = function () {
+                return formDbService.getAllForms();
+            };
+
             return {
                 init: init,
                 initSchema: initSchema,
@@ -369,6 +377,8 @@ angular.module('bahmni.common.offline')
                 getDbNames: getDbNames,
                 getCurrentDbName: getCurrentDbName,
                 deleteObsByEncounterUuid: deleteObsByEncounterUuid,
-                insertForm: insertForm
+                insertForm: insertForm,
+                getFormByUuid: getFormByUuid,
+                getAllForms: getAllForms
             };
         }]);
