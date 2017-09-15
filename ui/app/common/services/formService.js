@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('bahmni.common.conceptSet')
-    .factory('observationFormService', ['$q', 'offlineDbService', 'offlineService', 'androidDbService',
+    .factory('formService', ['$q', 'offlineDbService', 'offlineService', 'androidDbService',
         function ($q, offlineDbService, offlineService, androidDbService) {
             if (offlineService.isAndroidApp()) {
                 offlineDbService = androidDbService;
@@ -67,8 +67,15 @@ angular.module('bahmni.common.conceptSet')
                 return deferred.promise;
             };
 
+            var getAllForms = function () {
+                return offlineDbService.getAllForms().then(function (forms) {
+                    return {data: forms};
+                });
+            };
+
             return {
                 getFormList: getFormList,
-                getFormDetail: getFormDetail
+                getFormDetail: getFormDetail,
+                getAllForms: getAllForms
             };
         }]);

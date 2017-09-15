@@ -1,6 +1,6 @@
 'use strict';
 
-describe('observationFormService', function () {
+describe('formService', function () {
     var forms = [
         {
             "name": "test_form",
@@ -33,9 +33,9 @@ describe('observationFormService', function () {
             ]
         }
     ];
-    var observationFormService, $q = Q;
+    var formService, $q = Q;
     var offlineService, androidDbService, offlineDbService;
-    beforeEach(module('bahmni.clinical'));
+    beforeEach(module('bahmni.common.conceptSet'));
     beforeEach(module('bahmni.common.appFramework'));
 
     beforeEach(module(function ($provide) {
@@ -50,14 +50,14 @@ describe('observationFormService', function () {
         $provide.value('androidDbService', androidDbService);
     }));
 
-    beforeEach(inject(['observationFormService', function (observationFormServiceInjected) {
-        observationFormService = observationFormServiceInjected;
+    beforeEach(inject(['formService', function (formServiceInjected) {
+        formService = formServiceInjected;
     }]));
 
     it('should give the form detail for given uuid', function (done) {
         var uuid = "e5e763aa-31df-4931-bed4-0468ddf63aab";
         offlineDbService.getFormByUuid.and.returnValue(specUtil.respondWithPromise($q, forms[0]));
-        observationFormService.getFormDetail(uuid).then(function (form) {
+        formService.getFormDetail(uuid).then(function (form) {
             expect(uuid).toEqual(form.data.uuid);
             expect("test_form").toEqual(form.data.name);
             expect("1").toEqual(form.data.version);
@@ -70,7 +70,7 @@ describe('observationFormService', function () {
 
     it('should give all the latest form if given encounter uuid is null', function (done) {
         offlineDbService.getAllForms.and.returnValue(specUtil.respondWithPromise($q, forms));
-        observationFormService.getFormList().then(function (response) {
+        formService.getFormList().then(function (response) {
             var latestForms = response.data;
             expect(2).toEqual(latestForms.length);
             expect("7635fcda-cf1b-4d30-9ea9-595d7d34c7d9").toEqual(latestForms[0].uuid);
@@ -86,10 +86,32 @@ describe('observationFormService', function () {
         });
     });
 
+    it('should give all the forms', function (done) {
+        offlineDbService.getAllForms.and.returnValue(specUtil.respondWithPromise($q, forms));
+        formService.getAllForms().then(function (response) {
+            var latestForms = response.data;
+            expect(3).toEqual(latestForms.length);
+            expect("e5e763aa-31df-4931-bed4-0468ddf63aab").toEqual(latestForms[0].uuid);
+            expect("test_form").toEqual(latestForms[0].name);
+            expect("1").toEqual(latestForms[0].version);
+
+            expect("80b7273d-eea0-48d0-abae-b3d3bf7e96f1").toEqual(latestForms[1].uuid);
+            expect("demo_form").toEqual(latestForms[1].name);
+            expect("1").toEqual(latestForms[1].version);
+
+            expect("7635fcda-cf1b-4d30-9ea9-595d7d34c7d9").toEqual(latestForms[2].uuid);
+            expect("test_form").toEqual(latestForms[2].name);
+            expect("2").toEqual(latestForms[2].version);
+
+            expect(offlineDbService.getAllForms.calls.count()).toBe(1);
+            done();
+        });
+    });
+
     it("should give all the latest form if given encounter uuid does not hold any form data", function (done) {
         offlineDbService.getAllForms.and.returnValue(specUtil.respondWithPromise($q, forms));
         offlineDbService.getEncounterByEncounterUuid.and.returnValue(specUtil.respondWithPromise($q, {encounter: {observations: []}}));
-        observationFormService.getFormList("test-encounter-uuid").then(function (response) {
+        formService.getFormList("test-encounter-uuid").then(function (response) {
             var latestForms = response.data;
             expect(2).toEqual(latestForms.length);
             expect("7635fcda-cf1b-4d30-9ea9-595d7d34c7d9").toEqual(latestForms[0].uuid);
@@ -109,7 +131,7 @@ describe('observationFormService', function () {
     it("should replace latest form with older version of form if given encounter holds any form data", function (done) {
         offlineDbService.getAllForms.and.returnValue(specUtil.respondWithPromise($q, forms));
         offlineDbService.getEncounterByEncounterUuid.and.returnValue(specUtil.respondWithPromise($q, {encounter: {observations: [{formFieldPath: "test_form.1/2-0"}]}}));
-        observationFormService.getFormList("test-encounter-uuid").then(function (response) {
+        formService.getFormList("test-encounter-uuid").then(function (response) {
             var latestForms = response.data;
             expect(2).toEqual(latestForms.length);
             expect("e5e763aa-31df-4931-bed4-0468ddf63aab").toEqual(latestForms[0].uuid);
