@@ -98,7 +98,6 @@ module.exports = function (config) {
             'test/unit/clinical/services/labOrderResultService.spec.js',
             'app/common/util/androidDateTimeFormatter.js',
             "test/unit/common/util/androidDateTimeFormatter.spec.js",
-            'test/unit/registration/controllers/*.js',
             'test/unit/**/offline/android/*.js',
             'test/unit/clinical/offline/androidLabOrderResultsService.spec.js'
         ],
