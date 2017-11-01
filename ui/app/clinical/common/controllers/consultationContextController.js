@@ -17,7 +17,8 @@ angular.module('bahmni.clinical')
                             "address1",
                             "address2",
                             "cityVillage",
-                            "countryDistrict"
+                            "cityVillage",
+                            "countyDistrict"
                         ]
                     }
                 };
