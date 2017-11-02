@@ -73,9 +73,14 @@ angular.module('bahmni.common.conceptSet')
                 });
             };
 
+            var getFormTranslations = function () {
+                return $q.when([]);
+            };
+
             return {
                 getFormList: getFormList,
                 getFormDetail: getFormDetail,
-                getAllForms: getAllForms
+                getAllForms: getAllForms,
+                getFormTranslations: getFormTranslations
             };
         }]);
