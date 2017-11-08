@@ -37,7 +37,12 @@ angular.module('bahmni.clinical')
                     });
                 }
 
-                firstTabWithDefaultSection.sections = _.union(_.values(mandatoryConfig.sections), _.values(firstTabWithDefaultSection.sections));
+                var mandatorySections = _.map(_.values(mandatoryConfig.sections), function(item) {
+                    return _.assign(item, _.find( _.values(firstTabWithDefaultSection.sections), ['type', item.type]));
+                });
+
+                firstTabWithDefaultSection.sections = _.unionWith(_.values(mandatorySections), _.values(firstTabWithDefaultSection.sections), _.isEqual);
+
                 firstTabWithDefaultSection.sections = _.sortBy(firstTabWithDefaultSection.sections, function (section) {
                     return section.displayOrder;
                 });
