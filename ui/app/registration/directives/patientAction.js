@@ -12,6 +12,7 @@ angular.module('bahmni.registration')
                 var uuid = $stateParams.patientUuid;
                 var editActionsConfig = appService.getAppDescriptor().getExtensions(Bahmni.Registration.Constants.nextStepConfigId, "config") || [];
                 var conceptSetExtensions = appService.getAppDescriptor().getExtensions("org.bahmni.registration.conceptSetGroup.observations", "config");
+                var formExtensions = appService.getAppDescriptor().getExtensions("org.bahmni.registration.conceptSetGroup.observations", "forms");
                 var loginLocationUuid = $bahmniCookieStore.get(Bahmni.Common.Constants.locationCookieName).uuid;
                 var defaultVisitType = $rootScope.regEncounterConfiguration.getDefaultVisitType(loginLocationUuid);
                 defaultVisitType = defaultVisitType ? defaultVisitType : appService.getAppDescriptor().getConfigValue('defaultVisitType');
@@ -22,7 +23,7 @@ angular.module('bahmni.registration')
 
                 function setForwardActionKey () {
                     if (editActionsConfig.length === 0 && isOfflineApp) {
-                        $scope.forwardActionKey = conceptSetExtensions.length === 0 ? undefined : 'enterVisitDetails';
+                        $scope.forwardActionKey = _.isEmpty(formExtensions) && _.isEmpty(conceptSetExtensions) ? undefined : 'enterVisitDetails';
                     } else if (editActionsConfig.length === 0) {
                         $scope.forwardActionKey = self.hasActiveVisit ? 'enterVisitDetails' : 'startVisit';
                     } else {
