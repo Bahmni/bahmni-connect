@@ -138,6 +138,7 @@ angular.module('bahmni.common.conceptSet')
                 };
 
                 var clearFieldValuesOnDisabling = function (obs) {
+                    obs.comment = undefined;
                     if (obs.value || obs.isBoolean) {
                         obs.value = undefined;
                     } else if (obs.isMultiSelect) {
@@ -152,16 +153,16 @@ angular.module('bahmni.common.conceptSet')
                 var setObservationState = function (obsArray, disable, error, hide) {
                     if (!_.isEmpty(obsArray)) {
                         _.each(obsArray, function (obs) {
-                            obs.disabled = disable;
+                            obs.disabled = disable || hide;
                             obs.error = error;
                             obs.hide = hide;
-                            if (obs.disabled) {
+                            if (hide || obs.disabled) {
                                 clearFieldValuesOnDisabling(obs);
                             }
                             if (obs.groupMembers) {
                                 _.each(obs.groupMembers, function (groupMember) {
                                     // TODO : Hack to fix issue with formconditions on multiselect - Swathi
-                                    groupMember && setObservationState([groupMember], disable, error);
+                                    groupMember && setObservationState([groupMember], disable, error, hide);
                                 });
                             }
                         });
@@ -197,7 +198,7 @@ angular.module('bahmni.common.conceptSet')
                                 conceptSetValueMap[conceptName.split('|')[0]] = obsValue;
                                 return conceptSetValueMap;
                             }, {});
-                            var conditions = formCondition(formName, valueMap);
+                            var conditions = formCondition(formName, valueMap, $scope.patient);
                             if (!_.isUndefined(conditions)) {
                                 if (conditions.error && !_.isEmpty(conditions.error)) {
                                     messagingService.showMessage('error', conditions.error);
@@ -248,7 +249,6 @@ angular.module('bahmni.common.conceptSet')
                         }
                     });
                 };
-
                 var init = function () {
                     return conceptSetService.getConcept({
                         name: conceptSetName,
