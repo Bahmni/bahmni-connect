@@ -51,7 +51,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/Bhamni/opd.git"
+    "url": "git://github.com/Bahmni/bahmni-connect.git"
   },
   "keywords": [
     "Bahmni",
@@ -65,6 +65,6 @@
   "gitHead": "d292a992ce359f79a807fd7d75505e45cb631b80",
   "readmeFilename": "README.md",
   "bugs": {
-    "url": "https://github.com/Bhamni/opd/issues"
+    "url": "https://github.com/Bahmni/bahmni-connect/issues"
   }
 }
