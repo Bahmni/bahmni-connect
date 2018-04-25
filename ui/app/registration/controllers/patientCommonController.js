@@ -16,55 +16,49 @@ angular.module('bahmni.registration')
             $scope.dobMandatory = appService.getAppDescriptor().getConfigValue("dobMandatory") || false;
             $scope.readOnlyExtraIdentifiers = appService.getAppDescriptor().getConfigValue("readOnlyExtraIdentifiers");
             $scope.showSaveConfirmDialogConfig = appService.getAppDescriptor().getConfigValue("showSaveConfirmDialog");
+            $scope.showSaveAndContinueButton = false;
 
-            // Flag variable to check if Dont Save button is pressed or not
-            var flag = 0;
+            var dontSaveButtonClicked = false;
 
-            // Flag to check whether the button has an href or not
-            var hrefFlag = 0;
+            var isHref = false;
 
-            // Function is called when the Home Button is Clicked
-            $rootScope.homeNavigate = function (event) {
+            $rootScope.onHomeNavigate = function (event) {
                 if ($scope.showSaveConfirmDialogConfig) {
                     event.preventDefault();
                     $scope.targetUrl = event.currentTarget.getAttribute('href');
-                    naviConfirmBox(event);
+                    isHref = true;
+                    $scope.confirmationPrompt(event);
                 }
             };
 
-            // Checks for State Change
             var stateChangeListener = $rootScope.$on("$stateChangeStart", function (event, toState, toParams) {
-                naviConfirmBox(event, toState, toParams);
+                if ($scope.showSaveConfirmDialogConfig) {
+                    $scope.targetUrl = toState.name;
+                    isHref = false;
+                    $scope.confirmationPrompt(event, toState, toParams);
+                }
             });
 
-            var naviConfirmBox = function (event, toState) {
-                if (flag === 0) {
-                    if ($scope.showSaveConfirmDialogConfig) {
-                        if (event) {
-                            event.preventDefault();
-                            if ($scope.targetUrl) {
-                                hrefFlag = 1;
-                            } else {
-                                $scope.targetUrl = toState.name;
-                                hrefFlag = 0;
-                            }
-                        }
-                        ngDialog.openConfirm({template: "views/navigationPrompt.html", scope: $scope});
+            $scope.confirmationPrompt = function (event, toState) {
+                if (dontSaveButtonClicked === false) {
+                    if (event) {
+                        event.preventDefault();
                     }
+                    ngDialog.openConfirm({template: "../common/ui-helper/views/saveConfirmation.html", scope: $scope});
                 }
             };
 
             $scope.continueWithoutSaving = function () {
                 ngDialog.close();
-                flag = 1;
-                if (hrefFlag === 1) {
+                dontSaveButtonClicked = true;
+                if (isHref === true) {
                     $window.open($scope.targetUrl, '_self');
                 } else {
                     $state.go($scope.targetUrl);
                 }
             };
 
-            $scope.saveAndContinue = function () {
+            $scope.cancelTransition = function () {
                 ngDialog.close();
                 delete $scope.targetUrl;
             };
@@ -195,5 +189,4 @@ angular.module('bahmni.registration')
                 return ($scope.patient.causeOfDeath || $scope.patient.deathDate) && $scope.patient.dead;
             };
         }]);
-
 
