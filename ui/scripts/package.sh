@@ -3,9 +3,6 @@
 export LANG=en_US.UTF-8
 set -e
 
-npm cache clean
-bower cache clean
-
 npm install
 bower install
 grunt bundle
