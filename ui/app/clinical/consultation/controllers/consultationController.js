@@ -314,14 +314,15 @@ angular.module('bahmni.clinical').controller('ConsultationController',
                 var observationFilter = new Bahmni.Common.Domain.ObservationFilter();
                 $scope.consultation.preSaveHandler.fire();
                 $scope.lastvisited = $scope.consultation.lastvisited;
-                var selectedObsTemplate = $scope.consultation.selectedObsTemplate;
+                var selectedObsTemplates = $scope.consultation.selectedObsTemplates;
+                var selectedFormTemplates = _.filter(selectedObsTemplates, function (obsTemplate) { return obsTemplate.formUuid; });
                 var tempConsultation = angular.copy($scope.consultation);
                 tempConsultation.observations = observationFilter.filter(tempConsultation.observations);
                 tempConsultation.consultationNote = observationFilter.filter([tempConsultation.consultationNote])[0];
                 tempConsultation.labOrderNote = observationFilter.filter([tempConsultation.labOrderNote])[0];
 
-                addFormObservations(tempConsultation);
-                storeTemplatePreference(selectedObsTemplate);
+                addFormObservations(tempConsultation, selectedFormTemplates);
+                storeTemplatePreference(selectedObsTemplates);
                 var visitTypeForRetrospectiveEntries = clinicalAppConfigService.getVisitTypeForRetrospectiveEntries();
                 var defaultVisitType = clinicalAppConfigService.getDefaultVisitType();
                 var encounterData = new Bahmni.Clinical.EncounterTransactionMapper().map(tempConsultation, $scope.patient, sessionService.getLoginLocationUuid(), retrospectiveEntryService.getRetrospectiveEntry(),
@@ -330,9 +331,9 @@ angular.module('bahmni.clinical').controller('ConsultationController',
                 return deferred.promise;
             };
 
-            var storeTemplatePreference = function (selectedObsTemplate) {
+            var storeTemplatePreference = function (selectedObsTemplates) {
                 var templates = [];
-                _.each(selectedObsTemplate, function (template) {
+                _.each(selectedObsTemplates, function (template) {
                     var templateName = template.formName || template.conceptName;
                     var isTemplateAlreadyPresent = _.find(templates, function (template) {
                         return template.name === templateName;
@@ -366,7 +367,7 @@ angular.module('bahmni.clinical').controller('ConsultationController',
                 return discontinuedDrugOrderValidationMessage;
             };
 
-            var addFormObservations = function (tempConsultation) {
+            var addFormObservations = function (tempConsultation, selectedFormTemplates) {
                 if (tempConsultation.observationForms) {
                     _.remove(tempConsultation.observations, function (observation) {
                         return observation.formNamespace;
@@ -377,6 +378,13 @@ angular.module('bahmni.clinical').controller('ConsultationController',
                             _.each(formObservations.observations, function (obs) {
                                 tempConsultation.observations.push(obs);
                             });
+                        } else {
+                            var oldForm = _.find(selectedFormTemplates, function (form) { return form.formName === observationForm.formName; });
+                            if (oldForm) {
+                                _.each(oldForm.observations, function (obs) {
+                                    tempConsultation.observations.push(obs);
+                                });
+                            }
                         }
                     });
                 }

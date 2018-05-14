@@ -58,7 +58,7 @@ describe("conceptSetGroup", function () {
                     value: ""
                 }
             },
-            selectedObsTemplate : [
+            selectedObsTemplates : [
                 {
                     "uuid": "conceptSet1",
                     "label": "Followup",
@@ -93,7 +93,7 @@ describe("conceptSetGroup", function () {
     var executeDirective  = function () {
         httpBackend.expectGET("../common/concept-set/views/conceptSetGroup.html").respond('<div>dummy</div>');
 
-        var html = '<concept-set-group patient="patient" consultation="consultation" observations="consultation.observations" all-templates="consultation.selectedObsTemplate" context="context" auto-scroll-enabled="::scrollingEnabled"></concept-set-group>';
+        var html = '<concept-set-group patient="patient" consultation="consultation" observations="consultation.observations" all-templates="consultation.selectedObsTemplates" context="context" auto-scroll-enabled="::scrollingEnabled"></concept-set-group>';
         var element = compile(html)(scope);
         scope.$digest();
         httpBackend.flush();

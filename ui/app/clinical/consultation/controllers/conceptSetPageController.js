@@ -7,7 +7,7 @@ angular.module('bahmni.clinical')
         function ($scope, $rootScope, $stateParams, conceptSetService,
                   clinicalAppConfigService, messagingService, configurations, $state, spinner,
                   contextChangeHandler, $q, $translate, formService) {
-            $scope.consultation.selectedObsTemplate = $scope.consultation.selectedObsTemplate || [];
+            $scope.consultation.selectedObsTemplates = $scope.consultation.selectedObsTemplates || [];
             $scope.allTemplates = $scope.allTemplates || [];
             $scope.scrollingEnabled = false;
             var extensions = clinicalAppConfigService.getAllConceptSetExtensions($stateParams.conceptSetGroupName);
@@ -27,7 +27,7 @@ angular.module('bahmni.clinical')
                     }).then(function (response) {
                         var allTemplates = response.data.results[0].setMembers;
                         createConceptSections(allTemplates);
-                        $scope.allTemplates = getSelectedObsTemplate(allConceptSections);
+                        $scope.allTemplates = getSelectedObsTemplates(allConceptSections);
                         $scope.uniqueTemplates = _.uniqBy($scope.allTemplates, 'label');
                         if ($state.params.programUuid) {
                             showOnlyTemplatesFilledInProgram();
@@ -50,13 +50,13 @@ angular.module('bahmni.clinical')
 
             var concatObservationForms = function () {
                 $scope.allTemplates = $scope.allTemplates.concat($scope.consultation.observationForms);
-                if ($scope.consultation.selectedObsTemplate.length == 0) {
+                if ($scope.consultation.selectedObsTemplates.length == 0) {
                     initializeDefaultTemplates();
                     if ($scope.consultation.observations && $scope.consultation.observations.length > 0) {
                         addTemplatesInSavedOrder();
                     }
                     var templateToBeOpened = getLastVisitedTemplate() ||
-                        _.first($scope.consultation.selectedObsTemplate);
+                        _.first($scope.consultation.selectedObsTemplates);
 
                     if (templateToBeOpened) {
                         openTemplate(templateToBeOpened);
@@ -76,8 +76,8 @@ angular.module('bahmni.clinical')
             var insertInSavedOrder = function (templatePreference) {
                 var templateNames = templatePreference.templates;
                 _.each(templateNames, function (templateName) {
-                    var foundTemplate = _.find($scope.allTemplates, function (allTemplate) {
-                        return allTemplate.conceptName === templateName;
+                    var foundTemplate = _.find($scope.allTemplates, function (tmpl) {
+                        return tmpl.conceptName === templateName;
                     });
                     if (!_.isEmpty(foundTemplate.observations)) {
                         insertTemplate(foundTemplate);
@@ -95,12 +95,12 @@ angular.module('bahmni.clinical')
 
             var insertTemplate = function (template) {
                 if (template && !(template.isDefault() || template.alwaysShow)) {
-                    $scope.consultation.selectedObsTemplate.push(template);
+                    $scope.consultation.selectedObsTemplates.push(template);
                 }
             };
 
             var getLastVisitedTemplate = function () {
-                return _.find($scope.consultation.selectedObsTemplate, function (template) {
+                return _.find($scope.consultation.selectedObsTemplates, function (template) {
                     return template.id === $scope.consultation.lastvisited;
                 });
             };
@@ -112,7 +112,7 @@ angular.module('bahmni.clinical')
             };
 
             var initializeDefaultTemplates = function () {
-                $scope.consultation.selectedObsTemplate = _.filter($scope.allTemplates, function (template) {
+                $scope.consultation.selectedObsTemplates = _.filter($scope.allTemplates, function (template) {
                     return template.isDefault() || template.alwaysShow;
                 });
             };
@@ -164,9 +164,11 @@ angular.module('bahmni.clinical')
 
             var collectObservationsFromConceptSets = function () {
                 $scope.consultation.observations = [];
-                _.each($scope.consultation.selectedObsTemplate, function (conceptSetSection) {
-                    if (conceptSetSection.observations[0]) {
-                        $scope.consultation.observations.push(conceptSetSection.observations[0]);
+                _.each($scope.consultation.selectedObsTemplates, function (conceptSetSection) {
+                    if (conceptSetSection.observations) {
+                        _.each(conceptSetSection.observations, function (obs) {
+                            $scope.consultation.observations.push(obs);
+                        });
                     }
                 });
             };
@@ -177,7 +179,7 @@ angular.module('bahmni.clinical')
                 });
             };
 
-            var getSelectedObsTemplate = function (allConceptSections) {
+            var getSelectedObsTemplates = function (allConceptSections) {
                 return allConceptSections.filter(function (conceptSet) {
                     if (conceptSet.isAvailable($scope.context)) {
                         return true;
@@ -192,18 +194,18 @@ angular.module('bahmni.clinical')
             $scope.addTemplate = function (template) {
                 $scope.scrollingEnabled = true;
                 $scope.showTemplatesList = false;
-                var index = _.findLastIndex($scope.consultation.selectedObsTemplate, function (consultationTemplate) {
+                var index = _.findLastIndex($scope.consultation.selectedObsTemplates, function (consultationTemplate) {
                     return consultationTemplate.label == template.label;
                 });
 
-                if (index != -1 && $scope.consultation.selectedObsTemplate[index].allowAddMore) {
+                if (index != -1 && $scope.consultation.selectedObsTemplates[index].allowAddMore) {
                     var clonedObj = template.clone();
                     clonedObj.klass = "active";
-                    $scope.consultation.selectedObsTemplate.splice(index + 1, 0, clonedObj);
+                    $scope.consultation.selectedObsTemplates.splice(index + 1, 0, clonedObj);
                 } else {
                     template.toggle();
                     template.klass = "active";
-                    $scope.consultation.selectedObsTemplate.push(template);
+                    $scope.consultation.selectedObsTemplates.push(template);
                 }
                 $scope.consultation.searchParameter = "";
                 messagingService.showMessage("info", $translate.instant("CLINICAL_TEMPLATE_ADDED_SUCCESS_KEY", {label: template.label}));

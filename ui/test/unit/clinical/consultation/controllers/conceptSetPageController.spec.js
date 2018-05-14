@@ -125,7 +125,7 @@ describe('ConceptSetPageController', function () {
             expect(scope.allTemplates.length).toEqual(1);
             expect(scope.allTemplates[0].conceptName).toEqual("abcd");
 
-            expect(scope.consultation.selectedObsTemplate.length).toBe(0);
+            expect(scope.consultation.selectedObsTemplates.length).toBe(0);
         });
 
         it("should load all obs templates along with forms from implementers interface", function () {
@@ -157,7 +157,7 @@ describe('ConceptSetPageController', function () {
             expect(scope.allTemplates[0].conceptName).toEqual("abcd");
             expect(scope.allTemplates[1].formName).toEqual("my form");
 
-            expect(scope.consultation.selectedObsTemplate.length).toBe(0);
+            expect(scope.consultation.selectedObsTemplates.length).toBe(0);
         });
 
         it("should push template to selected obs template when template is pinned as favorite", function () {
@@ -183,9 +183,9 @@ describe('ConceptSetPageController', function () {
             expect(scope.allTemplates.length).toEqual(2);
             expect(scope.allTemplates[0].conceptName).toEqual("abcd");
             expect(scope.allTemplates[1].conceptName).toEqual("my form");
-            expect(scope.consultation.selectedObsTemplate.length).toBe(2);
-            expect(scope.consultation.selectedObsTemplate[0].label).toBe("abcd");
-            expect(scope.consultation.selectedObsTemplate[1].label).toBe("my form");
+            expect(scope.consultation.selectedObsTemplates.length).toBe(2);
+            expect(scope.consultation.selectedObsTemplates[0].label).toBe("abcd");
+            expect(scope.consultation.selectedObsTemplates[1].label).toBe("my form");
         });
 
         it("should push template to selected obs template when template is added as default in extensions", function () {
@@ -212,11 +212,11 @@ describe('ConceptSetPageController', function () {
             expect(scope.allTemplates).toBeTruthy();
             expect(scope.allTemplates.length).toEqual(1);
             expect(scope.allTemplates[0].conceptName).toEqual("abcd");
-            expect(scope.consultation.selectedObsTemplate.length).toBe(1);
-            expect(scope.consultation.selectedObsTemplate[0].label).toBe("abcd");
-            expect(scope.consultation.selectedObsTemplate[0].isOpen).toBeTruthy();
-            expect(scope.consultation.selectedObsTemplate[0].isLoaded).toBeTruthy();
-            expect(scope.consultation.selectedObsTemplate[0].klass).toBe("active");
+            expect(scope.consultation.selectedObsTemplates.length).toBe(1);
+            expect(scope.consultation.selectedObsTemplates[0].label).toBe("abcd");
+            expect(scope.consultation.selectedObsTemplates[0].isOpen).toBeTruthy();
+            expect(scope.consultation.selectedObsTemplates[0].isLoaded).toBeTruthy();
+            expect(scope.consultation.selectedObsTemplates[0].klass).toBe("active");
 
         });
 
@@ -262,20 +262,20 @@ describe('ConceptSetPageController', function () {
             expect(scope.allTemplates).toBeTruthy();
             expect(scope.allTemplates.length).toEqual(3);
 
-            expect(scope.consultation.selectedObsTemplate).toBeTruthy();
-            expect(scope.consultation.selectedObsTemplate.length).toEqual(3);
+            expect(scope.consultation.selectedObsTemplates).toBeTruthy();
+            expect(scope.consultation.selectedObsTemplates.length).toEqual(3);
 
-            expect(scope.consultation.selectedObsTemplate[0].conceptName).toEqual("abcd");
-            expect(scope.consultation.selectedObsTemplate[0].observations[0].uuid).toEqual("cafedead");
-            expect(scope.consultation.selectedObsTemplate[0].uuid).toEqual(123);
+            expect(scope.consultation.selectedObsTemplates[0].conceptName).toEqual("abcd");
+            expect(scope.consultation.selectedObsTemplates[0].observations[0].uuid).toEqual("cafedead");
+            expect(scope.consultation.selectedObsTemplates[0].uuid).toEqual(123);
 
-            expect(scope.consultation.selectedObsTemplate[1].conceptName).toEqual("abcd");
-            expect(scope.consultation.selectedObsTemplate[1].observations[0].uuid).toEqual("deadcafe");
-            expect(scope.consultation.selectedObsTemplate[1].uuid).toEqual(123);
+            expect(scope.consultation.selectedObsTemplates[1].conceptName).toEqual("abcd");
+            expect(scope.consultation.selectedObsTemplates[1].observations[0].uuid).toEqual("deadcafe");
+            expect(scope.consultation.selectedObsTemplates[1].uuid).toEqual(123);
 
-            expect(scope.consultation.selectedObsTemplate[2].formName).toEqual("my form");
-            expect(scope.consultation.selectedObsTemplate[2].observations[0].uuid).toEqual("random-uuid");
-            expect(scope.consultation.selectedObsTemplate[2].formUuid).toEqual("my-form-uuid");
+            expect(scope.consultation.selectedObsTemplates[2].formName).toEqual("my form");
+            expect(scope.consultation.selectedObsTemplates[2].observations[0].uuid).toEqual("random-uuid");
+            expect(scope.consultation.selectedObsTemplates[2].formUuid).toEqual("my-form-uuid");
         });
 
         it("should load all templates specific to program when program uuid is present", function () {
@@ -346,25 +346,25 @@ describe('ConceptSetPageController', function () {
             createController();
 
             expect(scope.allTemplates.length).toEqual(4);
-            expect(scope.consultation.selectedObsTemplate.length).toEqual(2);
+            expect(scope.consultation.selectedObsTemplates.length).toEqual(2);
 
-            expect(scope.consultation.selectedObsTemplate[0].isOpen).toBeTruthy();
-            expect(scope.consultation.selectedObsTemplate[0].isLoaded).toBeTruthy();
-            expect(scope.consultation.selectedObsTemplate[0].klass).toBe("active");
+            expect(scope.consultation.selectedObsTemplates[0].isOpen).toBeTruthy();
+            expect(scope.consultation.selectedObsTemplates[0].isLoaded).toBeTruthy();
+            expect(scope.consultation.selectedObsTemplates[0].klass).toBe("active");
 
-            scope.consultation.selectedObsTemplate[1].isAdded = true;
+            scope.consultation.selectedObsTemplates[1].isAdded = true;
             scope.addTemplate({label : "Followup Assessment", clone : function () {return {label : "Followup Assessment"}}});
-            expect(scope.consultation.selectedObsTemplate.length).toEqual(3);
-            expect(scope.consultation.selectedObsTemplate[2].klass).toBe("active");
+            expect(scope.consultation.selectedObsTemplates.length).toEqual(3);
+            expect(scope.consultation.selectedObsTemplates[2].klass).toBe("active");
 
             scope.addTemplate({label : "Baseline", toggle : function () {}});
-            expect(scope.consultation.selectedObsTemplate.length).toEqual(4);
-            var baselineTemplate = scope.consultation.selectedObsTemplate[2];
+            expect(scope.consultation.selectedObsTemplates.length).toEqual(4);
+            var baselineTemplate = scope.consultation.selectedObsTemplates[2];
             expect(baselineTemplate.klass).toBe("active");
 
             scope.addTemplate({label : "Baseline1", toggle : function () {}});
-            expect(scope.consultation.selectedObsTemplate.length).toEqual(5);
-            var baseline1Template = scope.consultation.selectedObsTemplate[3];
+            expect(scope.consultation.selectedObsTemplates.length).toEqual(5);
+            var baseline1Template = scope.consultation.selectedObsTemplates[3];
             expect(baseline1Template.klass).toBe("active");
             expect(messagingService.showMessage).toHaveBeenCalled();
         });
@@ -414,11 +414,11 @@ describe('ConceptSetPageController', function () {
             createController();
 
             expect(scope.consultation.observations.length).toBe(2);
-            expect(scope.consultation.selectedObsTemplate[0].label).toBe("Followup Assessment");
-            expect(scope.consultation.selectedObsTemplate[1].label).toBe("Baseline");
-            expect(scope.consultation.selectedObsTemplate[1].isOpen).toBeTruthy();
-            expect(scope.consultation.selectedObsTemplate[1].isLoaded).toBeTruthy();
-            expect(scope.consultation.selectedObsTemplate[1].klass).toBe("active");
+            expect(scope.consultation.selectedObsTemplates[0].label).toBe("Followup Assessment");
+            expect(scope.consultation.selectedObsTemplates[1].label).toBe("Baseline");
+            expect(scope.consultation.selectedObsTemplates[1].isOpen).toBeTruthy();
+            expect(scope.consultation.selectedObsTemplates[1].isLoaded).toBeTruthy();
+            expect(scope.consultation.selectedObsTemplates[1].klass).toBe("active");
         })
     })
 });
