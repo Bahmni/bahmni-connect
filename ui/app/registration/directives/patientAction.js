@@ -17,7 +17,7 @@ angular.module('bahmni.registration')
                 var defaultVisitType = $rootScope.regEncounterConfiguration.getDefaultVisitType(loginLocationUuid);
                 defaultVisitType = defaultVisitType ? defaultVisitType : appService.getAppDescriptor().getConfigValue('defaultVisitType');
                 var showStartVisitButton = appService.getAppDescriptor().getConfigValue("showStartVisitButton");
-                showStartVisitButton = showStartVisitButton ? showStartVisitButton : true;
+                showStartVisitButton = (_.isUndefined(showStartVisitButton) || _.isNull(showStartVisitButton)) ? true : showStartVisitButton;
                 var isOfflineApp = offlineService.isOfflineApp();
                 var visitLocationUuid = $rootScope.visitLocation;
 
