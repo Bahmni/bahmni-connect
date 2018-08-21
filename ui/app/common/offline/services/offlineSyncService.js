@@ -46,10 +46,10 @@ angular.module('bahmni.common.offline')
                 if (count !== fileNames.length) {
                     return $http.get(Bahmni.Common.Constants.preprocessedPatientUrl + fileNames[count]).then(function (response) {
                         updatePendingEventsCount("patient", response.data.patients.length);
-                        eventLogUuid = response.data.lastReadEventUuid;
+                        var lastReadEventUuid = response.data.lastReadEventUuid;
                         return savePatients(response.data.patients, 0).then(function () {
                             updateSyncedFileNames(fileNames[count], dbName);
-                            return getPatientDataForFiles(fileNames, ++count, eventLogUuid, dbName);
+                            return getPatientDataForFiles(fileNames, ++count, lastReadEventUuid, dbName);
                         });
                     });
                 }
@@ -69,14 +69,14 @@ angular.module('bahmni.common.offline')
             };
 
             var savePatientDataFromFile = function () {
-                var eventLogUuid;
                 var defer = $q.defer();
                 offlineDbService.getMarker('patient').then(function (marker) {
                     if (marker.lastReadEventUuid) {
-                        return defer.resolve();
+                        return defer.resolve(marker.lastReadEventUuid);
                     }
 
                     return getDbName().then(function (dbName) {
+                        var eventLogUuid;
                         var promises = marker.filters.map(function (filter) {
                             var syncedInfo = offlineService.getItem("synced") || {};
                             var synced = syncedInfo[dbName] || [];
@@ -322,6 +322,12 @@ angular.module('bahmni.common.offline')
 
             var updateMarker = function (event, category) {
                 return offlineDbService.getMarker(category).then(function (marker) {
+                    if (event.uuid == undefined) {
+                        if (marker.lastReadEventUuid != undefined) {
+                            console.log("Event identifier is null or undefined. Can not override last read event for category - " + category);
+                            throw new Error("Event identifier is null or undefined. Can not override last read event for category - " + category);
+                        }
+                    }
                     return offlineDbService.insertMarker(marker.markerName, event.uuid, marker.filters);
                 });
             };
