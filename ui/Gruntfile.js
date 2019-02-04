@@ -481,8 +481,6 @@ module.exports = function (grunt) {
         }
     });
 
-    grunt.renameTask('regarde', 'watch');
-
     grunt.registerTask('test', ['eslint', 'karma:chrome', 'coverage', 'karma:android', 'coverage']);
 
     grunt.registerTask('bundle', [
