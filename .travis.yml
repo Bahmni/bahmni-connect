@@ -20,7 +20,6 @@ script: yarn ci
 cache:
   directories:
   - ui/node_modules
-  - ui/app/components
 
 notifications:
   email: false

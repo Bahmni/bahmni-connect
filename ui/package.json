@@ -21,7 +21,7 @@
     "compass": "grunt compass",
     "uglify-and-rename": "grunt uglify-and-rename",
     "postinstall": "node -e \"try { require('fs').symlinkSync(require('path').resolve('node_modules/@bower_components'), 'app/components', 'junction') } catch (e) { }\"",
-    "ci": "grunt bundle && grunt uglify-and-rename && grunt web",
+    "ci": "grunt bundle && grunt uglify-and-rename && yarn test",
     "watch": "grunt watch"
   },
   "dependencies": {
