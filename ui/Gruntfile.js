@@ -486,7 +486,7 @@ module.exports = function (grunt) {
     grunt.registerTask('test', ['eslint', 'karma:chrome', 'coverage', 'karma:android', 'coverage']);
 
     grunt.registerTask('bundle', [
-        'npm-install',
+        'yarn-install',
         'bower-install',
         'eslint',
         'copy:nodeModules',
@@ -531,16 +531,16 @@ module.exports = function (grunt) {
     grunt.registerTask('generate-sw', 'generate service worker file', function () {
         var exec = require('child_process').exec;
         var cb = this.async();
-        exec('npm run sw', function (err, stdout) {
+        exec('yarn run sw', function (err, stdout) {
             console.log(stdout);
             cb(!err);
         });
     });
 
-    grunt.registerTask('npm-install', 'install dependencies using npm', function () {
+    grunt.registerTask('yarn-install', 'install dependencies using yarn', function () {
         var exec = require('child_process').exec;
         var cb = this.async();
-        exec('npm install', function (err, stdout) {
+        exec('yarn install', function (err, stdout) {
             console.log(stdout);
             cb(!err);
         });

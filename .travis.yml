@@ -1,8 +1,6 @@
 language: node_js
-node_js: "6"
 
 before_install:
-  - if [[ `npm -v` == 3.10.8 ]]; then npm i -g npm@3.10.7; fi
   - npm --version
   - npm config set spin false
 
@@ -14,8 +12,9 @@ before_install:
 install:
   - npm install -g bower
   - npm install -g grunt-cli
+  - npm install -g yarn
   - gem install compass
-  - cd ui && npm install
+  - cd ui && yarn
   - cat npm-debug.log || true
   - bower install
 
