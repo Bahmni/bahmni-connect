@@ -5,13 +5,7 @@ set -e
 
 npm install
 bower install
-
-if [ -z "$1" ]; then
-    grunt bundle
-else
-    grunt --gruntfile $1 bundle
-fi
-
+grunt --gruntfile Gruntfile_ci.js bundle
 
 mkdir bahmni-connect-apps
 mkdir androidDist
@@ -28,12 +22,7 @@ echo "Starting Xvfb process $XVFB_PID"
 
 rm -rf dist/*
 
-if [ -z "$1" ]; then
-    grunt chrome
-else
-    grunt --gruntfile $1 chrome
-fi
-
+grunt --gruntfile Gruntfile_ci.js chrome
 
 npm run sw
 cp -r dist/* bahmni-connect-apps
@@ -41,13 +30,9 @@ zip -r bahmni-connect-apps.zip bahmni-connect-apps
 
 rm -rf dist/*
 
-if [ -z "$1" ]; then
-    grunt android
-else
-    grunt --gruntfile $1 android
-fi
-
+grunt --gruntfile Gruntfile_ci.js android
 cp -r dist/* androidDist
 
 echo "Killing Xvfb process $XVFB_PID"
 /usr/bin/sudo kill $XVFB_PID
+
