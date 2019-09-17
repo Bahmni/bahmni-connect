@@ -13,7 +13,7 @@ angular.module('bahmni.common.conceptSet')
                 if (!_.isEmpty(allForms)) {
                     for (var formName in allForms) {
                         latestForms.push(allForms[formName].reduce(function (max, current) {
-                            return parseInt(current.version) > parseInt(max.version) ? current : max; 
+                            return parseInt(current.version) > parseInt(max.version) ? current : max;
                         }));
                     }
                 }
