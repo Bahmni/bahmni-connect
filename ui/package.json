@@ -20,6 +20,7 @@
     "coverage": "grunt coverage",
     "compass": "grunt compass",
     "uglify-and-rename": "grunt uglify-and-rename",
+    "preinstall": "node -e \"if (process.env.npm_execpath.indexOf('yarn') === -1) throw new Error('Use yarn for installing: https://yarnpkg.com/en/docs/install')\"",
     "postinstall": "node -e \"try { require('fs').symlinkSync('../node_modules/@bower_components', 'app/components', 'junction') } catch (e) { }\"",
     "ci": "grunt bundle && grunt uglify-and-rename && yarn test",
     "watch": "grunt watch"
@@ -135,6 +136,7 @@
     "url": "https://github.com/Bahmni/bahmni-connect/issues"
   },
   "engines": {
-    "yarn": ">= 1.0.0"
+    "yarn": ">= 1.0.0",
+    "npm": "use yarn instead of npm."
   }
 }
