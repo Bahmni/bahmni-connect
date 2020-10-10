@@ -3,15 +3,13 @@
 export LANG=en_US.UTF-8
 set -e
 
-npm install
-bower install
+yarn install
 
 if [ -z "$1" ]; then
     grunt bundle
 else
     grunt --gruntfile $1 bundle
 fi
-
 
 mkdir bahmni-connect-apps
 mkdir androidDist

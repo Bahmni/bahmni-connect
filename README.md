@@ -33,6 +33,5 @@ Please visit [Bahmni Wiki](https://bahmni.atlassian.net/wiki/spaces/BAH/pages/46
     |
     |-- test
     |-- .jshint.rc
-    |-- bower.json
     |-- package.json
 </pre>

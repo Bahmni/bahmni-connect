@@ -3,8 +3,7 @@
 export LANG=en_US.UTF-8
 set -e
 
-npm install
-bower install
+yarn install
 grunt --gruntfile Gruntfile_ci.js bundle
 
 mkdir bahmni-connect-apps

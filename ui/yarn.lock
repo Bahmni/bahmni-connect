@@ -2,6 +2,221 @@
 # yarn lockfile v1
 
 
+"@bower_components/Cortana@Yago31/Cortana#~1.2.6":
+  version "0.1.0"
+  resolved "https://codeload.github.com/Yago31/Cortana/tar.gz/8eea2a5766463307319dd89813b58fb435ee1f40"
+
+"@bower_components/angular-animate@angular/bower-angular-animate#1.4.9":
+  version "1.4.9"
+  resolved "https://codeload.github.com/angular/bower-angular-animate/tar.gz/e65bd633210be321fa62fa3acdc2c7fe7c814184"
+
+"@bower_components/angular-bindonce@Pasvaz/bindonce#0.3.3":
+  version "0.3.3"
+  resolved "https://codeload.github.com/Pasvaz/bindonce/tar.gz/0fcf71e6effc88179893c9c06baf6c6bf9037632"
+
+"@bower_components/angular-cookies@angular/bower-angular-cookies#1.4.9":
+  version "1.4.9"
+  resolved "https://codeload.github.com/angular/bower-angular-cookies/tar.gz/cf2e23660fbbc0d9e74eaa8a535b42ae58b70805"
+
+"@bower_components/angular-elastic@monospaced/angular-elastic#~2.5.0":
+  version "2.5.1"
+  resolved "https://codeload.github.com/monospaced/angular-elastic/tar.gz/4c2c75e413e668b4117bf2b3741272b2ab9e24c5"
+  dependencies:
+    angular ">=1.0.6"
+
+"@bower_components/angular-file-upload@nervgh/angular-file-upload#*":
+  version "2.5.0"
+  resolved "https://codeload.github.com/nervgh/angular-file-upload/tar.gz/bf5538e8f1cb58d24352641fbb6f97f890850e66"
+
+"@bower_components/angular-mocks@angular/bower-angular-mocks#1.4.9":
+  version "1.4.9"
+  resolved "https://codeload.github.com/angular/bower-angular-mocks/tar.gz/681485d618bace0bda94886772f5b9328bf4412b"
+
+"@bower_components/angular-recursion@marklagendijk/angular-recursion#~1.0.5":
+  version "1.0.5"
+  resolved "https://codeload.github.com/marklagendijk/angular-recursion/tar.gz/c95920d83de49e042719db6aa6c133eebb006e9b"
+
+"@bower_components/angular-route@angular/bower-angular-route#1.4.9":
+  version "1.4.9"
+  resolved "https://codeload.github.com/angular/bower-angular-route/tar.gz/7636556e472878aea93bedfcdb6c1a809794ac00"
+
+"@bower_components/angular-sanitize@angular/bower-angular-sanitize#1.4.9":
+  version "1.4.9"
+  resolved "https://codeload.github.com/angular/bower-angular-sanitize/tar.gz/698bf7b7801e3a901df670b929b50fca1eefbe4d"
+
+"@bower_components/angular-scenario@angular/bower-angular-scenario#1.4.9":
+  version "1.4.9"
+  resolved "https://codeload.github.com/angular/bower-angular-scenario/tar.gz/8dd815c065ea4de58058b67afa86b6324aa31bd2"
+
+"@bower_components/angular-translate-handler-log@PascalPrecht/bower-angular-translate-handler-log#*":
+  version "2.18.1"
+  resolved "https://codeload.github.com/PascalPrecht/bower-angular-translate-handler-log/tar.gz/4570014676aa3063d977e74dbcd9df1419f544f9"
+  dependencies:
+    angular-translate "~2.18.1"
+
+"@bower_components/angular-translate-loader-static-files@PascalPrecht/bower-angular-translate-loader-static-files#*":
+  version "2.18.1"
+  resolved "https://codeload.github.com/PascalPrecht/bower-angular-translate-loader-static-files/tar.gz/417a40c796117c4c8ac7afdb392fdac9471a56f5"
+  dependencies:
+    angular-translate "~2.18.1"
+
+"@bower_components/angular-translate-storage-cookie@PascalPrecht/bower-angular-translate-storage-cookie#~2.18.1":
+  version "2.18.1"
+  resolved "https://codeload.github.com/PascalPrecht/bower-angular-translate-storage-cookie/tar.gz/c2b4da628c8038476208959ee807f3732a2b6f70"
+  dependencies:
+    angular-cookies ">=1.2.26 <1.8"
+    angular-translate "~2.18.1"
+
+"@bower_components/angular-translate-storage-local@PascalPrecht/bower-angular-translate-storage-local#*":
+  version "2.18.1"
+  resolved "https://codeload.github.com/PascalPrecht/bower-angular-translate-storage-local/tar.gz/c060b41eab22e113d85d8dd8c4a2059e097a5596"
+  dependencies:
+    angular-translate "~2.18.1"
+    angular-translate-storage-cookie "~2.18.1"
+
+"@bower_components/angular-translate@PascalPrecht/bower-angular-translate#2.7.2":
+  version "0.0.0"
+  resolved "https://codeload.github.com/PascalPrecht/bower-angular-translate/tar.gz/2c1fe7efab11bc735b307e4c929386161b43995c"
+
+"@bower_components/angular-ui-router@angular-ui/angular-ui-router-bower#0.2.18":
+  version "0.0.0"
+  resolved "https://codeload.github.com/angular-ui/angular-ui-router-bower/tar.gz/2b8d5241b4c631ca2aef079bb96690b213eff449"
+
+"@bower_components/angular-ui-select2@angular-ui/ui-select2#0.0.5":
+  version "0.0.5"
+  resolved "https://codeload.github.com/angular-ui/ui-select2/tar.gz/fb5a7c4abef68b98445e4ea1a0232905a407757d"
+
+"@bower_components/angular@angular/bower-angular#1.4.9":
+  version "1.4.9"
+  resolved "https://codeload.github.com/angular/bower-angular/tar.gz/a69eba562dc18df13f27ca0274c90ee26c29004e"
+
+"@bower_components/angularjs-nvd3-directives@cmaurer/angularjs-nvd3-directives#v0.0.7":
+  version "0.0.7"
+  resolved "https://codeload.github.com/cmaurer/angularjs-nvd3-directives/tar.gz/7a617503f2f96aa13e97217010c86f4226b2cd40"
+
+"@bower_components/crypto-js@brix/crypto-js#3.1.5":
+  version "3.1.5"
+  resolved "https://codeload.github.com/brix/crypto-js/tar.gz/a94ba57c7a77edfff50ff037498b83f1cd3cb3eb"
+
+"@bower_components/d3@mbostock-bower/d3-bower#~3.4.1":
+  version "0.0.0"
+  resolved "https://codeload.github.com/mbostock-bower/d3-bower/tar.gz/ed7191b86b9644902948e32125cc88e96460a653"
+
+"@bower_components/fastclick@ftlabs/fastclick#1.0.2":
+  version "1.0.2"
+  resolved "https://codeload.github.com/ftlabs/fastclick/tar.gz/a56c6bfebe9152c0d5ec3fda37bae9bd58f843d2"
+
+"@bower_components/hustle@DWB-eHealth/hustle#4e7e3bd":
+  version "0.0.0"
+  resolved "https://codeload.github.com/DWB-eHealth/hustle/tar.gz/4e7e3bdf95d473e579a8ec4a137a96650f1c7e4b"
+
+"@bower_components/jasmine-jquery@velesin/jasmine-jquery#~2.1.0":
+  version "2.1.1"
+  resolved "https://codeload.github.com/velesin/jasmine-jquery/tar.gz/2fb05c75e1c1029c29c6c32a3a30347ead9b5a19"
+
+"@bower_components/jasmine@pivotal/jasmine#>=2":
+  version "3.3.0"
+  resolved "https://codeload.github.com/pivotal/jasmine/tar.gz/b3ccd4312cc96671d0d3d0d951a87b82dc15d7ad"
+
+"@bower_components/jquery-ui@components/jqueryui#1.10.2":
+  version "1.10.2"
+  resolved "https://codeload.github.com/components/jqueryui/tar.gz/1907b0db61e84f381e4bea8d5aa9e0807dd59e3d"
+
+"@bower_components/jquery.cookie@carhartl/jquery-cookie#1.4.0":
+  version "1.4.0"
+  resolved "https://codeload.github.com/carhartl/jquery-cookie/tar.gz/3caf209abe30a856789d0ceb464c297dfdbe670e"
+
+"@bower_components/jquery.scrollTo@flesler/jquery.scrollTo#*":
+  version "2.1.2"
+  resolved "https://codeload.github.com/flesler/jquery.scrollTo/tar.gz/d33ae4515be21a76bb7907c94dd8a0ca0de7e49b"
+  dependencies:
+    jquery ">=1.8"
+
+"@bower_components/jquery@jquery/jquery-dist#1.9.1":
+  version "1.9.1"
+  resolved "https://codeload.github.com/jquery/jquery-dist/tar.gz/d71f6a53927ad02d728503385d15539b73d21ac8"
+
+"@bower_components/keyboardjs@RobertWHurst/KeyboardJS#*":
+  version "2.5.0"
+  resolved "https://codeload.github.com/RobertWHurst/KeyboardJS/tar.gz/2eae9f4184c0a9587819a5ee6d5b893a8d301226"
+
+"@bower_components/lodash@lodash/lodash#4.3.0":
+  version "4.3.0"
+  resolved "https://codeload.github.com/lodash/lodash/tar.gz/8debfc6e6cd38bbaa926b42066a60f6540c9ca43"
+
+"@bower_components/lovefield@google/lovefield#~2.1.7":
+  version "2.1.12"
+  resolved "https://codeload.github.com/google/lovefield/tar.gz/bd1232ea63a94d87116330d99abda3ada391fe60"
+  dependencies:
+    js-yaml "~3.1.0"
+    nopt "~2.2.1"
+
+"@bower_components/moment@moment/moment#2.6.0":
+  version "2.6.0"
+  resolved "https://codeload.github.com/moment/moment/tar.gz/37808f3f9dec14e37ad2b5cff45c70f63b021d17"
+
+"@bower_components/ng-clip@asafdav/ng-clip#0.2.5":
+  version "0.2.5"
+  resolved "https://codeload.github.com/asafdav/ng-clip/tar.gz/9ed4e61538a81f96329a1ab325e6c1fc01f10984"
+
+"@bower_components/ng-tags-input@mbenford/ngTagsInput-bower#^3.1.1":
+  version "0.0.0"
+  resolved "https://codeload.github.com/mbenford/ngTagsInput-bower/tar.gz/045ef9590a78538054d720870c71c9f1eb72dde2"
+
+"@bower_components/ngDialog@likeastore/ngDialog#0.3.12":
+  version "0.3.12"
+  resolved "https://codeload.github.com/likeastore/ngDialog/tar.gz/ddca378288f6c3e1e4f1d585939aeeab16f646f1"
+
+"@bower_components/ngInfiniteScroll@ng-infinite-scroll/ng-infinite-scroll-bower#1.3.1":
+  version "0.0.0"
+  resolved "https://codeload.github.com/ng-infinite-scroll/ng-infinite-scroll-bower/tar.gz/e6d71f9f412834381661a09905bf25e5bcfc8e03"
+
+"@bower_components/ngReact@davidchang/ngReact#^0.3.0":
+  version "0.3.0"
+  resolved "https://codeload.github.com/davidchang/ngReact/tar.gz/b018429acb69c3dd1d73b508bf22b2e9dd1e1ad0"
+
+"@bower_components/nvd3@novus/nvd3#~v1.1.15-beta":
+  version "0.0.1"
+  resolved "https://codeload.github.com/novus/nvd3/tar.gz/365863cbe0d832931f17f46d65911d56e806bfde"
+
+"@bower_components/nya-bootstrap-select@lordfriend/nya-bootstrap-select#^2.2.0":
+  version "2.5.1"
+  resolved "https://codeload.github.com/lordfriend/nya-bootstrap-select/tar.gz/4b9d5ebd48594b6c3554b14521151a90a0c6b1ea"
+
+"@bower_components/offline@HubSpot/offline#0.7.14":
+  version "0.7.14"
+  resolved "https://codeload.github.com/HubSpot/offline/tar.gz/3eaff38bdcf150a1024ebb937fd5078f88f86457"
+
+"@bower_components/openmrs-uicommons@openmrs/openmrs-module-uicommons#master":
+  version "0.0.0"
+  resolved "https://codeload.github.com/openmrs/openmrs-module-uicommons/tar.gz/4a613a5910e84de5489b06a93090dc4cdd4ddb0d"
+
+"@bower_components/purl@allmarkedup/purl#2.3.1":
+  version "0.0.0"
+  resolved "https://codeload.github.com/allmarkedup/purl/tar.gz/1771aec03be7f0ae31d83c7f2fca6149a4581821"
+
+"@bower_components/q@kriskowal/q#1.0.1":
+  version "1.0.1"
+  resolved "https://codeload.github.com/kriskowal/q/tar.gz/3f62d467cb55efe4e0f53fa880239ab5057990e8"
+
+"@bower_components/react@facebook/react-bower#^15.3.2":
+  version "0.0.0"
+  resolved "https://codeload.github.com/facebook/react-bower/tar.gz/8ebee1339ca1fc65ce30ed4e34bfb1a8c9f0204e"
+
+"@bower_components/select2@ivaynberg/select2#~3.4":
+  version "3.4.8"
+  resolved "https://codeload.github.com/ivaynberg/select2/tar.gz/b5f3b2839c48c53f9641d6bb1bccafc5260c7620"
+
+"@bower_components/stacktrace-js@stacktracejs/stacktrace.js#0.6.4":
+  version "0.6.4"
+  resolved "https://codeload.github.com/stacktracejs/stacktrace.js/tar.gz/ea193d87060c5e68949505c4f433123f095ba7d7"
+
+"@bower_components/zeroclipboard@zeroclipboard/zeroclipboard#~2.1.0":
+  version "2.1.6"
+  resolved "https://codeload.github.com/zeroclipboard/zeroclipboard/tar.gz/e4f6ab73861924341792aa671592cdcb45d6e5cc"
+  dependencies:
+    send "0"
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
@@ -119,6 +334,31 @@ amdefine@>=0.0.4:
   resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
   integrity sha1-SlKCrBZHKek2Gbz9OtFR+BfOkfU=
 
+"angular-cookies@>=1.2.26 <1.8":
+  version "1.7.6"
+  resolved "https://registry.yarnpkg.com/angular-cookies/-/angular-cookies-1.7.6.tgz#a8f9e81866cbc76d82a15b3a18a84099c9d6fc84"
+  integrity sha512-BkwpZEruj2crsegrOJJvDIWjEBnIAK9PFq39y5rLtiqc2hOXYTs+sVzgq9qit2dlqZTH+xPIaiP2LXADv64W6g==
+
+angular-translate-storage-cookie@~2.18.1:
+  version "2.18.1"
+  resolved "https://registry.yarnpkg.com/angular-translate-storage-cookie/-/angular-translate-storage-cookie-2.18.1.tgz#8fcbdab296fa82490e00b428af1a746a17f44156"
+  integrity sha512-wiMaF/0OGN/3ilaYunfsqdLNpfGZEJK0fj4zT8yjD3XPq7Q9kM88xZ4XJiWKgodZShBljGCRzqgQbKMF7d1MLw==
+  dependencies:
+    angular-cookies ">=1.2.26 <1.8"
+    angular-translate "~2.18.1"
+
+angular-translate@~2.18.1:
+  version "2.18.1"
+  resolved "https://registry.yarnpkg.com/angular-translate/-/angular-translate-2.18.1.tgz#b29ed0d2f9bac44075e7aad3284166c59e150791"
+  integrity sha512-Mw0kFBqsv5j8ItL9IhRZunIlVmIRW6iFsiTmRs9wGr2QTt8z4rehYlWyHos8qnXc/kyOYJiW50iH50CSNHGB9A==
+  dependencies:
+    angular ">=1.2.26 <=1.7"
+
+angular@>=1.0.6, "angular@>=1.2.26 <=1.7":
+  version "1.7.6"
+  resolved "https://registry.yarnpkg.com/angular/-/angular-1.7.6.tgz#db3bd96e3305c870f6227b9b32a4d761880473da"
+  integrity sha512-QELpvuMIe1FTGniAkRz93O6A+di0yu88niDwcdzrSqtUHNtZMgtgFS4f7W/6Gugbuwej8Kyswlmymwdp8iPCWg==
+
 ansi-align@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ansi-align/-/ansi-align-2.0.0.tgz#c36aeccba563b89ceb556f3690f0b1d9e3547f7f"
@@ -192,6 +432,14 @@ argparse@^1.0.2, argparse@^1.0.7:
   integrity sha512-o5Roy6tNG4SL/FOkCAN6RzjiakZS25RLYFrcMttJqbdd8BWrnA+fGz57iN5Pb06pvBGvl5gQ0B48dJlslXvoTg==
   dependencies:
     sprintf-js "~1.0.2"
+
+"argparse@~ 0.1.11":
+  version "0.1.16"
+  resolved "https://registry.yarnpkg.com/argparse/-/argparse-0.1.16.tgz#cfd01e0fbba3d6caed049fbd758d40f65196f57c"
+  integrity sha1-z9AeD7uj1srtBJ+9dY1A9lGW9Xw=
+  dependencies:
+    underscore "~1.7.0"
+    underscore.string "~2.4.0"
 
 arr-diff@^4.0.0:
   version "4.0.0"
@@ -1333,6 +1581,11 @@ depd@~1.1.2:
   resolved "https://registry.yarnpkg.com/depd/-/depd-1.1.2.tgz#9bcd52e14c097763e749b274c4346ed2e560b5a9"
   integrity sha1-m81S4UwJd2PnSbJ0xDRu0uVgtak=
 
+destroy@~1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/destroy/-/destroy-1.0.4.tgz#978857442c44749e4206613e37946205826abd80"
+  integrity sha1-l4hXRCxEdJ5CBmE+N5RiBYJqvYA=
+
 detect-file@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/detect-file/-/detect-file-1.0.0.tgz#f0d66d03672a825cb1b73bdb3fe62310c8e552b7"
@@ -1483,7 +1736,7 @@ emojis-list@^2.0.0:
   resolved "https://registry.yarnpkg.com/emojis-list/-/emojis-list-2.1.0.tgz#4daa4d9db00f9819880c79fa457ae5b09a1fd389"
   integrity sha1-TapNnbAPmBmIDHn6RXrlsJof04k=
 
-encodeurl@~1.0.1:
+encodeurl@~1.0.1, encodeurl@~1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/encodeurl/-/encodeurl-1.0.2.tgz#ad3ff4c86ec2d029322f5a02c3a9a606c95b3f59"
   integrity sha1-rT/0yG7C0CkyL1oCw6mmBslbP1k=
@@ -1860,6 +2113,11 @@ esprima@^4.0.0:
   resolved "https://registry.yarnpkg.com/esprima/-/esprima-4.0.1.tgz#13b04cdb3e6c5d19df91ab6987a8695619b0aa71"
   integrity sha512-eGuFFw7Upda+g4p+QHvnW0RyTX/SVeJBDM/gCtMARO0cLuT2HcEKnTPvhjV6aGeqrCB/sbNop0Kszm0jsaWU4A==
 
+"esprima@~ 1.0.2":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/esprima/-/esprima-1.0.4.tgz#9f557e08fc3b4d26ece9dd34f8fbf476b62585ad"
+  integrity sha1-n1V+CPw7TSbs6d00+Pv0drYlha0=
+
 esprima@~1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/esprima/-/esprima-1.1.1.tgz#5b6f1547f4d102e670e140c509be6771d6aeb549"
@@ -1903,6 +2161,11 @@ esutils@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/esutils/-/esutils-1.0.0.tgz#8151d358e20c8acc7fb745e7472c0025fe496570"
   integrity sha1-gVHTWOIMisx/t0XnRywAJf5JZXA=
+
+etag@~1.8.1:
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/etag/-/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
+  integrity sha1-Qa4u62XvpiJorr/qg6x9eSmbCIc=
 
 event-emitter@~0.3.5:
   version "0.3.5"
@@ -2303,6 +2566,11 @@ fragment-cache@^0.2.1:
   integrity sha1-QpD60n8T6Jvn8zeZxrxaCr//DRk=
   dependencies:
     map-cache "^0.2.2"
+
+fresh@0.5.2:
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/fresh/-/fresh-0.5.2.tgz#3d8cadd90d976569fa835ab1f8e4b23a105605a7"
+  integrity sha1-PYyt2Q2XZWn6g1qx+OSyOhBWBac=
 
 from2@^2.1.1:
   version "2.3.0"
@@ -2998,7 +3266,7 @@ http-cache-semantics@3.8.1:
   resolved "https://registry.yarnpkg.com/http-cache-semantics/-/http-cache-semantics-3.8.1.tgz#39b0e16add9b605bf0a9ef3d9daaf4843b4cacd2"
   integrity sha512-5ai2iksyV8ZXmnZhHH4rWPoxxistEexSi5936zIQ1bnNTW5VnA85B6P/VpXiRM017IgRvb2kKo1a//y+0wSp3w==
 
-http-errors@1.6.3, http-errors@~1.6.3:
+http-errors@1.6.3, http-errors@~1.6.2, http-errors@~1.6.3:
   version "1.6.3"
   resolved "https://registry.yarnpkg.com/http-errors/-/http-errors-1.6.3.tgz#8b55680bb4be283a0b5bf4ea2e38580be1d9320d"
   integrity sha1-i1VoC7S+KDoLW/TqLjhYC+HZMg0=
@@ -3619,6 +3887,11 @@ jpegtran-bin@^4.0.0:
     bin-wrapper "^4.0.0"
     logalot "^2.0.0"
 
+jquery@>=1.8:
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.3.1.tgz#958ce29e81c9790f31be7792df5d4d95fc57fbca"
+  integrity sha512-Ubldcmxp5np52/ENotGxlLe6aGMvmF4R8S6tZjsP6Knsaxd/xp3Zrh50cG93lR6nPXyUFwzN3ZSOQI0wRJNdGg==
+
 "js-tokens@^3.0.0 || ^4.0.0":
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-4.0.0.tgz#19203fb59991df98e3a287050d4647cdeaf32499"
@@ -3636,6 +3909,14 @@ js-yaml@3.x, js-yaml@^3.12.0, js-yaml@^3.5.1:
   dependencies:
     argparse "^1.0.7"
     esprima "^4.0.0"
+
+js-yaml@~3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.1.0.tgz#36ba02e618c50748e772dd352428904cbbadcf44"
+  integrity sha1-NroC5hjFB0jnct01JCiQTLutz0Q=
+  dependencies:
+    argparse "~ 0.1.11"
+    esprima "~ 1.0.2"
 
 js-yaml@~3.5.2:
   version "3.5.5"
@@ -4076,6 +4357,11 @@ mime-types@^2.1.18, mime-types@~2.1.18:
   dependencies:
     mime-db "~1.37.0"
 
+mime@1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/mime/-/mime-1.4.1.tgz#121f9ebc49e3766f311a76e1fa1c8003c4b03aa6"
+  integrity sha512-KI1+qOZu5DcW6wayYHSzR/tXKCDC5Om4s1z2QJjDULzLcmf3DvzS7oluY4HCTrc+9FiKmWUgeNLg7W3uIQvxtQ==
+
 mime@^2.3.1:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/mime/-/mime-2.4.0.tgz#e051fd881358585f3279df333fe694da0bcffdd6"
@@ -4289,6 +4575,13 @@ nopt@^4.0.1:
   dependencies:
     abbrev "1"
     osenv "^0.1.4"
+
+nopt@~2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/nopt/-/nopt-2.2.1.tgz#2aa09b7d1768487b3b89a9c5aa52335bff0baea7"
+  integrity sha1-KqCbfRdoSHs7ianFqlIzW/8Lrqc=
+  dependencies:
+    abbrev "1"
 
 normalize-package-data@^2.3.2, normalize-package-data@^2.3.4:
   version "2.4.2"
@@ -4956,7 +5249,7 @@ query-string@^5.0.1:
     object-assign "^4.1.0"
     strict-uri-encode "^1.0.0"
 
-range-parser@^1.2.0:
+range-parser@^1.2.0, range-parser@~1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/range-parser/-/range-parser-1.2.0.tgz#f49be6b487894ddc40dcc94a322f611092e00d5e"
   integrity sha1-9JvmtIeJTdxA3MlKMi9hEJLgDV4=
@@ -5375,6 +5668,25 @@ semver@^4.0.3:
   resolved "https://registry.yarnpkg.com/semver/-/semver-4.3.6.tgz#300bc6e0e86374f7ba61068b5b1ecd57fc6532da"
   integrity sha1-MAvG4OhjdPe6YQaLWx7NV/xlMto=
 
+send@0:
+  version "0.16.2"
+  resolved "https://registry.yarnpkg.com/send/-/send-0.16.2.tgz#6ecca1e0f8c156d141597559848df64730a6bbc1"
+  integrity sha512-E64YFPUssFHEFBvpbbjr44NCLtI1AohxQ8ZSiJjQLskAdKuriYEP6VyGEsRDH8ScozGpkaX1BGvhanqCwkcEZw==
+  dependencies:
+    debug "2.6.9"
+    depd "~1.1.2"
+    destroy "~1.0.4"
+    encodeurl "~1.0.2"
+    escape-html "~1.0.3"
+    etag "~1.8.1"
+    fresh "0.5.2"
+    http-errors "~1.6.2"
+    mime "1.4.1"
+    ms "2.0.0"
+    on-finished "~2.3.0"
+    range-parser "~1.2.0"
+    statuses "~1.4.0"
+
 sentence-case@^1.1.1, sentence-case@^1.1.2:
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/sentence-case/-/sentence-case-1.1.3.tgz#8034aafc2145772d3abe1509aa42c9e1042dc139"
@@ -5711,6 +6023,11 @@ statuses@~1.3.1:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/statuses/-/statuses-1.3.1.tgz#faf51b9eb74aaef3b3acf4ad5f61abf24cb7b93e"
   integrity sha1-+vUbnrdKrvOzrPStX2Gr8ky3uT4=
+
+statuses@~1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/statuses/-/statuses-1.4.0.tgz#bb73d446da2796106efcc1b601a253d6c46bd087"
+  integrity sha512-zhSCtt8v2NDrRlPQpCNtw/heZLtfUDqxBM1udqikb/Hbk52LK4nQSwr10u77iopCW5LsyHpuXS0GnEc48mLeew==
 
 streamroller@0.7.0:
   version "0.7.0"
@@ -6128,6 +6445,11 @@ unbzip2-stream@^1.0.9:
     buffer "^3.0.1"
     through "^2.3.6"
 
+underscore.string@~2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/underscore.string/-/underscore.string-2.4.0.tgz#8cdd8fbac4e2d2ea1e7e2e8097c42f442280f85b"
+  integrity sha1-jN2PusTi0uoefi6Al8QvRCKA+Fs=
+
 underscore.string@~3.3.4:
   version "3.3.5"
   resolved "https://registry.yarnpkg.com/underscore.string/-/underscore.string-3.3.5.tgz#fc2ad255b8bd309e239cbc5816fd23a9b7ea4023"
@@ -6135,6 +6457,11 @@ underscore.string@~3.3.4:
   dependencies:
     sprintf-js "^1.0.3"
     util-deprecate "^1.0.2"
+
+underscore@~1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.7.0.tgz#6bbaf0877500d36be34ecaa584e0db9fef035209"
+  integrity sha1-a7rwh3UA02vjTsqlhODbn+8DUgk=
 
 union-value@^1.0.0:
   version "1.0.0"

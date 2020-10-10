@@ -10,13 +10,11 @@ before_install:
   - sleep 3 # give xvfb some time to start
 
 install:
-  - npm install -g bower
   - npm install -g grunt-cli
   - npm install -g yarn
   - gem install compass
   - cd ui && yarn
   - cat npm-debug.log || true
-  - bower install
 
 script: grunt bundle && grunt uglify-and-rename && grunt web
 
