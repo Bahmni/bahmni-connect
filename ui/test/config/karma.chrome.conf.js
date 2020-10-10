@@ -99,7 +99,8 @@ module.exports = function (config) {
             'app/common/util/androidDateTimeFormatter.js',
             "test/unit/common/util/androidDateTimeFormatter.spec.js",
             'test/unit/**/offline/android/*.js',
-            'test/unit/clinical/offline/androidLabOrderResultsService.spec.js'
+            'test/unit/clinical/offline/androidLabOrderResultsService.spec.js',
+            'app/components/lovefield/node_modules/**/*.js'
         ],
         reporters: ['junit', 'progress', 'coverage'],
         preprocessors: {

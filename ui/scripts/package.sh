@@ -6,9 +6,9 @@ set -e
 yarn install
 
 if [ -z "$1" ]; then
-    grunt bundle
+    yarn bundle
 else
-    grunt --gruntfile $1 bundle
+    yarn bundle --gruntfile $1
 fi
 
 mkdir bahmni-connect-apps
@@ -27,22 +27,22 @@ echo "Starting Xvfb process $XVFB_PID"
 rm -rf dist/*
 
 if [ -z "$1" ]; then
-    grunt chrome
+    yarn chrome
 else
-    grunt --gruntfile $1 chrome
+    yarn chrome --gruntfile $1
 fi
 
+yarn sw
 
-npm run sw
 cp -r dist/* bahmni-connect-apps
 zip -r bahmni-connect-apps.zip bahmni-connect-apps
 
 rm -rf dist/*
 
 if [ -z "$1" ]; then
-    grunt android
+    yarn android
 else
-    grunt --gruntfile $1 android
+    yarn android --gruntfile $1
 fi
 
 cp -r dist/* androidDist

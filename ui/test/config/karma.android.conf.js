@@ -100,7 +100,8 @@ module.exports = function (config) {
             "test/unit/common/util/dateTimeFormatter.spec.js",
             'test/unit/**/offline/chrome/*.js',
             'app/common/ui-helper/controllers/chromeAppUpdateController.js',
-            "test/unit/common/ui-helper/controllers/chromeAppUpdateController.spec.js"
+            "test/unit/common/ui-helper/controllers/chromeAppUpdateController.spec.js",
+            'app/components/lovefield/node_modules/**/*.js'
         ],
         reporters: ['junit', 'progress', 'coverage'],
         preprocessors: {

@@ -142,7 +142,7 @@ module.exports = function (grunt) {
         },
         eslint: {
             options: {
-                fix: false,
+                fix: grunt.option('fix'),
                 quiet: true
             },
             target: [

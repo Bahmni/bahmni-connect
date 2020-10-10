@@ -48,9 +48,21 @@
     "sw-precache": "^5.2.0"
   },
   "scripts": {
-    "test": "karma start test/config/karma.conf.js",
+    "test": "grunt test",
     "sw": "sw-precache  --config=sw-precache-config.js",
-    "postinstall": "node -e \"try { require('fs').symlinkSync(require('path').resolve('node_modules/@bower_components'), 'app/components', 'junction') } catch (e) { }\""
+    "devchrome": "grunt devchrome",
+    "devandroid": "grunt devandroid",
+    "devbundle": "grunt devbundle",
+    "bundle": "grunt bundle",
+    "chrome": "grunt chrome",
+    "android": "grunt android",
+    "lint": "grunt eslint",
+    "lint:fix": "grunt eslint --fix=true",
+    "coverage": "grunt coverage",
+    "compass": "grunt compass",
+    "uglify-and-rename": "grunt uglify-and-rename",
+    "postinstall": "node -e \"try { require('fs').symlinkSync(require('path').resolve('node_modules/@bower_components'), 'app/components', 'junction') } catch (e) { }\"",
+    "ci": "grunt bundle && grunt uglify-and-rename && grunt web"
   },
   "repository": {
     "type": "git",

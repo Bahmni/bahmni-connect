@@ -78,7 +78,8 @@ module.exports = function (config) {
             'app/common/util/androidDateTimeFormatter.js',
             'test/unit/common/util/androidDateTimeFormatter.spec.js',
             'app/common/offline/dbservices/dao/labOrderResultsDbService.js',
-            'test/integration/dbServices/dao/labOrderResultsDbService.spec.js'
+            'test/integration/dbServices/dao/labOrderResultsDbService.spec.js',
+            'app/components/lovefield/node_modules/**/*.js'
         ],
         reporters: ['junit', (process.env.CI === 'true' ? 'dots' : 'progress'), 'coverage'],
         preprocessors: {
