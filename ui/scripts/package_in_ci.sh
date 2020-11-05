@@ -3,9 +3,8 @@
 export LANG=en_US.UTF-8
 set -e
 
-npm install
-bower install
-grunt --gruntfile Gruntfile_ci.js bundle
+yarn install
+yarn bundle --gruntfile Gruntfile_ci.js
 
 mkdir bahmni-connect-apps
 mkdir androidDist
@@ -22,15 +21,15 @@ echo "Starting Xvfb process $XVFB_PID"
 
 rm -rf dist/*
 
-grunt --gruntfile Gruntfile_ci.js chrome
+yarn chrome --gruntfile Gruntfile_ci.js
 
-npm run sw
+yarn sw
 cp -r dist/* bahmni-connect-apps
 zip -r bahmni-connect-apps.zip bahmni-connect-apps
 
 rm -rf dist/*
 
-grunt --gruntfile Gruntfile_ci.js android
+yarn android --gruntfile Gruntfile_ci.js
 cp -r dist/* androidDist
 
 echo "Killing Xvfb process $XVFB_PID"
