@@ -485,7 +485,6 @@ module.exports = function (grunt) {
 
     grunt.registerTask('bundle', [
         'yarn-install',
-        'bower-install',
         'eslint',
         'copy:nodeModules',
         'clean:dist',
@@ -516,15 +515,6 @@ module.exports = function (grunt) {
     grunt.registerTask('devandroid', ['devbundle', 'preprocess:android', "toggleComments", 'clean:androidApp', 'copy:androidApp']);
     grunt.registerTask('chrome', ['bundle', 'uglify-and-rename', 'preprocess:chrome']);
     grunt.registerTask('android', ['bundle', 'uglify-and-rename', 'preprocess:android', 'toggleComments']);
-
-    grunt.registerTask('bower-install', 'install dependencies using bower', function () {
-        var exec = require('child_process').exec;
-        var cb = this.async();
-        exec('bower install', function (err, stdout) {
-            console.log(stdout);
-            cb(!err);
-        });
-    });
 
     grunt.registerTask('generate-sw', 'generate service worker file', function () {
         var exec = require('child_process').exec;
