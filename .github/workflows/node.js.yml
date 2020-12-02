@@ -33,21 +33,29 @@ jobs:
     - run: cd .. && git clone https://github.com/Bahmni/bahmni-offline.git
     - run: cd .. && git clone https://github.com/Bahmni/bahmni-offline-sync.git 
     - run: ls
-      working-directory:  /home/runner/work/bahmni-connect/
+      working-directory: /home/runner/work/bahmni-connect/
     - run: cd ui && scripts/package.sh
-    - name: Uplaod Artifact
+    - name: Upload apps.zip as Artifact
       uses: actions/upload-artifact@v2
       with:
         name: apps.zip
         path: ui/bahmni-connect-apps.zip
       if: always()
-    
-
-  # build:
-  #   needs: checkout
-  #   runs-on: ubuntu-latest
-  #   defaults:
-  #     run:
-  #       working-directory: /home/runner/work/bahmni-connect/
-  #   steps:
-  #   - run: pwd && ls  
+    - name: run cordova android
+    - run: cordova platform remove android && cordova platform add android && git checkout . 
+      working-directory: /home/runner/work/bahmni-connect/bahmni-offline
+    - run: cd android/www && rm -rf app/ && mkdir app
+      working-directory: /home/runner/work/bahmni-connect/bahmni-offline
+    - name: copy android dist
+      run: cp -R bahmni-connect/ui/androidDist/* bahmni-offline/android/www/app/ && mkdir -p bahmni-offline/android/www/bahmni_config
+      working-directory: /home/runner/work/bahmni-connect
+    - name: Generate default_config.zip
+      run: scripts/package.sh && cd .. && cp default-config/target/default_config.zip bahmni-offline/android/www/bahmni_config/default_config.zip
+      working-directory: /home/runner/work/bahmni-connect/default_config
+    - name: Upload apps.zip as Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: default-config zip
+        path: target/default_config.zip
+        working-directory: /home/runner/work/bahmni-connect/default-config
+      if: always()
