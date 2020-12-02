@@ -32,4 +32,4 @@ jobs:
     #   run:
     #     working-directory: cd ..
     steps:
-    - run: ls
+    - run: pwd && ls
