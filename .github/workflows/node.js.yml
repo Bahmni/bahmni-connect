@@ -20,6 +20,13 @@ jobs:
     #     working-directory:  /home/runner/work/bahmni-connect/
     steps:
     - uses: actions/checkout@v2
+    - name: Setup Node
+      uses: actions/setup-node@v1
+    - name: Setup android
+      uses: android-actions/setup-android@v2
+    - run: npm install -g cordova ionic
+    - run: npm install -g try-thread-sleep
+    - run: echo $ANDROID_HOME
     - run: echo $GITHUB_WORKSPACE && pwd
     - run: cd .. && git clone https://github.com/Bahmni/bahmni-offline.git
     - run: cd .. && git clone https://github.com/Bahmni/bahmni-offline-sync.git 
