@@ -17,7 +17,9 @@ jobs:
     strategy:
       matrix:
         node-version: [12.x]
-
+    defaults:
+      run:
+        working-directory: .
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
@@ -27,4 +29,3 @@ jobs:
     - run: echo $GITHUB_WORKSPACE && pwd
     - run: cd .. && git clone https://github.com/Bahmni/bahmni-offline.git && pwd
     - run: cd .. && git clone https://github.com/Bahmni/bahmni-offline-sync.git && ls
- 
