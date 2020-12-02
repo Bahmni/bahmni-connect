@@ -5,7 +5,7 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ master, addCI ]
+    branches: [ addCI ]
   pull_request:
     branches: [ ]
 
@@ -26,4 +26,5 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: echo $GITHUB_WORKSPACE && pwd
     - run: cd .. && git clone https://github.com/Bahmni/bahmni-offline.git && pwd
+    - run: git clone https://github.com/Bahmni/bahmni-offline-sync.git && ls
  
