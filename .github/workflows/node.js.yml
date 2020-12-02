@@ -15,9 +15,9 @@ jobs:
     strategy:
       matrix:
         node-version: [12.x]
-    defaults:
-      run:
-        working-directory:  /home/runner/work/bahmni-connect/
+    # defaults:
+    #   run:
+    #     working-directory:  /home/runner/work/bahmni-connect/
     steps:
     - uses: actions/checkout@v2
     - run: echo $GITHUB_WORKSPACE && pwd
