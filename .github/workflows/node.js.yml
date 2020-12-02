@@ -26,6 +26,7 @@ jobs:
       uses: android-actions/setup-android@v2
     - run: npm install -g cordova ionic
     - run: npm install -g try-thread-sleep
+    - run: npm install -g yarn
     - run: echo $ANDROID_HOME
     - run: echo $GITHUB_WORKSPACE && pwd
     - run: cd .. && git clone https://github.com/Bahmni/bahmni-offline.git
@@ -41,4 +42,4 @@ jobs:
   #     run:
   #       working-directory: /home/runner/work/bahmni-connect/
   #   steps:
-  #   - run: pwd && ls
+  #   - run: pwd && ls  
