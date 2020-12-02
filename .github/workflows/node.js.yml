@@ -10,7 +10,7 @@ on:
     branches: [ ]
 
 jobs:
-  checkout:
+  build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -50,7 +50,7 @@ jobs:
       run: cp -R bahmni-connect/ui/androidDist/* bahmni-offline/android/www/app/ && mkdir -p bahmni-offline/android/www/bahmni_config
       working-directory: /home/runner/work/bahmni-connect
     - name: Generate default_config.zip
-      run: scripts/package.sh && cd .. && cp default-config/target/default_config.zip bahmni-offline/android/www/bahmni_config/default_config.zip
+      run: pwd && scripts/package.sh && cd .. && cp default-config/target/default_config.zip bahmni-offline/android/www/bahmni_config/default_config.zip
       working-directory: /home/runner/work/bahmni-connect/default_config
     - name: Upload apps.zip as Artifact
       uses: actions/upload-artifact@v2
