@@ -17,20 +17,20 @@ jobs:
         node-version: [12.x]
     defaults:
       run:
-        working-directory: .
+        working-directory:  /home/runner/work/bahmni-connect/
     steps:
     - uses: actions/checkout@v2
     - run: echo $GITHUB_WORKSPACE && pwd
     - run: cd .. && git clone https://github.com/Bahmni/bahmni-offline.git && pwd
     - run: cd .. && git clone https://github.com/Bahmni/bahmni-offline-sync.git && ls && pwd
     - run: ls
-      working-directory:  /home/runner/work/bahmni-connect/
+      # working-directory:  /home/runner/work/bahmni-connect/
 
-  build:
-    needs: checkout
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: /home/runner/work/bahmni-connect/
-    steps:
-    - run: pwd && ls
+  # build:
+  #   needs: checkout
+  #   runs-on: ubuntu-latest
+  #   defaults:
+  #     run:
+  #       working-directory: /home/runner/work/bahmni-connect/
+  #   steps:
+  #   - run: pwd && ls
