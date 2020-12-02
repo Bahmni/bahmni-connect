@@ -28,7 +28,7 @@ jobs:
     - run: npm install -g try-thread-sleep
     - run: npm install -g yarn
     - run: sudo gem install compass
-    - run: echo $ANDROID_HOME
+    - run: echo $ANDROID_HOME && echo $PATH
     - run: echo $GITHUB_WORKSPACE && pwd
     - run: cd .. && git clone https://github.com/Bahmni/bahmni-offline.git
     - run: cd .. && git clone https://github.com/Bahmni/bahmni-offline-sync.git 
