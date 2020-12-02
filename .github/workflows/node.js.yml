@@ -24,7 +24,7 @@ jobs:
     - run: cd .. && git clone https://github.com/Bahmni/bahmni-offline.git && pwd
     - run: cd .. && git clone https://github.com/Bahmni/bahmni-offline-sync.git && ls && pwd
     - run: ls
-      # working-directory:  /home/runner/work/bahmni-connect/
+      working-directory:  /home/runner/work/bahmni-connect/
 
   # build:
   #   needs: checkout
