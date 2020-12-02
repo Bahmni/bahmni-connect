@@ -27,6 +27,7 @@ jobs:
     - run: npm install -g cordova ionic
     - run: npm install -g try-thread-sleep
     - run: npm install -g yarn
+    - run: gem install compass
     - run: echo $ANDROID_HOME
     - run: echo $GITHUB_WORKSPACE && pwd
     - run: cd .. && git clone https://github.com/Bahmni/bahmni-offline.git
