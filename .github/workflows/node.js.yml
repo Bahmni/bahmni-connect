@@ -32,7 +32,7 @@ jobs:
     - run: echo $GITHUB_WORKSPACE && pwd
     - run: cd .. && git clone https://github.com/Bahmni/bahmni-offline.git
     - run: cd .. && git clone https://github.com/Bahmni/bahmni-offline-sync.git 
-    - run: cd .. && git clone https://github.com/Bahmni-Covid19/default-config.git
+    - run: cd .. && git clone https://github.com/Bahmni/default-config.git
     - run: ls
       working-directory: /home/runner/work/bahmni-connect/
     - run: cd ui && scripts/package.sh
