@@ -22,7 +22,7 @@ jobs:
     - uses: actions/checkout@v2
     - run: echo $GITHUB_WORKSPACE && pwd
     - run: cd .. && git clone https://github.com/Bahmni/bahmni-offline.git && pwd
-    - run: cd .. && git clone https://github.com/Bahmni/bahmni-offline-sync.git
+    - run: cd .. && git clone https://github.com/Bahmni/bahmni-offline-sync.git && ls && pwd
     - run: ls
 
   build:
