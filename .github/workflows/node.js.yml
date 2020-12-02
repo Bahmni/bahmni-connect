@@ -25,4 +25,4 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: echo $GITHUB_WORKSPACE 
-    - run: cd .. && git clone https://github.com/Bahmni/bahmni-offline.git && echo pwd
+    - run: cd .. && git clone https://github.com/Bahmni/bahmni-offline.git && pwd
