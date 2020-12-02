@@ -10,10 +10,8 @@ on:
     branches: [ ]
 
 jobs:
-  build:
-
+  checkout:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         node-version: [12.x]
@@ -22,11 +20,16 @@ jobs:
         working-directory: .
     steps:
     - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
     - run: echo $GITHUB_WORKSPACE && pwd
     - run: cd .. && git clone https://github.com/Bahmni/bahmni-offline.git && pwd
     - run: cd .. && git clone https://github.com/Bahmni/bahmni-offline-sync.git
+    - run: ls
+
+  build:
+    needs: checkout
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: cd ..
+    steps:
     - run: ls
