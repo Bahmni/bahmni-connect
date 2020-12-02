@@ -7,7 +7,7 @@ on:
   push:
     branches: [ master, addCI ]
   pull_request:
-    branches: [ master ]
+    branches: [ ]
 
 jobs:
   build:
