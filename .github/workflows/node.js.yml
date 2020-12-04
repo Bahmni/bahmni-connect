@@ -23,7 +23,7 @@ jobs:
       uses: android-actions/setup-android@v2
     - run: npm install -g cordova ionic
     - run: npm install -g try-thread-sleep
-    # - run: npm install -g yarn
+    - run: npm install -g yarn
     - run: sudo gem install compass
     - run: echo $ANDROID_HOME && echo $PATH
     - run: echo $GITHUB_WORKSPACE && pwd
