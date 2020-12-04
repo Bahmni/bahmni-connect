@@ -51,7 +51,7 @@ jobs:
     - name: Generate default_config.zip
       run: pwd && scripts/package.sh && cd .. && cp default-config/target/default_config.zip bahmni-offline/android/www/bahmni_config/default_config.zip
       working-directory: /home/runner/work/bahmni-connect/default-config
-    - name: Upload apps.zip as Artifact
+    - name: Upload default config as Artifact
       uses: actions/upload-artifact@v2
       with:
         name: default-config-zip
