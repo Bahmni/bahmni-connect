@@ -40,6 +40,12 @@ jobs:
         name: bahmni-connect-apps
         path: | 
           ui/bahmni-connect-apps
+      if: always()
+    - name: Upload androidDist as Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: bahmni-android
+        path: | 
           ui/androidDist
       if: always()
     # - name: add cordova android platform
