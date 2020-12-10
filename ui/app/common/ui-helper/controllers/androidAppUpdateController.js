@@ -1,8 +1,23 @@
 'use strict';
 angular.module('bahmni.common.uiHelper')
-    .controller('AppUpdateController', ['$scope', 'ngDialog', 'offlineService', 'appInfoStrategy',
-        function ($scope, ngDialog, offlineService, appInfoStrategy) {
+    .controller('AppUpdateController', ['$scope', 'ngDialog', 'offlineService', 'appInfoStrategy','$http',
+        function ($scope, ngDialog, offlineService, appInfoStrategy,$http) {
             $scope.isAndroid = true;
+            $scope.isSelectiveSyncStrategy = false;
+
+            var verifySelectiveSync = function () {
+                 $http.get('/openmrs/ws/rest/v1/eventlog/filter/globalProperty/', {
+                    method: "GET",
+                    params: { q: 'bahmniOfflineSync.strategy' },
+                    withCredentials: true,
+                    headers: { "Accept": "application/text", "Content-Type": "text/plain" }
+                }).then((response) => {
+                    let value = response.data;
+                    if (value.includes("SelectiveSyncStrategy"))
+                        $scope.isSelectiveSyncStrategy = true;
+                }), function (error) {
+                };
+            };
 
             $scope.isUpdateAvailable = function () {
                 var installedVersion = appInfoStrategy.getVersion();
@@ -17,4 +32,10 @@ angular.module('bahmni.common.uiHelper')
                 AppUpdateService.updateApp(url);
                 ngDialog.close();
             };
+
+            var init = function(){
+                verifySelectiveSync();
+            }
+
+            return init();
         }]);

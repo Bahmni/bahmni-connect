@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en" ng-app="syncdatarules">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width"/>
+    <title>Sync Data Rules</title>
+    <link rel="shortcut icon" type="image/x-icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../lib/jquery/jquery-ui-1.10.4.custom.min.css">
+    <link rel="stylesheet" href="../components/select2/select2.css"/>
+    <!-- build:css registration.min.css -->
+    <link rel="stylesheet" href="../styles/syncdatarules.css"/>
+    <link rel="stylesheet" href="../styles/registration.css"/>
+    <!-- endbuild -->
+    <link rel="stylesheet" href="../components/ngDialog/css/ngDialog.min.css"/>
+    <link rel="stylesheet" href="../components/ngDialog/css/ngDialog-theme-default.min.css"/>
+    <link rel="stylesheet" href="../components/ngDialog/css/ngDialog-theme-plain.min.css"/>
+</head>
+<body>
+<div class="reg-wrapper">
+    <div ng-include src="'../common/ui-helper/messages.html'"></div>
+    <div ui-view="layout" id="view-content"></div>
+</div>
+<script src="../components/jquery/jquery.min.js"></script>
+<script src="../components/jquery.cookie/jquery.cookie.js"></script>
+<script src="../lib/jquery/jquery-ui-1.10.4.custom.min.js"></script>
+<script src="../lib/indexeddb-export-import/index.js"></script>
+<script src="../lib/modernizr.custom.80690.js"></script>
+<script src="../components/angular/angular.min.js"></script>
+<script src="../components/ng-tags-input/ng-tags-input.min.js"></script>
+<script src="../components/angular-sanitize/angular-sanitize.min.js"></script>
+<script src="../components/angular-recursion/angular-recursion.min.js"></script>
+<script src="../components/moment/min/moment.min.js"></script>
+<script src="../components/ngInfiniteScroll/build/ng-infinite-scroll.min.js"></script>
+<script src="../components/angular-bindonce/bindonce.min.js"></script>
+<script src="../components/select2/select2.min.js"></script>
+<script src="../components/angular-ui-select2/src/select2.js"></script>
+<script src="../components/angular-ui-router/release/angular-ui-router.min.js"></script>
+<script src="../components/stacktrace-js/dist/stacktrace.min.js"></script>
+<script src="../components/ng-clip/dest/ng-clip.min.js"></script>
+<script src="../components/zeroclipboard/dist/ZeroClipboard.min.js"></script>
+<script src="../components/ngDialog/js/ngDialog.min.js"></script>
+<script src="../components/angular-translate/angular-translate.min.js"></script>
+<script src="../components/angular-cookies/angular-cookies.min.js"></script>
+<script src="../components/angular-translate-loader-static-files/angular-translate-loader-static-files.min.js"></script>
+<script src="../components/angular-translate-storage-cookie/angular-translate-storage-cookie.min.js"></script>
+<script src="../components/angular-translate-storage-local/angular-translate-storage-local.min.js"></script>
+<script src="../components/angular-translate-handler-log/angular-translate-handler-log.min.js"></script>
+<script src="../components/angular-elastic/elastic.js"></script>
+<script src="../components/lovefield/dist/lovefield.min.js"></script>
+<script src="../components/ng-tags-input/ng-tags-input.min.js"></script>
+<!-- <script src="../components/ng-vkThread/vkthread/worker.js"></script>
+<script src="../components/ng-vkThread/vkthread/vkthread.js"></script> -->
+<script src="../components/react/react.min.js"></script>
+<script src="../components/react/react-dom.min.js"></script>
+
+<script src="../components/bahmni-form-controls/helpers.js"></script>
+<script src="../components/bahmni-form-controls/bundle.js"></script>
+
+<!-- build:js ../common.offline.min.js -->
+<script src="../common/constants.js"></script>
+<script src="../components/lodash/dist/lodash.min.js"></script>
+<script src="../common/util/init.js"></script>
+<script src="../common/models/init.js"></script>
+<script src="../common/models/age.js"></script>
+<script src="../lib/angular-workers/dist/angular-workers.js"></script>
+<script src="../common/offline/init.js"></script>
+<script src="../common/logging/init.js"></script>
+<script src="../common/logging/exceptionHandler.js"></script>
+<script src="../common/offline/offlineService.js"></script>
+<script src="../common/offline/services/dbNameService.js"></script>
+
+
+<script src="../common/offline/initializeOfflineSchema.js"></script>
+<script src="../common/offline/offlineDbInitialization.js"></script>
+<script src="../common/offline/offlineConfigInitialization.js"></script>
+<script src="../common/offline/offlineReferenceDataInitialization.js"></script>
+<script src="../common/offline/offlineLocationInitialization.js"></script>
+<script src="../common/offline/offlineSyncInitialization.js"></script>
+<script src="../common/offline/services/eventLogService.js"></script>
+<script src="../common/offline/services/offlineSyncService.js"></script>
+<script src="../common/offline/services/networkStatusService.js"></script>
+<script src="../common/offline/dbservices/dao/androidDbService.js"></script>
+<script src="../common/offline/dbservices/dao/offlineSearchDbService.js"></script>
+<script src="../common/offline/dbservices/dao/offlineDbService.js"></script>
+<script src="../common/offline/dbservices/dao/patientAddressDbService.js"></script>
+<script src="../common/offline/dbservices/dao/patientAttributeDbService.js"></script>
+<script src="../common/offline/dbservices/dao/patientDbService.js"></script>
+<script src="../common/offline/dbservices/dao/patientIdentifierDbService.js"></script>
+<script src="../common/offline/dbservices/dao/encounterDbService.js"></script>
+<script src="../common/offline/dbservices/dao/labOrderResultsDbService.js"></script>
+<script src="../common/offline/dbservices/dao/errorLogDbService.js"></script>
+<script src="../common/offline/dbservices/dao/offlineMarkerDbService.js"></script>
+<script src="../common/offline/dbservices/dao/offlineAddressHierarchyDbService.js"></script>
+<script src="../common/offline/dbservices/dao/offlineConfigDbService.js"></script>
+<script src="../common/offline/schemaDefinitions.js"></script>
+<script src="../common/offline/chromeMigrations/migration_1.js"></script>
+<script src="../common/offline/models/UUID.js"></script>
+<script src="../common/offline/models/AddressFields.js"></script>
+<script src="../common/offline/dbservices/dao/referenceDataDbService.js"></script>
+<script src="../common/offline/dbservices/dao/locationDbService.js"></script>
+<script src="../common/offline/dbservices/dao/encounterDbService.js"></script>
+<script src="../common/offline/dbservices/dao/visitDbService.js"></script>
+<script src="../common/offline/dbservices/dao/observationDbService.js"></script>
+<script src="../common/offline/dbservices/dao/conceptDbService.js"></script>
+<script src="../common/offline/dbservices/dao/formDbService.js"></script>
+<script src="../common/offline/services/dbNameService.js"></script>
+
+<script src="../common/logging/services/loggingService.js"></script>
+<script src="../common/logging/offline/offlineLoggingService.js"></script>
+<script src="../common/logging/offline/chromeLoggingService.js"></script>
+
+<script src="../common/offline/offlineDbInitialization.js"></script>
+<script src="../components/hustle/hustle.js"></script>
+<script src="../common/offline/scheduler/eventQueue.js"></script>
+<script src="../common/offline/scheduler/scheduledSync.js"></script>
+<script src="../common/offline/scheduler/scheduledJob.js"></script>
+<script src="../common/offline/offlinePush.js"></script>
+<script src="../common/offline/offlinePull.js"></script>
+<script src="../common/offline/scheduler/MultiStageWorker.js"></script>
+<script src="../common/offline/services/schedulerService.js"></script>
+<script src="../common/offline/services/appUpdateService.js"></script>
+<script src="../common/offline/services/chrome/chromeAppInfoStrategy.js"></script>
+<!-- endbuild -->
+
+
+<!-- build:js registration.min.js -->
+<script src="../common/route-errorhandler/init.js"></script>
+<script src="../common/util/init.js"></script>
+<script src="../common/util/dateUtil.js"></script>
+<script src="../common/util/validationUtil.js"></script>
+<script src="../common/util/dynamicResourceLoader.js"></script>
+<script src="../common/util/arrayUtil.js"></script>
+<script src="../common/util/httpErrorInterceptor.js"></script>
+<script src="../common/models/visitControl.js"></script>
+
+<script src="../common/config/init.js"></script>
+<script src="../common/config/services/configurations.js"></script>
+
+<script src="../common/domain/init.js"></script>
+<script src="../common/domain/observationFilter.js"></script>
+<script src="../common/domain/helpers/domainHelpers.js"></script>
+<script src="../common/domain/mappers/conceptMapper.js"></script>
+<script src="../common/domain/services/providerService.js"></script>
+<script src="../common/domain/encounterConfig.js"></script>
+<script src="../common/domain/mappers/observationValueMapper.js"></script>
+
+
+<script src="../common/ui-helper/init.js"></script>
+<script src="../common/ui-helper/spinner.js"></script>
+<script src="../common/ui-helper/printer.js"></script>
+<script src="../common/ui-helper/directives.js"></script>
+<script src="../common/ui-helper/directives/bahmniAutocomplete.js"></script>
+<script src="../common/ui-helper/directives/popOver.js"></script>
+<script src="../common/ui-helper/directives/conceptAutocomplete.js"></script>
+<script src="../common/ui-helper/directives/datetimepicker.js"></script>
+<script src="../common/ui-helper/directives/monthyearpicker.js"></script>
+<script src="../common/ui-helper/directives/toggle.js"></script>
+<script src="../common/ui-helper/directives/gallery.js"></script>
+<script src="../common/ui-helper/directives/ngConfirmClick.js"></script>
+<script src="../common/ui-helper/directives/bmShow.js"></script>
+<script src="../common/ui-helper/directives/confirmOnExit.js"></script>
+<script src="../common/ui-helper/filters/dateFilters.js"></script>
+<script src="../common/ui-helper/filters/reverse.js"></script>
+<script src="../common/ui-helper/filters/thumbnail.js"></script>
+<script src="../common/ui-helper/filters/formatDecimalValues.js"></script>
+<script src="../common/ui-helper/services/backlinkService.js"></script>
+<script src="../common/ui-helper/services/contextChangeHandler.js"></script>
+<script src="../common/ui-helper/services/stateChangeSpinner.js"></script>
+<script src="../common/ui-helper/directives/backLinks.js"></script>
+<script src="../common/ui-helper/directives/providerDirective.js"></script>
+<script src="../common/ui-helper/directives/focusOn.js"></script>
+<script src="../common/ui-helper/directives/scrollToObsElement.js"></script>
+<script src="../common/ui-helper/directives/dateConverter.js"></script>
+<script src="../common/ui-helper/directives/compileHtml.js"></script>
+<script src="../common/ui-helper/controllers/messageController.js"></script>
+<script src="../common/ui-helper/services/messagingService.js"></script>
+<script src="../common/ui-helper/services/confirmBoxService.js"></script>
+<script src="../common/ui-helper/directives/focusOnInputErrors.js"></script>
+<script src="../common/ui-helper/directives/fixedFirstColumn.js"></script>
+<script src="../common/ui-helper/directives/assignHeight.js"></script>
+<script src="../components/lovefield/dist/lovefield.js"></script>
+
+<script src="../common/i18n/init.js"></script>
+<script src="../common/i18n/bahmni-translate.js"></script>
+<script src="../common/i18n/services/mergeLocaleFilesService.js"></script>
+
+<script src="../common/app-framework/init.js"></script>
+<script src="../common/app-framework/models/appDescriptor.js"></script>
+<script src="../common/app-framework/services/appService.js"></script>
+<script src="../common/app-framework/services/mergeService.js"></script>
+
+<script src="../common/auth/init.js"></script>
+<script src="../common/auth/user.js"></script>
+<script src="../common/auth/userService.js"></script>
+<script src="../common/auth/authentication.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dexie/3.0.2/dexie.min.js" crossorigin="anonymous"></script>
+<script src="node_modules/indexeddb-export-import/index.js"></script>
+
+<script src="../components/bahmni-form-controls/helpers.js"></script>
+<script src="../components/bahmni-form-controls/bundle.js"></script>
+<script src="app.js"></script>
+<script src="controllers/SyncDataRulesController.js"></script>
+<script src="controllers/errorLogController.js"></script>
+<script src="services/selectiveSchedulerService.js"></script>
+<script src="services/selectiveSyncService.js"></script>
+
+
+
+</body>
+</html>

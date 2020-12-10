@@ -1,12 +1,27 @@
 'use strict';
 
 angular.module('bahmni.home')
-    .controller('DashboardController', ['$scope', '$state', 'appService', 'locationService', 'spinner', '$bahmniCookieStore', '$window', '$q', 'offlineService', 'schedulerService', 'eventQueue', 'offlineDbService', 'androidDbService', 'networkStatusService', 'messagingService', '$translate',
-        function ($scope, $state, appService, locationService, spinner, $bahmniCookieStore, $window, $q, offlineService, schedulerService, eventQueue, offlineDbService, androidDbService, networkStatusService, messagingService, $translate) {
+    .controller('DashboardController', ['$scope', '$state', 'appService', 'locationService', 'spinner', '$bahmniCookieStore', '$window', '$q', 'offlineService', 'schedulerService', 'eventQueue', 'offlineDbService', 'androidDbService', 'networkStatusService', 'messagingService', '$translate', '$http',
+        function ($scope, $state, appService, locationService, spinner, $bahmniCookieStore, $window, $q, offlineService, schedulerService, eventQueue, offlineDbService, androidDbService, networkStatusService, messagingService, $translate, $http) {
             $scope.appExtensions = appService.getAppDescriptor().getExtensions($state.current.data.extensionPointId, "link") || [];
             $scope.selectedLocationUuid = {};
             $scope.isOfflineApp = offlineService.isOfflineApp();
             $scope.isPWAapp = offlineService.isChromeApp();
+            $scope.isSelectiveSyncStrategy = false;
+
+            var verifySelectiveSync = function () {
+                 $http.get('/openmrs/ws/rest/v1/eventlog/filter/globalProperty/', {
+                    method: "GET",
+                    params: { q: 'bahmniOfflineSync.strategy' },
+                    withCredentials: true,
+                    headers: { "Accept": "application/text", "Content-Type": "text/plain" }
+                }).then((response) => {
+                    let value = response.data;
+                    if (value.includes("SelectiveSyncStrategy"))
+                        $scope.isSelectiveSyncStrategy = true;
+                }), function (error) {
+                };
+            };
 
             $scope.isVisibleExtension = function (extension) {
                 if (!$scope.isOfflineApp) {
@@ -20,6 +35,7 @@ angular.module('bahmni.home')
             };
 
             var init = function () {
+                verifySelectiveSync();
                 if ($scope.isOfflineApp) {
                     setWatchersForErrorStatus();
                 }
@@ -55,6 +71,11 @@ angular.module('bahmni.home')
 
             $scope.sync = function () {
                 schedulerService.sync(Bahmni.Common.Constants.syncButtonConfiguration);
+            };
+
+
+            $scope.import = function () {
+                console.log("Starting to import");
             };
 
             var cleanUpListenerSchedulerStage = $scope.$on("schedulerStage", function (event, stage, restartSync) {

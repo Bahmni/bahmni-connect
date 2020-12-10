@@ -403,7 +403,7 @@ angular.module('bahmni.common.offline')
                         });
                         break;
                     case 'addressHierarchy':
-                    // case 'parentAddressHierarchy':
+                    case 'parentAddressHierarchy':
                         offlineDbService.insertAddressHierarchy(response.data).then(function () {
                             deferrable.resolve();
                         });

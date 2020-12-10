@@ -2,7 +2,7 @@
     <div class="opd-header-top">
         <header>
             <bm-back-links></bm-back-links>
-            <div class="fr">
+            <div class="fr" ng-controller="AppUpdateController">
                 <div class="retro-date-widget-wrapper"
                      show-if-privilege="{{retrospectivePrivilege}},{{onBehalfOfPrivilege}},{{locationPickerPrivilege}}"
                      ng-if="getTitle()">
@@ -13,8 +13,7 @@
                 <div ng-if="isOfflineApp" class="offline-sync fl" ng-controller="AppUpdateController">
                     <button class="btn" ng-if="isUpdateAvailable()" ng-click="update()">Update</button>
                 </div>
-
-                <button class="btn offline-sync fl" ng-click="sync()"  ng-show="isOfflineApp && !isSyncing ">
+                <button class="btn offline-sync fl" ng-click="sync()"  ng-show="!isSelectiveSyncStrategy && isOfflineApp && !isSyncing ">
                     {{::'HEADER_LABEL_SYNC_KEY' | translate}}
                 </button>
                 <button class="btn offline-sync fl offline-sync-image" ng-show="isOfflineApp && isSyncing" disabled>

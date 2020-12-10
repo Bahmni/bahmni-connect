@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('bahmni.clinical')
-    .controller('PatientListHeaderController', ['$scope', '$rootScope', '$bahmniCookieStore', 'providerService', 'spinner', 'locationService', '$window', 'ngDialog', 'retrospectiveEntryService', 'offlineService', 'schedulerService', 'offlineStatusService',
-        function ($scope, $rootScope, $bahmniCookieStore, providerService, spinner, locationService, $window, ngDialog, retrospectiveEntryService, offlineService, schedulerService, offlineStatusService) {
+    .controller('PatientListHeaderController', ['$scope', '$rootScope', '$bahmniCookieStore', 'providerService', 'spinner', 'locationService', '$window', 'ngDialog', 'retrospectiveEntryService', 'offlineService', 'schedulerService', 'offlineStatusService','$http',
+        function ($scope, $rootScope, $bahmniCookieStore, providerService, spinner, locationService, $window, ngDialog, retrospectiveEntryService, offlineService, schedulerService, offlineStatusService, $http) {
             var DateUtil = Bahmni.Common.Util.DateUtil;
             $scope.maxStartDate = DateUtil.getDateWithoutTime(DateUtil.today());
             var selectedProvider = {};
@@ -11,6 +11,21 @@ angular.module('bahmni.clinical')
             $scope.onBehalfOfPrivilege = Bahmni.Common.Constants.onBehalfOfPrivilege;
             $scope.selectedLocationUuid = {};
             $rootScope.isOfflineApp = offlineService.isOfflineApp();
+            $scope.isSelectiveSyncStrategy = false;
+
+            var verifySelectiveSync = function () {
+                 $http.get('/openmrs/ws/rest/v1/eventlog/filter/globalProperty/', {
+                    method: "GET",
+                    params: { q: 'bahmniOfflineSync.strategy' },
+                    withCredentials: true,
+                    headers: { "Accept": "application/text", "Content-Type": "text/plain" }
+                }).then((response) => {
+                    let value = response.data;
+                    if (value.includes("SelectiveSyncStrategy"))
+                        $scope.isSelectiveSyncStrategy = true;
+                }), function (error) {
+                };
+            };
 
             offlineStatusService.setOfflineOptions();
             $scope.getProviderList = function () {
@@ -115,6 +130,7 @@ angular.module('bahmni.clinical')
             };
 
             var init = function () {
+                verifySelectiveSync();
                 var retrospectiveDate = retrospectiveEntryService.getRetrospectiveDate();
                 $scope.date = retrospectiveDate ? new Date(retrospectiveDate) : new Date($scope.maxStartDate);
                 $scope.encounterProvider = getCurrentProvider();

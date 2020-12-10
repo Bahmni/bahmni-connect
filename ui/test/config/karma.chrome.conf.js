@@ -52,6 +52,7 @@ module.exports = function (config) {
             'app/common/**/*.html',
             'app/clinical/**/*.js',
             'app/home/**/*.js',
+            'app/syncdatarules/**/*.js',
             'app/offline/**/*.js',
             'app/registration/**/*.js',
             'test/support/**/*.js',
