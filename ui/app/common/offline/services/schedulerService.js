@@ -1,3 +1,4 @@
+
 'use strict';
 
 angular.module('bahmni.common.offline')
@@ -5,12 +6,11 @@ angular.module('bahmni.common.offline')
         function (offlineService, WorkerService, scheduledSync) {
             this.jobs = [];
             this.sync = function (config) {
-                if (offlineService.isChromeApp() || offlineService.isAndroidApp()) {
+                if (offlineService.isChromeApp() || offlineService.isAndroidApp() || offlineService.isOfflineApp()) {
                     var job = scheduledSync(config, undefined);
                     this.jobs.push(job);
                 }
             };
-
             this.stopSync = function () {
                 if (offlineService.isChromeApp() || offlineService.isAndroidApp()) {
                     _.each(this.jobs, function (job) {

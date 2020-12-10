@@ -34,8 +34,25 @@ angular.module('bahmni.common.offline')
             });
         };
 
+        var getPatientsCount = function (db) {
+            var p = db.getSchema().table('patient');
+            return db.select(p.patientJson.as('patient'))
+                .from(p)
+                .where().exec()
+                .then(function (result) {
+                    return result.length;
+                });
+        };
+
+        var deleteAllPatientRecords = function (db) {
+            var patient = db.getSchema().table('patient');
+            return db.delete().from(patient).exec();
+        };
+
         return {
             getPatientByUuid: getPatientByUuid,
-            insertPatientData: insertPatientData
+            insertPatientData: insertPatientData,
+            getPatientsCount: getPatientsCount,
+            deleteAllPatientRecords: deleteAllPatientRecords
         };
     });

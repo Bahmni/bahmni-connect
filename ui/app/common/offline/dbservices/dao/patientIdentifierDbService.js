@@ -54,7 +54,7 @@ angular.module('bahmni.common.offline')
                 var tx = db.createTransaction();
                 return tx.exec(queries).then(function () {
                     return defer.resolve();
-                });
+                }).catch(reason => console.log(reason));
             });
             return defer.promise;
         };
