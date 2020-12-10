@@ -17,7 +17,6 @@ jobs:
     - name: Setup Node
       uses: actions/setup-node@v1
     - run: npm install -g yarn
-    - run: sudo gem install compass
     - run: cd ui && scripts/package.sh
     - name: Upload apps.zip as Artifact
       uses: actions/upload-artifact@v2
