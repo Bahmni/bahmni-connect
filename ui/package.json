@@ -69,7 +69,8 @@
     "@bower_components/react": "facebook/react-bower#^15.3.2",
     "@bower_components/select2": "ivaynberg/select2#~3.4",
     "@bower_components/stacktrace-js": "stacktracejs/stacktrace.js#0.6.4",
-    "@bower_components/zeroclipboard": "zeroclipboard/zeroclipboard#~2.1.0"
+    "@bower_components/zeroclipboard": "zeroclipboard/zeroclipboard#~2.1.0",
+    "grunt-contrib-uglify-es": "github:gruntjs/grunt-contrib-uglify#harmony"
   },
   "devDependencies": {
     "@bower_components/jasmine": "pivotal/jasmine#>=2",
@@ -96,6 +97,7 @@
     "grunt-contrib-htmlmin": "1.0.0",
     "grunt-contrib-imagemin": "^3.1.0",
     "grunt-contrib-uglify": "2.0.0",
+    "grunt-contrib-uglify-es": "github:gruntjs/grunt-contrib-uglify#harmony",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-eslint": "^19.0.0",
     "grunt-filerev": "^2.3.1",
