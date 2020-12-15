@@ -30,17 +30,17 @@ angular.module('bahmni.common.offline')
             };
 
             var getPatientByUuid = function (uuid, preferredDb) {
-                preferredDb = preferredDb ? preferredDb : db;
+                preferredDb = preferredDb || db;
                 return patientDbService.getPatientByUuid(preferredDb, uuid);
             };
 
-            var getPatientsCount = function() {
+            var getPatientsCount = function () {
                 return patientDbService.getPatientsCount(db);
-            }
+            };
 
             var getEncountersCount = function () {
                 return encounterDbService.getEncountersCount(db);
-            }
+            };
 
             var deletePatientData = function (uuid) {
                 var deferred = $q.defer();
@@ -118,7 +118,7 @@ angular.module('bahmni.common.offline')
             };
 
             var insertEncounterData = function (encounterData, preferredDb) {
-                preferredDb = preferredDb ? preferredDb : db;
+                preferredDb = preferredDb || db;
                 return encounterDbService.insertEncounterData(preferredDb, encounterData).then(function () {
                     if (encounterData && encounterData.observations && encounterData.observations.length > 0) {
                         return observationDbService.insertObservationsData(preferredDb, encounterData.patientUuid, encounterData.visitUuid, encounterData.observations).then(function () {
@@ -246,7 +246,7 @@ angular.module('bahmni.common.offline')
             };
 
             var insertVisitData = function (visitData, preferredDb) {
-                preferredDb = preferredDb ? preferredDb : db;
+                preferredDb = preferredDb || db;
                 return visitDbService.insertVisitData(preferredDb, visitData);
             };
 
@@ -255,7 +255,7 @@ angular.module('bahmni.common.offline')
             };
 
             var getEncounterByEncounterUuid = function (encounterUuid, preferredDb) {
-                preferredDb = preferredDb ? preferredDb : db;
+                preferredDb = preferredDb || db;
                 return encounterDbService.getEncounterByEncounterUuid(preferredDb, encounterUuid);
             };
 
@@ -276,14 +276,14 @@ angular.module('bahmni.common.offline')
             };
 
             var insertLog = function (errorUuid, failedRequest, responseStatus, stackTrace, requestPayload) {
-                var provider = _.has(requestPayload, 'providers') ? requestPayload.providers[0] :
-                    (_.has(requestPayload, 'auditInfo.creator') ? requestPayload.auditInfo.creator : "");
-                requestPayload = requestPayload ? requestPayload : "";
+                var provider = _.has(requestPayload, 'providers') ? requestPayload.providers[0]
+                    : (_.has(requestPayload, 'auditInfo.creator') ? requestPayload.auditInfo.creator : "");
+                requestPayload = requestPayload || "";
                 return errorLogDbService.insertLog(db, errorUuid, failedRequest, responseStatus, stackTrace, requestPayload, provider);
             };
 
             var getErrorLogByUuid = function (uuid, preferredDb) {
-                preferredDb = preferredDb ? preferredDb : db;
+                preferredDb = preferredDb || db;
                 return errorLogDbService.getErrorLogByUuid(preferredDb, uuid);
             };
 
@@ -292,7 +292,7 @@ angular.module('bahmni.common.offline')
             };
 
             var deleteObsByEncounterUuid = function (uuid, preferredDb) {
-                preferredDb = preferredDb ? preferredDb : db;
+                preferredDb = preferredDb || db;
                 return observationDbService.deleteByEncounterUuid(preferredDb, uuid);
             };
 
@@ -363,8 +363,8 @@ angular.module('bahmni.common.offline')
             };
 
             var clearLastEventUuidForMarker = function (markerName) {
-                return offlineMarkerDbService.clearLastEventUuid(db, markerName)
-            }
+                return offlineMarkerDbService.clearLastEventUuid(db, markerName);
+            };
 
             return {
                 init: init,

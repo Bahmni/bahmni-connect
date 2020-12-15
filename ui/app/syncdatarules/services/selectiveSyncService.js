@@ -87,10 +87,9 @@ angular.module('syncdatarules')
                                     });
                                     offlineDbService.getPatientsCount().then(function (patientsCount) {
                                         if (patientsCount === 0) {
-                                            offlineDbService.clearLastEventUuidForMarker("patient")
+                                            offlineDbService.clearLastEventUuidForMarker("patient");
                                         }
                                     });
-
                                 } catch (e) {
                                     console.log('Error at ' + STAGES.STAGE1, e);
                                 }

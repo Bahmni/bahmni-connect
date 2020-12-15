@@ -255,7 +255,7 @@ Bahmni.Common = Bahmni.Common || {};
         eventLogServiceConceptUrl: hostUrl + "/event-log-service/rest/eventlog/concepts",
         eventLogServiceFormUrl: hostUrl + "/event-log-service/rest/eventlog/forms",
         offlineMetadataUrl: hostUrl + "/offlineMetadata.json",
-        startArchivingURL : RESTWS_V1 + "/bahmniconnect/initSync",
+        startArchivingURL: RESTWS_V1 + "/bahmniconnect/initSync",
         faviconUrl: hostUrl + "/bahmni/favicon.ico",
         platformType: {
             chrome: 'chrome',

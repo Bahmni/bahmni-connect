@@ -13,7 +13,7 @@ angular.module('bahmni.common.offline')
                 return deferrable.promise;
             };
 
-            var initializeInitSyncInfo = function initializeCounters(categories) {
+            var initializeInitSyncInfo = function initializeCounters (categories) {
                 $rootScope.initSyncInfo = {};
                 $rootScope.showSyncInfo = true;
                 _.map(categories, function (category) {
@@ -28,8 +28,8 @@ angular.module('bahmni.common.offline')
                 if (count != patients.length) {
                     return saveData({ category: 'patient' }, { data: patients[count] }).then(function () {
                         updateSavedEventsCount('patient');
-                        return (offlineService.isAndroidApp() && count % 10 == 0) ?
-                            $timeout(savePatients, 100, true, patients, ++count) : savePatients(patients, ++count);
+                        return (offlineService.isAndroidApp() && count % 10 == 0)
+                            ? $timeout(savePatients, 100, true, patients, ++count) : savePatients(patients, ++count);
                     });
                 }
                 return $q.when();
@@ -39,8 +39,8 @@ angular.module('bahmni.common.offline')
                 if (count != addressHierarchies.length) {
                     return saveData({ category: 'addressHierarchy' }, { data: addressHierarchies[count] }).then(function () {
                         updateSavedEventsCount('addressHierarchy');
-                        return (offlineService.isAndroidApp() && count % 10 == 0) ?
-                            $timeout(saveAddressHierarchy, 100, true, addressHierarchies, ++count) : saveAddressHierarchy(addressHierarchies, ++count);
+                        return (offlineService.isAndroidApp() && count % 10 == 0)
+                            ? $timeout(saveAddressHierarchy, 100, true, addressHierarchies, ++count) : saveAddressHierarchy(addressHierarchies, ++count);
                     });
                 }
                 return $q.when();
@@ -49,8 +49,8 @@ angular.module('bahmni.common.offline')
                 if (count != offlineConcepts.length) {
                     return saveData({ category: 'offline-concepts' }, { data: offlineConcepts[count] }).then(function () {
                         updateSavedEventsCount('offline-concepts');
-                        return (offlineService.isAndroidApp() && count % 10 == 0) ?
-                            $timeout(saveMetaData, 100, true, offlineConcepts, ++count) : saveMetaData(offlineConcepts, ++count);
+                        return (offlineService.isAndroidApp() && count % 10 == 0)
+                            ? $timeout(saveMetaData, 100, true, offlineConcepts, ++count) : saveMetaData(offlineConcepts, ++count);
                     });
                 }
                 return $q.when();
@@ -247,7 +247,6 @@ angular.module('bahmni.common.offline')
                     offlineDbService.getPatientsCount().then(
                         function (patientsCount) {
                             if (patientsCount === 0) {
-
                                 var patientPromise = savePatientDataFromFile().then(function (uuid) {
                                     return updateMarker({ uuid: uuid }, "patient");
                                 });
@@ -255,7 +254,6 @@ angular.module('bahmni.common.offline')
 
                                 categories = ["encounter"];
                                 promises.push(syncForCategory(categories[0], isInitSync));
-
                             } else {
                                 _.forEach(categories, function (category) {
                                     promises.push(syncForCategory(category, isInitSync));
@@ -372,50 +370,50 @@ angular.module('bahmni.common.offline')
             var saveData = function (event, response) {
                 var deferrable = $q.defer();
                 switch (event.category) {
-                    case 'patient':
-                        offlineDbService.getAttributeTypes().then(function (attributeTypes) {
-                            mapAttributesToPostFormat(response.data.person.attributes, attributeTypes);
-                            mapIdentifiers(response.data.identifiers).then(function () {
-                                offlineDbService.createPatient({ patient: response.data }).then(function () {
-                                    deferrable.resolve();
-                                }, function (response) {
-                                    deferrable.reject(response);
-                                });
+                case 'patient':
+                    offlineDbService.getAttributeTypes().then(function (attributeTypes) {
+                        mapAttributesToPostFormat(response.data.person.attributes, attributeTypes);
+                        mapIdentifiers(response.data.identifiers).then(function () {
+                            offlineDbService.createPatient({ patient: response.data }).then(function () {
+                                deferrable.resolve();
+                            }, function (response) {
+                                deferrable.reject(response);
                             });
                         });
-                        break;
-                    case 'Encounter':
-                    case 'SHREncounter':
-                        offlineDbService.createEncounter(response.data).then(function () {
-                            deferrable.resolve();
-                        });
-                        break;
-                    case 'LabOrderResults':
-                        var patientUuid = event.object.match(Bahmni.Common.Constants.uuidRegex)[0];
-                        offlineDbService.insertLabOrderResults(patientUuid, response.data).then(function () {
-                            deferrable.resolve();
-                        });
-                        break;
-
-                    case 'offline-concepts':
-                        offlineDbService.insertConceptAndUpdateHierarchy({ "results": [response.data] }).then(function () {
-                            deferrable.resolve();
-                        });
-                        break;
-                    case 'addressHierarchy':
-                    case 'parentAddressHierarchy':
-                        offlineDbService.insertAddressHierarchy(response.data).then(function () {
-                            deferrable.resolve();
-                        });
-                        break;
-                    case 'forms':
-                        offlineDbService.insertForm(response.data).then(function () {
-                            deferrable.resolve();
-                        });
-                        break;
-                    default:
+                    });
+                    break;
+                case 'Encounter':
+                case 'SHREncounter':
+                    offlineDbService.createEncounter(response.data).then(function () {
                         deferrable.resolve();
-                        break;
+                    });
+                    break;
+                case 'LabOrderResults':
+                    var patientUuid = event.object.match(Bahmni.Common.Constants.uuidRegex)[0];
+                    offlineDbService.insertLabOrderResults(patientUuid, response.data).then(function () {
+                        deferrable.resolve();
+                    });
+                    break;
+
+                case 'offline-concepts':
+                    offlineDbService.insertConceptAndUpdateHierarchy({ "results": [response.data] }).then(function () {
+                        deferrable.resolve();
+                    });
+                    break;
+                case 'addressHierarchy':
+                case 'parentAddressHierarchy':
+                    offlineDbService.insertAddressHierarchy(response.data).then(function () {
+                        deferrable.resolve();
+                    });
+                    break;
+                case 'forms':
+                    offlineDbService.insertForm(response.data).then(function () {
+                        deferrable.resolve();
+                    });
+                    break;
+                default:
+                    deferrable.resolve();
+                    break;
                 }
                 return deferrable.promise;
             };

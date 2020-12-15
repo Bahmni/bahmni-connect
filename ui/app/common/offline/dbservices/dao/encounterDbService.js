@@ -78,7 +78,7 @@ angular.module('bahmni.common.offline')
             return db.delete().from(encounter).exec();
         };
 
-        var getEncountersCount = function(db) {
+        var getEncountersCount = function (db) {
             var encounter = db.getSchema().table('encounter');
             return db.select(encounter.encounterJson.as('encounter'))
                 .from(encounter)
@@ -86,7 +86,7 @@ angular.module('bahmni.common.offline')
                 .then(function (result) {
                     return result.length;
                 });
-        }
+        };
 
         return {
             insertEncounterData: insertEncounterData,

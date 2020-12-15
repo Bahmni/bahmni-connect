@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('bahmni.clinical')
-    .controller('PatientListHeaderController', ['$scope', '$rootScope', '$bahmniCookieStore', 'providerService', 'spinner', 'locationService', '$window', 'ngDialog', 'retrospectiveEntryService', 'offlineService', 'schedulerService', 'offlineStatusService','$http',
+    .controller('PatientListHeaderController', ['$scope', '$rootScope', '$bahmniCookieStore', 'providerService', 'spinner', 'locationService', '$window', 'ngDialog', 'retrospectiveEntryService', 'offlineService', 'schedulerService', 'offlineStatusService', '$http',
         function ($scope, $rootScope, $bahmniCookieStore, providerService, spinner, locationService, $window, ngDialog, retrospectiveEntryService, offlineService, schedulerService, offlineStatusService, $http) {
             var DateUtil = Bahmni.Common.Util.DateUtil;
             $scope.maxStartDate = DateUtil.getDateWithoutTime(DateUtil.today());
@@ -14,17 +14,15 @@ angular.module('bahmni.clinical')
             $scope.isSelectiveSyncStrategy = false;
 
             var verifySelectiveSync = function () {
-                 $http.get('/openmrs/ws/rest/v1/eventlog/filter/globalProperty/', {
+                $http.get('/openmrs/ws/rest/v1/eventlog/filter/globalProperty/', {
                     method: "GET",
                     params: { q: 'bahmniOfflineSync.strategy' },
                     withCredentials: true,
                     headers: { "Accept": "application/text", "Content-Type": "text/plain" }
                 }).then((response) => {
                     let value = response.data;
-                    if (value.includes("SelectiveSyncStrategy"))
-                        $scope.isSelectiveSyncStrategy = true;
-                }), function (error) {
-                };
+                    if (value.includes("SelectiveSyncStrategy")) { $scope.isSelectiveSyncStrategy = true; }
+                });
             };
 
             offlineStatusService.setOfflineOptions();
@@ -66,7 +64,8 @@ angular.module('bahmni.clinical')
             };
 
             $scope.popUpHandler = function () {
-                $scope.dialog = ngDialog.open({ template: 'consultation/views/defaultDataPopUp.html', className: 'test ngdialog-theme-default',
+                $scope.dialog = ngDialog.open({ template: 'consultation/views/defaultDataPopUp.html',
+                    className: 'test ngdialog-theme-default',
                     controller: 'PatientListHeaderController'});
                 $('body').addClass('show-controller-back');
             };

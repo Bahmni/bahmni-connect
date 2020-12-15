@@ -10,17 +10,15 @@ angular.module('bahmni.home')
             $scope.isSelectiveSyncStrategy = false;
 
             var verifySelectiveSync = function () {
-                 $http.get('/openmrs/ws/rest/v1/eventlog/filter/globalProperty/', {
+                $http.get('/openmrs/ws/rest/v1/eventlog/filter/globalProperty/', {
                     method: "GET",
                     params: { q: 'bahmniOfflineSync.strategy' },
                     withCredentials: true,
                     headers: { "Accept": "application/text", "Content-Type": "text/plain" }
                 }).then((response) => {
                     let value = response.data;
-                    if (value.includes("SelectiveSyncStrategy"))
-                        $scope.isSelectiveSyncStrategy = true;
-                }), function (error) {
-                };
+                    if (value.includes("SelectiveSyncStrategy")) { $scope.isSelectiveSyncStrategy = true; }
+                });
             };
 
             $scope.isVisibleExtension = function (extension) {
@@ -72,7 +70,6 @@ angular.module('bahmni.home')
             $scope.sync = function () {
                 schedulerService.sync(Bahmni.Common.Constants.syncButtonConfiguration);
             };
-
 
             $scope.import = function () {
                 console.log("Starting to import");

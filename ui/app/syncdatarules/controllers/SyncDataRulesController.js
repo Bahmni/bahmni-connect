@@ -407,6 +407,7 @@ angular.module("syncdatarules").controller("SyncDataRulesController", [
                 $scope.addressesToFilter[`${level.name}_${index}`] = angular.copy(address);
                 $scope.updateSelectedItems(`${level.name}_${index}`);
                 $scope.loadState();
+                filterSelectedItems();
             });
                 });
             });
@@ -425,6 +426,38 @@ angular.module("syncdatarules").controller("SyncDataRulesController", [
             }
         };
 
+        let filterSelectedItems = function () {
+            let syncFilterConfigObject = JSON.parse(
+                $window.localStorage.getItem("syncFilterConfigObject")
+              );
+            if (syncFilterConfigObject !== null) {
+                for (let level in $scope.addressesToFilter) {
+                    if (level.includes('_0')) {
+                        let levelIndex = $scope.getLevel(level);
+                        var indexToMatch = parseInt(levelIndex) + 1;
+                        for (let key in $scope.addressesToFilter) {
+                            var selectedParentIds = $scope.addressesToFilter[key]
+        .filter((element) => element.selected)
+        .map((element) => element.parentId);
+                            if ($scope.getLevel(key) == indexToMatch) {
+                                let tempAddresses = angular.copy($scope.addresses);
+                                $scope.addressesToFilter[key] = tempAddresses[key].filter((levelToFilter) =>
+            selectedParentIds.includes(levelToFilter.parentId)
+          );
+                                $scope.addressesToFilter[key].forEach((element) => {
+                                    if (syncFilterConfigObject[key].includes(element.userGeneratedId) && selectedParentIds.includes(element.parentId)) {
+                                        element.selected = true;
+                                    }
+                                });
+                                indexToMatch = indexToMatch + 1;
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
         return spinner.forPromise($q.all(init()));
     }
 ]);
+

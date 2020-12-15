@@ -35,9 +35,9 @@ angular.module('bahmni.common.offline')
             });
         };
 
-        var clearLastEventUuid = function(db, markerName) {
+        var clearLastEventUuid = function (db, markerName) {
             var markerTable = db.getSchema().table('event_log_marker');
-            getMarkers(db, markerTable, markerName).then(function(markers) {
+            getMarkers(db, markerTable, markerName).then(function (markers) {
                 let marker = markers[0];
                 marker.lastReadEventUuid = null;
                 var row = markerTable.createRow(marker);
@@ -46,7 +46,7 @@ angular.module('bahmni.common.offline')
                     return marker;
                 });
             });
-        }
+        };
 
         return {
             insertMarker: insertMarker,
