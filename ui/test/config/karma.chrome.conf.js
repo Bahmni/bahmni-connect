@@ -109,6 +109,7 @@ module.exports = function (config) {
             'app/common/**/*.js': ['coverage'],
             'app/home/**/*.js': ['coverage'],
             'app/registration/**/*.js': ['coverage'],
+            'app/syncdatarules/**/*.js': ['coverage'],
             'app/common/displaycontrols/**/views/*.html':['ng-html2js'],
             'app/common/concept-set/views/*.html':['ng-html2js'],
             'app/common/uicontrols/**/views/*.html': ['ng-html2js'],

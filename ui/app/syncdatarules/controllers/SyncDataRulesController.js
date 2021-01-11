@@ -407,7 +407,7 @@ angular.module("syncdatarules").controller("SyncDataRulesController", [
                 $scope.addressesToFilter[`${level.name}_${index}`] = angular.copy(address);
                 $scope.updateSelectedItems(`${level.name}_${index}`);
                 $scope.loadState();
-                filterSelectedItems();
+                $scope.filterSelectedItems();
             });
                 });
             });
@@ -426,7 +426,7 @@ angular.module("syncdatarules").controller("SyncDataRulesController", [
             }
         };
 
-        let filterSelectedItems = function () {
+        $scope.filterSelectedItems = function () {
             let syncFilterConfigObject = JSON.parse(
                 $window.localStorage.getItem("syncFilterConfigObject")
               );
