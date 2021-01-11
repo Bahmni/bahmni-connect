@@ -299,7 +299,7 @@ angular.module("syncdatarules").controller("SyncDataRulesController", [
           .filter((address) => address.selected)
           .map((address) => address.userGeneratedId);
             }
-            if (Object.values(syncFilterConfigObject).flat().length == 0) {
+            if (Object.values(syncFilterConfigObject).length == 0) {
                 $scope.state.showValidationError = true;
             } else {
                 $scope.state.showValidationError = false;
@@ -407,7 +407,7 @@ angular.module("syncdatarules").controller("SyncDataRulesController", [
                 $scope.addressesToFilter[`${level.name}_${index}`] = angular.copy(address);
                 $scope.updateSelectedItems(`${level.name}_${index}`);
                 $scope.loadState();
-                filterSelectedItems();
+                $scope.filterSelectedItems();
             });
                 });
             });
@@ -426,7 +426,7 @@ angular.module("syncdatarules").controller("SyncDataRulesController", [
             }
         };
 
-        let filterSelectedItems = function () {
+        $scope.filterSelectedItems = function () {
             let syncFilterConfigObject = JSON.parse(
                 $window.localStorage.getItem("syncFilterConfigObject")
               );
