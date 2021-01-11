@@ -15,7 +15,7 @@ angular.module('bahmni.registration')
                     headers: { "Accept": "application/text", "Content-Type": "text/plain" }
                 }).then((response) => {
                     let value = response.data;
-                    if (value.includes("SelectiveSyncStrategy")) { $scope.isSelectiveSyncStrategy = true; }
+                    if (value.includes(Bahmni.Common.Constants.syncStrategy)) { $scope.isSelectiveSyncStrategy = true; }
                 });
             };
             $scope.goTo = function (url) {
