@@ -1,26 +1,13 @@
 'use strict';
 
 angular.module('bahmni.home')
-    .controller('DashboardController', ['$scope', '$state', 'appService', 'locationService', 'spinner', '$bahmniCookieStore', '$window', '$q', 'offlineService', 'schedulerService', 'eventQueue', 'offlineDbService', 'androidDbService', 'networkStatusService', 'messagingService', '$translate', '$http',
-        function ($scope, $state, appService, locationService, spinner, $bahmniCookieStore, $window, $q, offlineService, schedulerService, eventQueue, offlineDbService, androidDbService, networkStatusService, messagingService, $translate, $http) {
+    .controller('DashboardController', ['$scope', '$state', 'appService', 'locationService', 'spinner', '$bahmniCookieStore', '$window', '$q', 'offlineService', 'schedulerService', 'eventQueue', 'offlineDbService', 'androidDbService', 'networkStatusService', 'messagingService', '$translate', 'globalPropertyService',
+        function ($scope, $state, appService, locationService, spinner, $bahmniCookieStore, $window, $q, offlineService, schedulerService, eventQueue, offlineDbService, androidDbService, networkStatusService, messagingService, $translate, globalPropertyService) {
             $scope.appExtensions = appService.getAppDescriptor().getExtensions($state.current.data.extensionPointId, "link") || [];
             $scope.selectedLocationUuid = {};
             $scope.isOfflineApp = offlineService.isOfflineApp();
             $scope.isPWAapp = offlineService.isChromeApp();
             $scope.isSelectiveSyncStrategy = false;
-
-            var verifySelectiveSync = function () {
-                $http.get('/openmrs/ws/rest/v1/eventlog/filter/globalProperty/', {
-                    method: "GET",
-                    params: { q: 'bahmniOfflineSync.strategy' },
-                    withCredentials: true,
-                    headers: { "Accept": "application/text", "Content-Type": "text/plain" }
-                }).then((response) => {
-                    let value = response.data;
-                    if (value.includes(Bahmni.Common.Constants.syncStrategy)) { $scope.isSelectiveSyncStrategy = true; }
-                });
-            };
-
             $scope.isVisibleExtension = function (extension) {
                 if (!$scope.isOfflineApp) {
                     return true;
@@ -33,7 +20,7 @@ angular.module('bahmni.home')
             };
 
             var init = function () {
-                verifySelectiveSync();
+                globalPropertyService.verifySelectiveSync('bahmniOfflineSync.strategy', $scope);
                 if ($scope.isOfflineApp) {
                     setWatchersForErrorStatus();
                 }
