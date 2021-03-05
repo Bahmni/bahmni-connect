@@ -299,7 +299,8 @@ Bahmni.Common = Bahmni.Common || {};
         bahmniConnectVersion: "0.89",
         defaultBahmniConnectDb: "Bahmni",
         categories: categories,
-        syncStrategy: "SelectiveSyncStrategy"
+        syncStrategy: "SelectiveSyncStrategy",
+        globalPropertyServiceUrl: "/openmrs/ws/rest/v1/eventlog/filter/globalProperty/"
     };
 })();
 

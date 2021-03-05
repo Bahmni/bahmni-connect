@@ -1,23 +1,11 @@
 'use strict';
 
 angular.module('bahmni.registration')
-    .controller('NavigationController', ['$scope', '$rootScope', '$location', 'sessionService', '$window', 'appService', '$sce', 'offlineService', 'schedulerService', '$http',
-        function ($scope, $rootScope, $location, sessionService, $window, appService, $sce, offlineService, schedulerService, $http) {
+    .controller('NavigationController', ['$scope', '$rootScope', '$location', 'sessionService', '$window', 'appService', '$sce', 'offlineService', 'schedulerService', 'globalPropertyService',
+        function ($scope, $rootScope, $location, sessionService, $window, appService, $sce, offlineService, schedulerService, globalPropertyService) {
             $scope.extensions = appService.getAppDescriptor().getExtensions("org.bahmni.registration.navigation", "link");
             $scope.isOfflineApp = offlineService.isOfflineApp();
             $scope.isSelectiveSyncStrategy = false;
-
-            var verifySelectiveSync = function () {
-                $http.get('/openmrs/ws/rest/v1/eventlog/filter/globalProperty/', {
-                    method: "GET",
-                    params: { q: 'bahmniOfflineSync.strategy' },
-                    withCredentials: true,
-                    headers: { "Accept": "application/text", "Content-Type": "text/plain" }
-                }).then((response) => {
-                    let value = response.data;
-                    if (value.includes(Bahmni.Common.Constants.syncStrategy)) { $scope.isSelectiveSyncStrategy = true; }
-                });
-            };
             $scope.goTo = function (url) {
                 $location.url(url);
             };
@@ -48,7 +36,7 @@ angular.module('bahmni.registration')
             });
 
             var init = function () {
-                verifySelectiveSync();
+                globalPropertyService.verifySelectiveSync('bahmniOfflineSync.strategy', $scope);
             };
             $scope.$on("$destroy", cleanUpListenerSchedulerStage);
             return init();
