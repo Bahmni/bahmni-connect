@@ -1,13 +1,13 @@
 
 'use strict';
 
-angular.module('bahmni.common.offline')
-    .service('schedulerService', ['offlineService', 'WorkerService', 'scheduledSync',
-        function (offlineService, WorkerService, scheduledSync) {
+angular.module('syncdatarules')
+    .service('selectiveSchedulerService', ['offlineService', 'selectiveSyncService',
+        function (offlineService, selectiveSyncService) {
             this.jobs = [];
-            this.sync = function (config) {
+            this.sync = function (config, deletePatientAndEncounters) {
                 if (offlineService.isChromeApp() || offlineService.isAndroidApp() || offlineService.isOfflineApp()) {
-                    var job = scheduledSync(config, undefined);
+                    var job = selectiveSyncService(config, deletePatientAndEncounters);
                     this.jobs.push(job);
                 }
             };

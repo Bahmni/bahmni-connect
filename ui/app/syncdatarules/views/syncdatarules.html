@@ -1,0 +1,66 @@
+<div class="opd-header-wrapper" ng-controller="SyncDataRulesController">
+  <div class="opd-header-top">
+    <a class="back-btn" ng-class="{'dashboard-link':backLink.image}" accesskey="h" ng-href="../home/index.html"
+      ng-click="closeAllDialogs()" id="" title="" href="../home/index.html">
+      <i class="fa fa-home"></i>
+    </a>
+  </div>
+</div>
+
+<section class="block sync-rules-section">
+  <h2 class="section-title" id="loadData" ng-click="loadState()">Selective Sync</h2>
+  <div data-ng-init="populateList()" class="sync-data-rules-container">
+    <form>
+
+      <div class="mb20" ng-repeat="(key, value) in addressesToFilter">
+        <div class="grid-item " id="{{getLevel(key)}}-block" ng-show="display(getLevel(key)) && isParentSelected(key)"><h3> {{getLevelName(key)}}:</h3>
+          <br/>
+          <div class="selected-items-container">
+            <ul class="selected-list" >
+              <li class="selected-list-item info" ng-repeat="level in selecteLevelNames(key)" >
+                {{level}} 
+                  <button class="selection-choice-remove" title="Remove Item" ng-click="removeFromSelectedList(level,key)">X</button>
+              </li>
+            </ul>
+          </div>
+          <div class="dropdown grid-item">
+            <div class="selected-items-box" ng-click="openDropDown(key)" id="{{replaceSpecialCharacters(key)}}-select" >
+              <ul class="selected-list" >
+                <li class="default-option" ng-show="value.length != 0">--- Select {{getLevelName(key)}} ---
+                  <i class="fa fa-caret-down pull-right"></i></li>
+                <li class="default-option" ng-show="value.length == 0">--- No {{getLevelName(key)}} ---
+                  <i class="fa fa-caret-down pull-right"></i></li>
+              </ul>
+            </div>
+            
+            <div class="{{replaceSpecialCharacters(key)}}-list list">
+              <ul class="items-list">
+                <li ng-repeat="address in value">
+                  <input type="checkbox" ng-model="address.selected" id={{address.name+key}} ng-click="filterLevels(key)"  />
+                  <label for={{address.name+key}}>{{address.name}}</label>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="validation-error" ng-show="state.showValidationError">{{validationError()}}</p>
+    
+      </br>
+      <div>
+          <button id="dialog" class="btn offline-sync fl" ng-click="showDialog()" ng-show="isOfflineApp && !isSyncing ">
+            Sync
+        </button>
+        <button class="btn offline-sync fl offline-sync-image" ng-show="isOfflineApp && isSyncing" disabled>
+            <img src="../images/sync.gif" />
+        </button>
+      </div>
+    </form>
+  </div>
+  <div ng-if="::isOfflineApp" class="syncStatusInfo">
+    <button ng-if="errorsInSync" ui-sref="errorLog" class="button-Errorlog " ><i class="fa fa-warning fa-orange"></i><span>Error logs</span></button>
+    <p class="{{getStatusStyleCode()}} message">{{syncStatusMessage}}</p>
+    <p>Last Successful Sync Time : {{lastSyncTime}}</p>
+</div>
+</section>

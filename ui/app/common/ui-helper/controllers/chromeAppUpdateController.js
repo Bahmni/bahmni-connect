@@ -1,9 +1,9 @@
 'use strict';
 angular.module('bahmni.common.uiHelper')
-    .controller('AppUpdateController', ['$scope', 'ngDialog', 'appInfoStrategy', 'offlineService',
-        function ($scope, ngDialog, appInfoStrategy, offlineService) {
+    .controller('AppUpdateController', ['$scope', 'ngDialog', 'appInfoStrategy', 'offlineService', 'globalPropertyService',
+        function ($scope, ngDialog, appInfoStrategy, offlineService, globalPropertyService) {
             $scope.isAndroid = false;
-
+            $scope.isSelectiveSyncStrategy = false;
             $scope.isUpdateAvailable = function () {
                 var installedVersion = appInfoStrategy.getVersion();
                 var appUpdateInfo = offlineService.getItem("appUpdateInfo");
@@ -18,4 +18,9 @@ angular.module('bahmni.common.uiHelper')
                     showClose: true
                 });
             };
+            var init = function () {
+                globalPropertyService.verifySelectiveSync('bahmniOfflineSync.strategy', $scope);
+            };
+
+            return init();
         }]);

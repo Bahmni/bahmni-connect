@@ -96,4 +96,21 @@ describe('encounterDbService tests', function () {
         });
 
     });
+
+    it("should clear all the records from encounters table", function (done){
+        schemaBuilder.connect().then(function(db){
+            encounterDbService.deleteAllEncounterRecords(db).then(function(){
+
+                var encounter = db.getSchema().table('encounter');
+
+                db.select('*')
+                .from(encounter)
+                .where().exec()
+                .then(function (result) {
+                    expect(result.length).toBe(0);
+                    done();
+                });
+            });
+        });
+    });
 });

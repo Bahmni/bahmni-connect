@@ -1,0 +1,11 @@
+<link rel="stylesheet" href="../styles/syncdatarules.css" />
+<div aria-labelledby="dialog-label" class="delete-confirm-dialog">
+    <div class="dialog-msg">
+        <p>Filters have changed, this action will delete all previously synced data. Press OK to confirm.</p>
+    </div>
+    <div class="buttons-block">
+        <button id="modal-revise-button1" class="secondary-button"
+            ng-click="startSync(deletePatientAndEncounter)">OK</button>
+        <button id="modal-revise-button1" class="primary-button" ng-click="cancelDialog()">Cancel</button>
+    </div>
+</div>

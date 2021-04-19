@@ -35,8 +35,7 @@ angular.module('bahmni.common.offline')
             _.each(identifiers, function (identifier) {
                 if (!identifier.primaryIdentifier) {
                     queries = insertQueries(identifier, patientIdentifierTable, patientUuid, queries, db);
-                }
-                else {
+                } else {
                     var promise = db.select(patientIdentifierTable.primaryIdentifier)
                         .from(patientIdentifierTable)
                         .where(lf.op.and(patientIdentifierTable.primaryIdentifier.eq(identifier.primaryIdentifier), patientIdentifierTable.patientUuid.neq(patientUuid))).exec()
@@ -54,7 +53,7 @@ angular.module('bahmni.common.offline')
                 var tx = db.createTransaction();
                 return tx.exec(queries).then(function () {
                     return defer.resolve();
-                });
+                }).catch(reason => console.log(reason));
             });
             return defer.promise;
         };

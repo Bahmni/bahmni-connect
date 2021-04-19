@@ -5,7 +5,7 @@ describe('PatientServiceStrategy test', function () {
     var offlinePatientServiceStrategyMock, $q = Q, eventQueueMock, rootScope, mockBahmniCookieStore;
 
     eventQueueMock = jasmine.createSpyObj('eventQueue', ['addToEventQueue']);
-    offlinePatientServiceStrategyMock = jasmine.createSpyObj(' offlinePatientServiceStrategy', ['search', 'get', 'create', 'deletePatientData','getAttributeTypes']);
+    offlinePatientServiceStrategyMock = jasmine.createSpyObj(' offlinePatientServiceStrategy', ['search', 'get', 'create', 'deletePatientData','getAttributeTypes', 'getPatientsCount']);
     mockBahmniCookieStore = jasmine.createSpyObj('bahmniCookieStore', ["get"]);
     beforeEach(function () {
         module('bahmni.common.offline');
@@ -29,6 +29,7 @@ describe('PatientServiceStrategy test', function () {
         offlinePatientServiceStrategyMock.create.and.returnValue(specUtil.respondWith({"data": patientJson}));
         offlinePatientServiceStrategyMock.deletePatientData.and.returnValue(specUtil.respondWith({}));
         eventQueueMock.addToEventQueue.and.returnValue(specUtil.respondWith({}));
+        offlinePatientServiceStrategyMock.getPatientsCount.and.returnValue(specUtil.respondWith(5));
         mockBahmniCookieStore.get.and.callFake(function (cookie) {
             if (cookie == Bahmni.Common.Constants.locationCookieName) {
                 return {name: "location-name"};

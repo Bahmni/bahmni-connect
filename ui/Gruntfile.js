@@ -136,7 +136,9 @@ module.exports = function (grunt) {
                     "dist/offline/index.html": "dist/offline/index.html",
                     "dist/registration/index.html": "dist/registration/index.html",
                     "dist/clinical/index.html": "dist/clinical/index.html",
-                    "dist/home/index.html": "dist/home/index.html"
+                    "dist/home/index.html": "dist/home/index.html",
+                    "dist/syncdatarules/index.html": "dist/syncdatarules/index.html"
+
                 }
             }
         },
@@ -219,7 +221,9 @@ module.exports = function (grunt) {
                 '<%= yeoman.app %>/**/*.html',
                 '<%= yeoman.app %>/common/**/*.html',
                 '<%= yeoman.app %>/home/**/*.html',
-                '<%= yeoman.app %>/registration/**/*.html'
+                '<%= yeoman.app %>/registration/**/*.html',
+                '<%= yeoman.app %>/syncdatarules/**/*.html'
+
             ],
             css: '<%= yeoman.app %>/styles/**/*.css',
             options: {
@@ -286,7 +290,8 @@ module.exports = function (grunt) {
                             'common/**/*.html',
                             'home/**/*.html',
                             'offline/**/*.html',
-                            'registration/**/*.html'
+                            'registration/**/*.html',
+                            'syncdatarules/**/*.html'
                         ],
                         dest: '<%= yeoman.dist %>'
                     }
@@ -393,6 +398,12 @@ module.exports = function (grunt) {
                     {
                         expand: true,
                         cwd: '<%= yeoman.dist %>',
+                        src: ['syncdatarules.*.js'],
+                        dest: '<%= yeoman.dist %>/syncdatarules/'
+                    },
+                    {
+                        expand: true,
+                        cwd: '<%= yeoman.dist %>',
                         src: ['clinical.*.css'],
                         dest: '<%= yeoman.dist %>/clinical/'
                     },
@@ -413,6 +424,12 @@ module.exports = function (grunt) {
                         cwd: '<%= yeoman.dist %>',
                         src: ['registration.*.css'],
                         dest: '<%= yeoman.dist %>/registration/'
+                    },
+                    {
+                        expand: true,
+                        cwd: '<%= yeoman.dist %>',
+                        src: ['syncdatarules.*.css'],
+                        dest: '<%= yeoman.dist %>/syncdatarules/'
                     }
                 ]
             }
@@ -457,7 +474,8 @@ module.exports = function (grunt) {
                 files: {
                     '<%= yeoman.dist %>/registration.min.js': '<%= yeoman.dist %>/registration.min.js',
                     '<%= yeoman.dist %>/home.min.js': '<%= yeoman.dist %>/home.min.js',
-                    '<%= yeoman.dist %>/clinical.min.js': '<%= yeoman.dist %>/clinical.min.js'
+                    '<%= yeoman.dist %>/clinical.min.js': '<%= yeoman.dist %>/clinical.min.js',
+                    '<%= yeoman.dist %>/syncdatarules.min.js': '<%= yeoman.dist %>/syncdatarules.min.js'
                 }
             },
             chrome: {

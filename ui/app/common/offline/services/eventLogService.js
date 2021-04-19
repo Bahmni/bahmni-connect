@@ -34,8 +34,8 @@ angular.module('bahmni.common.offline')
                 return getEvents(Bahmni.Common.Constants.eventLogServiceEncounterUrl, marker);
             case 'offline-concepts':
                 return getEvents(Bahmni.Common.Constants.eventLogServiceConceptUrl, marker);
+            // case 'parentAddressHierarchy':
             case 'addressHierarchy':
-            case 'parentAddressHierarchy':
                 return getEvents(Bahmni.Common.Constants.addressEventLogServiceUrl, marker);
             case 'forms':
                 return getEvents(Bahmni.Common.Constants.eventLogServiceFormUrl, marker);

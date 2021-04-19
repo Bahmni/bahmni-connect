@@ -13,7 +13,7 @@
                 <button class="btn" ng-if="isUpdateAvailable()" ng-click="update()">Update</button>
             </div>
 
-            <button class="btn offline-sync fl" ng-click="sync()" ng-show="isOfflineApp && !isSyncing ">
+            <button class="btn offline-sync fl" ng-click="sync()" ng-show="!isSelectiveSyncStrategy && isOfflineApp && !isSyncing ">
                 {{::'REGISTRATION_LABEL_SYNC' | translate}}
             </button>
             <button class="btn offline-sync offline-sync-image fl" ng-show="isOfflineApp && isSyncing" disabled>

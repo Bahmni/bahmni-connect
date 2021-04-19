@@ -49,7 +49,7 @@ describe('dashboardController', function () {
         window = jasmine.createSpyObj('$window', ['confirm']);
         state = jasmine.createSpyObj('$state',['go']);
     }));
-
+    
     beforeEach(
         inject(function ($controller, $rootScope, $httpBackend, $translate) {
             $aController = $controller;
@@ -61,6 +61,7 @@ describe('dashboardController', function () {
             state.current.data = {extensionPointId: 'org.bahmni.home.dashboard'};
             httpBackend.expectGET("../i18n/home/locale_en.json").respond({});
             httpBackend.expectGET("/bahmni_config/openmrs/i18n/home/locale_en.json").respond({});
+            httpBackend.expectGET("/openmrs/ws/rest/v1/eventlog/filter/globalProperty/?q=bahmniOfflineSync.strategy").respond("");
             translate =  $translate;
         })
     );

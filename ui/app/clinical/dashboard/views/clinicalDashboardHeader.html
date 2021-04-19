@@ -33,7 +33,7 @@
                 </div>
 
                 <div class="fr offlin-sync-wrapper" ng-controller="PatientListHeaderController">
-                    <button class="btn fl  offline-sync" ng-click="sync()" ng-show="isOfflineApp && !isSyncing">
+                    <button class="btn fl  offline-sync" ng-click="sync()" ng-show="!isSelectiveSyncStrategy && isOfflineApp && !isSyncing">
                         {{::'HEADER_LABEL_SYNC_KEY' | translate}}
                     </button>
                     <button class="btn fl offline-sync offline-sync-image" ng-show="isOfflineApp && isSyncing" disabled>
@@ -133,7 +133,7 @@
                      <div ng-if="isOfflineApp" class="offline-sync fl" ng-controller="AppUpdateController">
                         <button class="btn" ng-if="isUpdateAvailable()" ng-click="update()">Update</button>
                      </div>
-                    <button class="btn fl  offline-sync" ng-click="sync()" ng-show="isOfflineApp && !isSyncing">
+                    <button class="btn fl  offline-sync" ng-click="sync()" ng-show="!isSelectiveSyncStrategy && isOfflineApp && !isSyncing">
                       {{::'HEADER_LABEL_SYNC_KEY' | translate}}
                     </button>
                     <button class="btn fl offline-sync offline-sync-image" ng-show="isOfflineApp && isSyncing" disabled>

@@ -1,0 +1,279 @@
+.sync-rules-section {
+	min-width: 50%;
+	position: absolute;
+	padding: 40px;
+	margin-top: 5%;
+}
+.sync-data-rules-container {
+	border: 1px solid #ccc;
+	background: #ffffff;
+	border-radius: 3px;
+	overflow: hidden;
+	padding: 15px;
+}
+.back-btn {
+	margin-left: 25px !important;
+}
+.select {
+	display: inline-block;
+}
+.validation-error {
+	color: red;
+	padding: 10px;
+}
+.mb20 {
+	margin-bottom: 20px;
+}
+.grid-container {
+	margin-left: 5%;
+	display: grid;
+	grid-template-columns: auto auto auto;
+}
+.grid-item {
+	padding: 10px;
+}
+.selected-items-box {
+	cursor: pointer;
+	border: solid 1px #ddd;
+	padding: 10px;
+	width: 500px;
+	.items-list {
+		list-style-type: none;
+		padding: 0;
+		margin: 0;
+		li {
+			display: inline;
+		}
+	}
+}
+.default-option {
+	&:hover {
+		background-color: white !important;
+		color: #363463;
+	}
+}
+li {
+	&:hover {
+		background-color: #5897fb !important;
+		color: white;
+	}
+}
+.list {
+	display: none;
+	max-height: 200px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	border-left: solid 1px #C7C6C7;
+	border-right: solid 1px #C7C6C7;
+	border-bottom: solid 1px #C7C6C7;
+	z-index: 100;
+	position: absolute;
+	width: 520px;
+	.items-list {
+		list-style-type: none;
+		width: 100%;
+		padding: 0;
+		margin: 0;
+		li {
+			margin: 0;
+			width: 100%;
+			padding: 0;
+			border-bottom: solid 1px #C7C6C7;
+			padding: 15px;
+			background-color: #fff;
+		}
+	}
+}
+.success {
+	color: #4CAF50;
+}
+.info {
+	background-color: #2196F3;
+}
+.selected-list {
+	display: inline;
+	list-style: none;
+	padding: 0;
+}
+.selected-list-item {
+	border: 1px solid #2196F3;
+	border-radius: 4px;
+	display: inline-block;
+	margin-left: 5px;
+	margin-top: 5px;
+	padding: 5px;
+	color: white;
+}
+.delete-confirm-dialog {
+	margin: 5px;
+	padding: 5px;
+	margin: 5px;
+	padding: 5px;
+}
+.dialog-msg {
+	margin: 2px;
+	margin: 2px;
+}
+.selected-items-container {
+	max-width: 600px;
+}
+.selection-choice-remove {
+	background-color: #2196F3;
+	border: none;
+	border-right: 1px solid #aaa;
+	border-top-left-radius: 4px;
+	border-bottom-left-radius: 4px;
+	color: black;
+	cursor: pointer;
+	font-size: 1em;
+	font-weight: 700;
+	padding: 0 4px;
+	margin-left: 8px;
+}
+.syncStatusInfo {
+	text-align: center;
+	font-size: 14px;
+	width: 100%;
+	margin-top: 30px;
+	bottom: 13px;
+	font-style: italic;
+	color: #666;
+	.message {
+		font-style: normal;
+	}
+	.pending {
+		color: #FDA319;
+	}
+	.fail {
+		color: red;
+	}
+	.success {
+		color: #53B76D;
+	}
+	.inProgress {
+		color: black;
+	}
+	p {
+		padding-bottom: 10px;
+		margin: 0;
+	}
+}
+.dialog-buttons-table {
+	width: 100%;
+	table-layout: fixed;
+	background-color: #f0f0f0;
+}
+.buttons-block {
+	margin-block-start: 5%;
+}
+.primary-button {
+	margin-inline-start: 3%;
+}
+.secondary-button {
+	margin-inline-start: 30%;
+}
+table {
+	width: 100%;
+	th {
+		padding: 5px 10px;
+		border: 1px solid #ddd;
+	}
+	td {
+		padding: 5px 10px;
+		border: 1px solid #ddd;
+	}
+	tr {
+		border: 1px solid #EEE;
+		&:nth-child(even) {
+			background: #FFFDF7;
+		}
+		&:nth-child(odd) {
+			background: white;
+		}
+	}
+	tr.hover {
+		background: #75b2f0;
+		color: white;
+		cursor: pointer;
+	}
+	tr.selected {
+		background: #007FFF;
+		color: white;
+		a {
+			color: white;
+		}
+	}
+	thead {
+		th {
+			border-bottom: 1px solid #ddd;
+			background: #f3f3f3;
+			width: auto;
+			text-align: left;
+			word-break: normal;
+			font-weight: normal;
+			font-family: "OpenSansBold";
+		}
+	}
+}
+.error-log-wrapper {
+	table {
+		table-layout: fixed;
+		tr {
+			background: #fff;
+		}
+		th {
+			&:nth-child(1) {
+				width: 20%;
+			}
+			&:nth-child(2) {
+				width: 10%;
+			}
+			&:nth-child(3) {
+				width: 10%;
+			}
+		}
+		td {
+			word-wrap: break-word;
+			.stackTrace {
+				overflow: hidden;
+				max-height: 30px;
+			}
+			.stackTrace.stackTraceMore {
+				overflow: auto;
+				padding-bottom: 15px;
+				max-height: 900px;
+				-webkit-transition: max-height 1.5s ease-in-out;
+				-moz-transition: max-height 1.5s ease-in-out;
+				transition: max-height 1.5s ease-in-out;
+			}
+			.read-wrap {
+				background: #fff;
+				padding: 9px 0 5px;
+				.read-wrap-ellipse {
+					display: block;
+					text-align: center;
+				}
+			}
+			button.readButton {
+				padding: 2px 10px 3px;
+				background: #fff;
+				font-size: 12px;
+				margin-top: -14px;
+				&:hover {
+					background: #DDD;
+				}
+				.more {
+					display: none;
+				}
+			}
+			button.readButton.active {
+				.more {
+					display: block;
+				}
+				.less {
+					display: none;
+				}
+			}
+		}
+	}
+}

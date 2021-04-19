@@ -3,7 +3,7 @@
 describe('navigationController', function () {
 
     var $aController, window, sce;
-    var scopeMock,rootScopeMock,locationMock,offlineService,sessionServiceMock,appServiceMock,schedulerService,scheduledSyncMock;
+    var scopeMock,rootScopeMock,locationMock,offlineService,sessionServiceMock,appServiceMock,schedulerService,scheduledSyncMock,httpBackend;
 
     beforeEach(module('bahmni.registration'));
 
@@ -27,12 +27,14 @@ describe('navigationController', function () {
     }));
 
     beforeEach(
-        inject(function ($controller, $rootScope, $window, $sce) {
+        inject(function ($controller, $rootScope, $window, $sce, $httpBackend) {
             $aController = $controller;
             rootScopeMock = $rootScope;
             window = $window;
             sce = $sce;
             scopeMock = rootScopeMock.$new();
+            httpBackend = $httpBackend;
+            httpBackend.expectGET("/openmrs/ws/rest/v1/eventlog/filter/globalProperty/?q=bahmniOfflineSync.strategy").respond("");
         })
     );
 

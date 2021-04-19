@@ -101,7 +101,8 @@ module.exports = function (config) {
             'test/unit/**/offline/chrome/*.js',
             'app/common/ui-helper/controllers/chromeAppUpdateController.js',
             "test/unit/common/ui-helper/controllers/chromeAppUpdateController.spec.js",
-            'app/components/lovefield/node_modules/**/*.js'
+            'app/components/lovefield/node_modules/**/*.js',
+            'test/unit/syncDataRules/controllers/*.js'
         ],
         reporters: ['junit', 'progress', 'coverage'],
         preprocessors: {

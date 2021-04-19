@@ -30,8 +30,16 @@ angular.module('bahmni.common.offline')
             };
 
             var getPatientByUuid = function (uuid, preferredDb) {
-                preferredDb = preferredDb ? preferredDb : db;
+                preferredDb = preferredDb || db;
                 return patientDbService.getPatientByUuid(preferredDb, uuid);
+            };
+
+            var getPatientsCount = function () {
+                return patientDbService.getPatientsCount(db);
+            };
+
+            var getEncountersCount = function () {
+                return encounterDbService.getEncountersCount(db);
             };
 
             var deletePatientData = function (uuid) {
@@ -75,6 +83,10 @@ angular.module('bahmni.common.offline')
                 return $q.when(patientData);
             };
 
+            var getAllAddressesByLevelId = function (levelId) {
+                return offlineAddressHierarchyDbService.getParentAddressByLevelId(levelId);
+            };
+
             var getAddress = function (person) {
                 return person.addresses[0] || person.preferredAddress || {};
             };
@@ -106,7 +118,7 @@ angular.module('bahmni.common.offline')
             };
 
             var insertEncounterData = function (encounterData, preferredDb) {
-                preferredDb = preferredDb ? preferredDb : db;
+                preferredDb = preferredDb || db;
                 return encounterDbService.insertEncounterData(preferredDb, encounterData).then(function () {
                     if (encounterData && encounterData.observations && encounterData.observations.length > 0) {
                         return observationDbService.insertObservationsData(preferredDb, encounterData.patientUuid, encounterData.visitUuid, encounterData.observations).then(function () {
@@ -182,6 +194,13 @@ angular.module('bahmni.common.offline')
                 return offlineAddressHierarchyDbService.search(params);
             };
 
+            var getAddressesHeirarchyLevels = function () {
+                return offlineAddressHierarchyDbService.getAddressesHeirarchyLevels();
+            };
+
+            var getAddressesHeirarchyLevelsById = function (levelId) {
+                return offlineAddressHierarchyDbService.getAddressesHeirarchyLevelsById(levelId);
+            };
             var getConfig = function (module) {
                 return offlineConfigDbService.getConfig(module);
             };
@@ -227,7 +246,7 @@ angular.module('bahmni.common.offline')
             };
 
             var insertVisitData = function (visitData, preferredDb) {
-                preferredDb = preferredDb ? preferredDb : db;
+                preferredDb = preferredDb || db;
                 return visitDbService.insertVisitData(preferredDb, visitData);
             };
 
@@ -236,7 +255,7 @@ angular.module('bahmni.common.offline')
             };
 
             var getEncounterByEncounterUuid = function (encounterUuid, preferredDb) {
-                preferredDb = preferredDb ? preferredDb : db;
+                preferredDb = preferredDb || db;
                 return encounterDbService.getEncounterByEncounterUuid(preferredDb, encounterUuid);
             };
 
@@ -257,14 +276,14 @@ angular.module('bahmni.common.offline')
             };
 
             var insertLog = function (errorUuid, failedRequest, responseStatus, stackTrace, requestPayload) {
-                var provider = _.has(requestPayload, 'providers') ? requestPayload.providers[0] :
-                    (_.has(requestPayload, 'auditInfo.creator') ? requestPayload.auditInfo.creator : "");
-                requestPayload = requestPayload ? requestPayload : "";
+                var provider = _.has(requestPayload, 'providers') ? requestPayload.providers[0]
+                    : (_.has(requestPayload, 'auditInfo.creator') ? requestPayload.auditInfo.creator : "");
+                requestPayload = requestPayload || "";
                 return errorLogDbService.insertLog(db, errorUuid, failedRequest, responseStatus, stackTrace, requestPayload, provider);
             };
 
             var getErrorLogByUuid = function (uuid, preferredDb) {
-                preferredDb = preferredDb ? preferredDb : db;
+                preferredDb = preferredDb || db;
                 return errorLogDbService.getErrorLogByUuid(preferredDb, uuid);
             };
 
@@ -273,7 +292,7 @@ angular.module('bahmni.common.offline')
             };
 
             var deleteObsByEncounterUuid = function (uuid, preferredDb) {
-                preferredDb = preferredDb ? preferredDb : db;
+                preferredDb = preferredDb || db;
                 return observationDbService.deleteByEncounterUuid(preferredDb, uuid);
             };
 
@@ -332,6 +351,21 @@ angular.module('bahmni.common.offline')
                 return formDbService.getAllForms();
             };
 
+            var deleteRecordsFromTable = function (table) {
+                switch (table) {
+                case 'patient' :
+                    patientDbService.deleteAllPatientRecords(db);
+                    break;
+                case 'encounter':
+                    encounterDbService.deleteAllEncounterRecords(db);
+                    break;
+                }
+            };
+
+            var clearLastEventUuidForMarker = function (markerName) {
+                return offlineMarkerDbService.clearLastEventUuid(db, markerName);
+            };
+
             return {
                 init: init,
                 initSchema: initSchema,
@@ -379,6 +413,13 @@ angular.module('bahmni.common.offline')
                 deleteObsByEncounterUuid: deleteObsByEncounterUuid,
                 insertForm: insertForm,
                 getFormByUuid: getFormByUuid,
-                getAllForms: getAllForms
+                getAllForms: getAllForms,
+                getPatientsCount: getPatientsCount,
+                getAllAddressesByLevelId: getAllAddressesByLevelId,
+                getAddressesHeirarchyLevels: getAddressesHeirarchyLevels,
+                getAddressesHeirarchyLevelsById: getAddressesHeirarchyLevelsById,
+                deleteRecordsFromTable: deleteRecordsFromTable,
+                getEncountersCount: getEncountersCount,
+                clearLastEventUuidForMarker: clearLastEventUuidForMarker
             };
         }]);
