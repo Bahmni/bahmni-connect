@@ -165,6 +165,12 @@ module.exports = function (grunt) {
                 configFile: 'test/config/karma.chrome.conf.js',
                 singleRun: false,
                 autoWatch: true
+            },
+            debug: {
+                configFile: 'test/config/karma.chrome.conf.js',
+                singleRun: false,
+                autoWatch: true,
+                preprocessors: []
             }
         },
         coverage: {
