@@ -4,7 +4,7 @@ describe("PatientListHeaderController", function () {
 
     var scope, ngDialog,
         $bahmniCookieStore, locationService, $window, retrospectiveEntryService,
-        providerService, rootScope, thisController, locationsPromise, offlineService, schedulerService, offlineStatusService;
+        providerService, rootScope, thisController, locationsPromise, offlineService, schedulerService, offlineStatusService, httpBackend;
     var date = "2015-01-11";
     var encounterProvider = {value: "Test", uuid: "Test_UUID"};
 
@@ -16,8 +16,10 @@ describe("PatientListHeaderController", function () {
         scope = $rootScope.$new();
     }));
 
-    beforeEach(inject(function ($controller) {
+    beforeEach(inject(function ($controller,$httpBackend) {
         $bahmniCookieStore = jasmine.createSpyObj('$bahmniCookieStore', ['remove', 'put', 'get']);
+        httpBackend = $httpBackend;
+        httpBackend.expectGET("/openmrs/ws/rest/v1/eventlog/filter/globalProperty/?q=bahmniOfflineSync.strategy").respond("");
         $bahmniCookieStore.get.and.callFake(function (cookie) {
             if (cookie == Bahmni.Common.Constants.grantProviderAccessDataCookieName) {
                 return encounterProvider;

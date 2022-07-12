@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('bahmni.clinical')
-    .controller('PatientListHeaderController', ['$scope', '$rootScope', '$bahmniCookieStore', 'providerService', 'spinner', 'locationService', '$window', 'ngDialog', 'retrospectiveEntryService', 'offlineService', 'schedulerService', 'offlineStatusService',
-        function ($scope, $rootScope, $bahmniCookieStore, providerService, spinner, locationService, $window, ngDialog, retrospectiveEntryService, offlineService, schedulerService, offlineStatusService) {
+    .controller('PatientListHeaderController', ['$scope', '$rootScope', '$bahmniCookieStore', 'providerService', 'spinner', 'locationService', '$window', 'ngDialog', 'retrospectiveEntryService', 'offlineService', 'schedulerService', 'offlineStatusService', 'globalPropertyService',
+        function ($scope, $rootScope, $bahmniCookieStore, providerService, spinner, locationService, $window, ngDialog, retrospectiveEntryService, offlineService, schedulerService, offlineStatusService, globalPropertyService) {
             var DateUtil = Bahmni.Common.Util.DateUtil;
             $scope.maxStartDate = DateUtil.getDateWithoutTime(DateUtil.today());
             var selectedProvider = {};
@@ -11,7 +11,7 @@ angular.module('bahmni.clinical')
             $scope.onBehalfOfPrivilege = Bahmni.Common.Constants.onBehalfOfPrivilege;
             $scope.selectedLocationUuid = {};
             $rootScope.isOfflineApp = offlineService.isOfflineApp();
-
+            $scope.isSelectiveSyncStrategy = false;
             offlineStatusService.setOfflineOptions();
             $scope.getProviderList = function () {
                 return function (searchAttrs) {
@@ -51,7 +51,8 @@ angular.module('bahmni.clinical')
             };
 
             $scope.popUpHandler = function () {
-                $scope.dialog = ngDialog.open({ template: 'consultation/views/defaultDataPopUp.html', className: 'test ngdialog-theme-default',
+                $scope.dialog = ngDialog.open({ template: 'consultation/views/defaultDataPopUp.html',
+                    className: 'test ngdialog-theme-default',
                     controller: 'PatientListHeaderController'});
                 $('body').addClass('show-controller-back');
             };
@@ -115,6 +116,7 @@ angular.module('bahmni.clinical')
             };
 
             var init = function () {
+                globalPropertyService.verifySelectiveSync('bahmniOfflineSync.strategy', $scope);
                 var retrospectiveDate = retrospectiveEntryService.getRetrospectiveDate();
                 $scope.date = retrospectiveDate ? new Date(retrospectiveDate) : new Date($scope.maxStartDate);
                 $scope.encounterProvider = getCurrentProvider();

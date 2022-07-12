@@ -11,19 +11,19 @@ describe('OfflineDbService ', function () {
     beforeEach(function () {
         module('bahmni.common.offline');
         module(function ($provide) {
-            patientDbService = jasmine.createSpyObj('patientDbService', ['getPatientByUuid', 'insertPatientData']);
+            patientDbService = jasmine.createSpyObj('patientDbService', ['getPatientByUuid', 'insertPatientData', 'getPatientsCount', 'deleteAllPatientRecords']);
             patientIdentifierDbService = jasmine.createSpyObj('patientIdentifierDbService', ['insertPatientIdentifiers']);
             patientAddressDbService = jasmine.createSpyObj('patientAddressDbService', ['insertAddress']);
             patientAttributeDbService = jasmine.createSpyObj('patientAttributeDbService', ['insertAttributes', 'getAttributeTypes']);
             labOrderResultsDbService = jasmine.createSpyObj('labOrderResultsDbService', ['insertLabOrderResults', 'getLabOrderResultsForPatient']);
             offlineMarkerDbService = jasmine.createSpyObj('offlineMarkerDbService', ['init', 'getMarker', 'insertMarker']);
-            offlineAddressHierarchyDbService = jasmine.createSpyObj('offlineAddressHierarchyDbService', ['init', 'insertAddressHierarchy', 'search']);
+            offlineAddressHierarchyDbService = jasmine.createSpyObj('offlineAddressHierarchyDbService', ['init', 'insertAddressHierarchy', 'search', 'getParentAddressByLevelId', 'getAddressesHeirarchyLevels']);
             offlineConfigDbService = jasmine.createSpyObj('offlineConfigDbService', ['init', 'getConfig', 'insertConfig']);
             initializeOfflineSchema = jasmine.createSpyObj('initializeOfflineSchema', ['initSchema', 'reinitSchema']);
             referenceDataDbService = jasmine.createSpyObj('referenceDataDbService', ['init', 'getReferenceData', 'insertReferenceData']);
             locationDbService = jasmine.createSpyObj('locationDbService', ['getLocationByUuid']);
             offlineSearchDbService = jasmine.createSpyObj('offlineSearchDbService', ['init']);
-            encounterDbService = jasmine.createSpyObj('encounterDbService', ['insertEncounterData', 'getEncountersByPatientUuid', 'findActiveEncounter', 'getEncountersByVisits', 'getEncounterByEncounterUuid']);
+            encounterDbService = jasmine.createSpyObj('encounterDbService', ['insertEncounterData', 'getEncountersByPatientUuid', 'findActiveEncounter', 'getEncountersByVisits', 'getEncounterByEncounterUuid', 'deleteAllEncounterRecords']);
             visitDbService = jasmine.createSpyObj('visitDbService', ['insertVisitData', 'getVisitByUuid', 'getVisitsByPatientUuid', 'getVisitDetailsByPatientUuid']);
             observationDbService = jasmine.createSpyObj('observationDbService', ['insertObservationsData', 'getObservationsFor', 'deleteByEncounterUuid']);
             conceptDbService = jasmine.createSpyObj('conceptDbService', ['init', 'getReferenceData', 'getConceptByName', 'insertConceptAndUpdateHierarchy', 'updateChildren', 'updateParentJson', 'getAllParentsInHierarchy']);
@@ -405,6 +405,32 @@ describe('OfflineDbService ', function () {
             });
         });
 
+
+        it("should return patients count from patient table", function (done) {
+            var schemaBuilder = lf.schema.create('BahmniOfflineDb', 1);
+    
+            patientDbService.getPatientsCount.and.callFake(function () {
+                var deferred1 = $q.defer();
+                var patientData = [
+                    {patient: { uuid: "patientUuid1" }},
+                    {patient: { uuid: "patientUuid2" }},
+                    {patient: { uuid: "patientUuid3" }},
+                    ];
+                    deferred1.resolve(patientData);
+                    return deferred1.promise;
+                });
+    
+                schemaBuilder.connect().then(function (db) {
+                    offlineDbService.init(db);
+    
+                    offlineDbService.getPatientsCount(db).then(function (patientData) {
+                        expect(patientData.length).toBe(3);
+                        expect(patientDbService.getPatientsCount).toHaveBeenCalledWith(db);
+                        done();
+                    });
+                });
+            });
+
         it("should call createPatient with given patientData", function (done) {
             var schemaBuilder = lf.schema.create('BahmniOfflineDb', 1);
             schemaBuilder.connect().then(function (db) {
@@ -431,6 +457,12 @@ describe('OfflineDbService ', function () {
                 });
 
                 patientDbService.getPatientByUuid.and.callFake(function () {
+                    var deferred1 = $q.defer();
+                    deferred1.resolve({patient: "patientInfo"});
+                    return deferred1.promise;
+                });
+
+                patientDbService.getPatientsCount.and.callFake(function () {
                     var deferred1 = $q.defer();
                     deferred1.resolve({patient: "patientInfo"});
                     return deferred1.promise;
@@ -610,6 +642,16 @@ describe('OfflineDbService ', function () {
                     expect(patientIdentifierDbService.insertPatientIdentifiers).not.toHaveBeenCalled();
                     done();
                 });
+            });
+        });
+
+        it("should call deleteRecordsFromTable with given table as patient", function (done) {
+            var schemaBuilder = lf.schema.create('BahmniOfflineDb', 1);
+            schemaBuilder.connect().then(function (db) {
+                offlineDbService.init(db);
+                offlineDbService.deleteRecordsFromTable('patient');
+                expect(patientDbService.deleteAllPatientRecords).toHaveBeenCalled();
+                done();
             });
         });
     });
@@ -936,6 +978,19 @@ describe('OfflineDbService ', function () {
             expect(offlineAddressHierarchyDbService.search.calls.count()).toBe(1);
             expect(offlineAddressHierarchyDbService.search).toHaveBeenCalledWith("paramas");
         });
+
+        it("should call getParentAddressByLevelId with given level id", function () {
+            offlineDbService.getAllAddressesByLevelId(3);
+            expect(offlineAddressHierarchyDbService.getParentAddressByLevelId.calls.count()).toBe(1);
+            expect(offlineAddressHierarchyDbService.getParentAddressByLevelId).toHaveBeenCalledWith(3);
+        })
+
+        it("should call getAddressesHeirarchyLevels with no params", function () {
+            offlineDbService.getAddressesHeirarchyLevels();
+            expect(offlineAddressHierarchyDbService.getAddressesHeirarchyLevels.calls.count()).toBe(1);
+            expect(offlineAddressHierarchyDbService.getAddressesHeirarchyLevels).toHaveBeenCalledWith();
+        })
+
     });
 
 
@@ -1062,6 +1117,16 @@ describe('OfflineDbService ', function () {
                 offlineDbService.getEncountersByPatientUuid("patientUuid");
                 expect(encounterDbService.getEncountersByPatientUuid.calls.count()).toBe(1);
                 expect(encounterDbService.getEncountersByPatientUuid).toHaveBeenCalledWith(db, "patientUuid");
+                done();
+            });
+        });
+
+        it("should call deleteRecordsFromTable with given table as encounter", function (done) {
+            var schemaBuilder = lf.schema.create('BahmniOfflineDb', 1);
+            schemaBuilder.connect().then(function (db) {
+                offlineDbService.init(db);
+                offlineDbService.deleteRecordsFromTable('encounter');
+                expect(encounterDbService.deleteAllEncounterRecords).toHaveBeenCalled();
                 done();
             });
         });

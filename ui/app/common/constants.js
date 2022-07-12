@@ -44,6 +44,19 @@ Bahmni.Common = Bahmni.Common || {};
         syncPending: "Sync Pending, Press Sync button to Sync"
     };
 
+    var categories = {
+        forms: "forms",
+        offlineConcepts: "offline-concepts",
+        addressHierarchy: "addressHierarchy",
+        eventLogCategories: "eventLogCategories",
+        parentAddressHierarchy: "parentAddressHierarchy",
+        patient: "patient",
+        encounter: "encounter",
+        shrEncounter: "SHREncounter",
+        labOrderResults: "LabOrderResults",
+        Encounter: "Encounter"
+    };
+
     var representation = "custom:(uuid,name,names,conceptClass," +
         "setMembers:(uuid,name,names,conceptClass," +
         "setMembers:(uuid,name,names,conceptClass," +
@@ -247,10 +260,15 @@ Bahmni.Common = Bahmni.Common || {};
         eventLogServicePatientUrl: hostUrl + "/event-log-service/rest/eventlog/events/patient",
         eventLogServiceEncounterUrl: hostUrl + "/event-log-service/rest/eventlog/events/encounter",
         preprocessedPatientUrl: RESTWS_V1 + "/bahmniconnect/patient?filename=",
+        preprocessedOfflineConceptsUrl: RESTWS_V1 + "/bahmniconnect/offlineconcepts?filename=",
         preprocessedPatientFilesUrl: RESTWS_V1 + "/bahmniconnect/patientfiles?filter=",
+        preprocessedOfflineConceptsFilesUrl: RESTWS_V1 + "/bahmniconnect/offlineconceptfiles?filter=",
+        preprocessedAddressHierarchyUrl: RESTWS_V1 + "/bahmniconnect/addresshierarchy?filename=",
+        preprocessedAddressHierarchyFilesUrl: RESTWS_V1 + "/bahmniconnect/addresshierarchy?filter=",
         eventLogServiceConceptUrl: hostUrl + "/event-log-service/rest/eventlog/concepts",
         eventLogServiceFormUrl: hostUrl + "/event-log-service/rest/eventlog/forms",
         offlineMetadataUrl: hostUrl + "/offlineMetadata.json",
+        startArchivingURL: RESTWS_V1 + "/bahmniconnect/initSync",
         faviconUrl: hostUrl + "/bahmni/favicon.ico",
         platformType: {
             chrome: 'chrome',
@@ -279,7 +297,10 @@ Bahmni.Common = Bahmni.Common || {};
         eventlogFilterUrl: hostUrl + "/openmrs/ws/rest/v1/eventlog/filter",
         bahmniConnectMetaDataDb: "metaData",
         bahmniConnectVersion: "0.89",
-        defaultBahmniConnectDb: "Bahmni"
+        defaultBahmniConnectDb: "Bahmni",
+        categories: categories,
+        syncStrategy: "SelectiveSyncStrategy",
+        globalPropertyServiceUrl: "/openmrs/ws/rest/v1/eventlog/filter/globalProperty/"
     };
 })();
 
