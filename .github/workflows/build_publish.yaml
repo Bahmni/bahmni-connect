@@ -1,0 +1,34 @@
+name: Build and Publish bahmni-connect
+on:
+  push:
+    branches:
+      - master
+      - BAH-2334
+    paths-ignore:
+      - '**.md'
+
+jobs:
+  build-publish:
+    name: Build bahmni-connect
+    runs-on: ubuntu-latest
+    steps:
+      -  uses: actions/checkout@v2
+      - name: Setup Node
+        uses: actions/setup-node@v1
+      - run: npm install -g yarn
+      - run: sudo gem install compass
+      - run: cd ui && scripts/package.sh
+      - name: zip bahmni-connect-apps
+        run: zip -r bahmni-connect-apps.zip ui/bahmni-connect-apps
+      - name: Upload bahmni-connect-apps.zip
+        uses: actions/upload-artifact@v2
+        with:
+          name: bahmni-connect-apps
+          path: | 
+            bahmni-connect-apps.zip
+      - name: Upload androidDist as Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: bahmni-android
+          path: | 
+            ui/androidDist
