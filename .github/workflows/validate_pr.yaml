@@ -1,0 +1,15 @@
+name: Validate PR
+
+on:
+  push:
+    branches: [ master]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup Node
+      uses: actions/setup-node@v1
+    - run: npm install -g yarn
+    - run: sudo gem install compass
+    - run: cd ui && scripts/package.sh
