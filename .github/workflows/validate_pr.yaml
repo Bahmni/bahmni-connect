@@ -1,3 +1,5 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+
 name: Validate PR
 
 on:
@@ -10,6 +12,8 @@ jobs:
     - uses: actions/checkout@v2
     - name: Setup Node
       uses: actions/setup-node@v1
+    - name: Install yarn
     - run: npm install -g yarn
+    - name: Install compass
     - run: sudo gem install compass
     - run: cd ui && scripts/package.sh
