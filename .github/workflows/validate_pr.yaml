@@ -1,0 +1,20 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+
+name: Validate PR
+
+on:
+  pull_request:
+    branches: [ master]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup Node
+      uses: actions/setup-node@v1
+    - name: Install yarn
+      run: npm install -g yarn
+    - name: Install compass
+      run: sudo gem install compass
+    - name: Build UI Package
+      run: cd ui && scripts/package.sh
