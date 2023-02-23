@@ -16,4 +16,5 @@ jobs:
       run: npm install -g yarn
     - name: Install compass
       run: sudo gem install compass
-    - run: cd ui && scripts/package.sh
+    - name: Build UI Package
+      run: cd ui && scripts/package.sh
