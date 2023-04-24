@@ -153,7 +153,6 @@ Bahmni.ConceptSet.ObservationMapper = function () {
             concept: conceptMapper.map(concept),
             units: concept.units,
             label: getLabel(concept),
-            possibleAnswers: concept.answers,
             groupMembers: mappedGroupMembers,
             comment: comment,
             showAddMoreButton: showAddMoreButton
